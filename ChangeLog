@@ -1,3 +1,43 @@
+2000-09-17  Kevin Ryde  <kevin@swox.se>
+
+	* gmp.h (__GNU_MP_VERSION_PATCHLEVEL): Bump to 1.
+	* Makefile.am (LIBGMP_LT_REVISION, LIBMP_LT_REVISION): Bump to 1.
+	* NEWS: Update.
+
+	* gmp.texi (Copying): Refer to Lesser not Library GPL.
+	(Miscellaneous Rational Functions): Correct return type of mpq_set_d.
+	(GMP and Reentrancy): Note stack-alloc.c is not reentrant.
+	(Build Options): Clarify where to find CFLAGS.
+
+	* configure.in: Re-apply "PROLOGUE.*" regexp change for the
+	benefit of alpha PROLOGUE_GP, lost in path search reorganisation.
+
+	* mpz/{fdiv_r_2exp.c,lcm.c,urandomm.c}: Add missing TMP_MARK/FREE,
+	avoiding memory leak when using stack-alloc.c.
+
+	* mpz/pprime_p.c (mpz_millerrabin): Fix a TMP_FREE.
+
+	* gmp-impl.h (mpn_tdiv_qr): Move prototype from here ...
+	* gmp.h (mpn_tdiv_qr): ... to here.
+
+	* mp.h (mp_set_memory_functions): Add missing #define.
+
+	* tune/speed.h (SPEED_ROUTINE_MPN_GCD_CALL): Fix for sizes > 512 limbs.
+
+	* mpn/tests/try.c (call): Cast popcount and hamdist calls,
+	for the benefit of long long limb.
+
+	The following by Paul:
+
+	* mpn/generic/bz_divrem_n.c: Fix qhl handling, simplify.
+
+	The following by Torbjorn:
+	
+	* gmp-impl.h (mpn_com_n): Fix typo.
+
+	* mpf/get_str.c: Don't set n_digits from digits_computed_so_far
+	when the converted operand becomes zero.  Misc cleanups.
+
 2000-08-02  Torbjorn Granlund  <tege@swox.com>
 
 	* Version 3.1 released.
