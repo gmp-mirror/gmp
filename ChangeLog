@@ -1,3 +1,14 @@
+2000-05-05  Linus Nordberg  <linus@swox.se>
+
+	* gmp.texi (Miscellaneous Float Functions): Correct parameter list
+	for mpf_urandomb().
+
+2000-05-02  Torbjorn Granlund  <tege@swox.com>
+
+	* mpn/generic/bz_divrem_n.c (mpn_bz_divrem_n): Handle non-zero return
+	from first mpn_bz_div_3_halves_by_2 call.
+	(mpn_bz_divrem_aux): Likewise.
+
 2000-04-26  Torbjorn Granlund  <tege@swox.com>
 
 	* Version 3.0.1 released.
