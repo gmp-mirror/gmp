@@ -19,6 +19,11 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 MA 02111-1307, USA.
 
 
+2002-01-15  Kevin Ryde  <kevin@swox.se>
+
+	* mpf/out_str.c: Use MPF_SIGNIFICANT_DIGITS, so mpf_out_str and
+	mpf_get_str give the same for ndigits==0.
+
 2002-01-06  Kevin Ryde  <kevin@swox.se>
 
 	* gmp-h.in (mpn_divexact_by3c): Remove variables from prototype, to
