@@ -1,3 +1,35 @@
+2000-04-25  Linus Nordberg  <linus@swox.se>
+
+	Merge from main trunk:
+
+	2000-04-25  Linus Nordberg  <linus@swox.se>
+	* gmp.texi (Random State Initialization): Correct arguments to
+	`gmp_randinit'.
+
+	2000-04-24  Kevin Ryde  <kevin@swox.se>
+	* gmp.texi (Getting the Latest Version of GMP): Add reference to
+	ftp.gnu.org mirrors list.
+
+	2000-04-23  Kevin Ryde  <kevin@swox.se>
+	* gmp.texi (Reporting Bugs): Itemize the list of things to include.
+	(Miscellaneous Float Functions): Correct typo in mpf_ceil etc
+	argument types.
+	Change @ifinfo -> @ifnottex for benefit of makeinfo --html.
+	Remove unnecessary @iftex's around @tex.
+
+	2000-04-22  Torbjorn Granlund  <tege@swox.com>
+	* configure.in: Specifically match freebsd[3-9].
+
+	2000-04-21  Torbjorn Granlund  <tege@swox.com>
+	* rand.c: Call mpz_clear for otherwise leaking mpz_t.
+	* mpz/pprime_p2.c (mpz_probab_prime_p): Merge handling of negative
+	n into code for handling small positive n.  Merge variables m and n.
+	After dividing, simply call mpz_millerrabin.
+	(isprime): Local variables now use attribute `long'.
+	(mpz_millerrabin): New static function, based on code from
+	mpz_probab_prime_p.
+	(millerrabin): Now simple workhorse for mpz_millerrabin.
+
 2000-04-17  Torbjorn Granlund  <tege@swox.com>
 
 	* Version 3.0 released.
