@@ -23,6 +23,8 @@ MA 02111-1307, USA.
 
 	* Version 4.0.1 released.
 
+	* gmp.texi (Contributors): Bump release version.
+
 	* acinclude.m4 (GMP_FUNC_VSNPRINTF): Use %n to better detect sparc
 	solaris 2.7 problems.
 	
