@@ -1,5 +1,10 @@
 2000-04-25  Linus Nordberg  <linus@swox.se>
 
+	* acinclude.m4 (GMP_VERSION): Change `eval' --> `m4_eval'.  Fix
+	from Kevin.
+	* aclocal.m4: Regenerate.
+	* configure: Regenerate.
+
 	* Makefile.am (LIBGMP_LT_REVISION): Change 0 --> 1.
 	* Makefile.in: Regenerate.
 
@@ -29,7 +34,7 @@
 
 	2000-04-21  Torbjorn Granlund  <tege@swox.com>
 	* rand.c: Call mpz_clear for otherwise leaking mpz_t.
-	* mpz/pprime_p2.c (mpz_probab_prime_p): Merge handling of negative
+	* mpz/pprime_p.c (mpz_probab_prime_p): Merge handling of negative
 	n into code for handling small positive n.  Merge variables m and n.
 	After dividing, simply call mpz_millerrabin.
 	(isprime): Local variables now use attribute `long'.
