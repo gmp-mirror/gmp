@@ -19,9 +19,11 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 MA 02111-1307, USA.
 
 
-2002-01-20  Kevin Ryde  <kevin@swox.se>
+2002-01-22  Kevin Ryde  <kevin@swox.se>
 
 	* Version 4.0.1 released.
+
+2002-01-20  Kevin Ryde  <kevin@swox.se>
 
 	* gmp.texi (Contributors): Bump release version.
 
