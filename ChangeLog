@@ -4,6 +4,10 @@
 
 	* mpn/x86/k[67]/mmx/popham.asm: Don't use ELF-ism ".section .rodata".
 
+2000-10-04  Torbjorn Granlund  <tege@swox.com>
+
+	* configure.in (sparc64-*-linux*): Set path according to CC64.
+
 2000-09-27  Torbjorn Granlund  <tege@swox.com>
 
 	* mpn/alpha/ev6/addmul_1.asm: Use explicit offset for all load and
