@@ -1,6 +1,10 @@
-2000-10-04  Kevin Ryde  <kevin@swox.se>
+2000-10-05  Kevin Ryde  <kevin@swox.se>
 
 	* Version 3.1.1 released.
+
+	* gmp.texi (Known Build Problems): Note VERSION problem with old sed.
+
+2000-10-04  Kevin Ryde  <kevin@swox.se>
 
 	* mpn/x86/k[67]/mmx/popham.asm: Don't use ELF-ism ".section .rodata".
 
