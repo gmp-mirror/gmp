@@ -1,3 +1,7 @@
+2000-09-29  Kevin Ryde  <kevin@swox.se>
+
+	* Version 3.1.1 released.
+
 2000-09-27  Torbjorn Granlund  <tege@swox.com>
 
 	* mpn/alpha/ev6/addmul_1.asm: Use explicit offset for all load and
