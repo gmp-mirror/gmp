@@ -1,6 +1,8 @@
-2000-09-29  Kevin Ryde  <kevin@swox.se>
+2000-10-04  Kevin Ryde  <kevin@swox.se>
 
 	* Version 3.1.1 released.
+
+	* mpn/x86/k[67]/mmx/popham.asm: Don't use ELF-ism ".section .rodata".
 
 2000-09-27  Torbjorn Granlund  <tege@swox.com>
 
