@@ -13,6 +13,8 @@
 	* configure.in: Re-apply "PROLOGUE.*" regexp change for the
 	benefit of alpha PROLOGUE_GP, lost in path search reorganisation.
 
+	* aclocal.m4: Regenerate with correct autoconf snapshot.
+
 	* mpz/{fdiv_r_2exp.c,lcm.c,urandomm.c}: Add missing TMP_MARK/FREE,
 	avoiding memory leak when using stack-alloc.c.
 
