@@ -8,6 +8,7 @@
 	(Miscellaneous Rational Functions): Correct return type of mpq_set_d.
 	(GMP and Reentrancy): Note stack-alloc.c is not reentrant.
 	(Build Options): Clarify where to find CFLAGS.
+	(Low-level Functions): Fix return type of mpn_tdiv_qr.
 
 	* configure.in: Re-apply "PROLOGUE.*" regexp change for the
 	benefit of alpha PROLOGUE_GP, lost in path search reorganisation.
