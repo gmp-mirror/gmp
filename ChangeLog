@@ -1,5 +1,12 @@
 2000-04-25  Linus Nordberg  <linus@swox.se>
 
+	* Makefile.am (LIBGMP_LT_REVISION): Change 0 --> 1.
+	* Makefile.in: Regenerate.
+
+	* gmp.h (__GNU_MP_VERSION_PATCHLEVEL): Change 0 --> 1.
+
+	* NEWS: Add notes for 3.0.1.
+
 	Merge from main trunk:
 
 	2000-04-25  Linus Nordberg  <linus@swox.se>
