@@ -1,5 +1,11 @@
 2020-01-24  Niels Möller  <nisse@lysator.liu.se>
 
+	* mpn/generic/hgcd2_jacobi.c (div1, div2): Deleted. Instead,
+	include hgcd2-div.h, to reuse the tuned implementations for hgcd2.
+	(mpn_hgcd2_jacobi): Adapt to different return value for div1. Also
+	other small changes to make it identical to mpn_hgcd2, except for
+	the updates of the jacobi-related state.
+
 	* mpn/generic/hgcd2.c (div1, div2): Move inline functions...
 	* mpn/generic/hgcd2-div.h: ... to a separate file.
 
