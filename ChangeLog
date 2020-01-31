@@ -1,3 +1,9 @@
+2020-01-31 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/powm.c (MPN_REDC_0): Subtractive redc
+	(mpn_2powm): New, static, function
+	* tests/mpz/t-powm.c: More tests for the base=2 case.
+
 2020-01-24  Niels Möller  <nisse@lysator.liu.se>
 
 	* mpn/generic/hgcd2_jacobi.c (div1, div2): Deleted. Instead,
