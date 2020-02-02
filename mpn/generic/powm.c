@@ -6,7 +6,7 @@
    SAFE TO REACH THEM THROUGH DOCUMENTED INTERFACES.  IN FACT, IT IS ALMOST
    GUARANTEED THAT THEY WILL CHANGE OR DISAPPEAR IN A FUTURE GNU MP RELEASE.
 
-Copyright 2007-2012, 2019 Free Software Foundation, Inc.
+Copyright 2007-2012, 2019, 2020 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -142,7 +142,7 @@ getbits (const mp_limb_t *p, mp_bitcnt_t bi, int nbits)
   mp_limb_t r;
   mp_size_t i;
 
-  if (bi < nbits)
+  if (bi <= nbits)
     {
       return p[0] & (((mp_limb_t) 1 << bi) - 1);
     }
@@ -682,11 +682,9 @@ mpn_powm (mp_ptr rp, mp_srcptr bp, mp_size_t bn,
     }
 
   expbits = getbits (ep, ebi, windowsize);
-  if (ebi < windowsize)
-    ebi = 0;
-  else
-    ebi -= windowsize;
+  ebi -= windowsize;
 
+  /* THINK: Should we initialise the case expbits % 4 == 0 with a mul? */
   count_trailing_zeros (cnt, expbits);
   ebi += cnt;
   expbits >>= cnt;
@@ -709,18 +707,11 @@ mpn_powm (mp_ptr rp, mp_srcptr bp, mp_size_t bn,
 	 significant bit is 1.  */					\
 									\
       expbits = getbits (ep, ebi, windowsize);				\
-      this_windowsize = windowsize;					\
-      if (ebi < windowsize)						\
-	{								\
-	  this_windowsize -= windowsize - ebi;				\
-	  ebi = 0;							\
-	}								\
-      else								\
-        ebi -= windowsize;						\
+      this_windowsize = MIN (ebi, windowsize);				\
 									\
       count_trailing_zeros (cnt, expbits);				\
       this_windowsize -= cnt;						\
-      ebi += cnt;							\
+      ebi -= this_windowsize;						\
       expbits >>= cnt;							\
 									\
       do								\
