@@ -3357,6 +3357,8 @@ gmp_jacobi_coprime (mp_limb_t a, mp_limb_t b)
       bit ^= c & (b ^ (b >> 1));
       if (a < b)
 	{
+	  if (a == 0)
+	    return bit & 1 ? -1 : 1;
 	  bit ^= a & b;
 	  a = b - a;
 	  b -= a;
@@ -3370,9 +3372,7 @@ gmp_jacobi_coprime (mp_limb_t a, mp_limb_t b)
       gmp_ctz(c, a);
       ++c;
     }
-  while (b > 0);
-
-  return bit & 1 ? -1 : 1;
+  while (1);
 }
 
 static void
