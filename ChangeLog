@@ -1,3 +1,8 @@
+2020-02-02 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/powm.c: Better handling of current window-size.
+	* mpn/generic/powlo.c: Likewise.
+
 2020-01-31 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpn/generic/powm.c (MPN_REDC_0): Subtractive redc
