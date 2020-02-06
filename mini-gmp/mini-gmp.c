@@ -2,7 +2,7 @@
 
    Contributed to the GNU project by Niels Möller
 
-Copyright 1991-1997, 1999-2019 Free Software Foundation, Inc.
+Copyright 1991-1997, 1999-2020 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -3350,7 +3350,7 @@ gmp_jacobi_coprime (mp_limb_t a, mp_limb_t b)
   gmp_ctz(c, a);
   a >>= 1;
 
-  do
+  for (;;)
     {
       a >>= c;
       /* (2/b) = -1 if b = 3 or 5 mod 8 */
@@ -3372,7 +3372,6 @@ gmp_jacobi_coprime (mp_limb_t a, mp_limb_t b)
       gmp_ctz(c, a);
       ++c;
     }
-  while (1);
 }
 
 static void
