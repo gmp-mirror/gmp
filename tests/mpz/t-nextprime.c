@@ -33,6 +33,60 @@ refmpz_nextprime (mpz_ptr p, mpz_srcptr t)
 }
 
 void
+test_largegap (mpz_t low, const int gap)
+{
+  mpz_t t, nxt;
+
+  mpz_init (t);
+  mpz_init (nxt);
+
+  mpz_nextprime(nxt, low);
+  mpz_sub(t, nxt, low);
+
+  if (mpz_cmp_ui(t, gap) != 0)
+     {
+      gmp_printf ("prime gap %Zd != %d\n", t, gap);
+      abort ();
+    }
+
+  mpz_clear (t);
+  mpz_clear (nxt);
+}
+
+void
+test_largegaps ()
+{
+  mpz_t x;
+
+  mpz_init (x);
+
+  // This takes ~3 seconds on a fast computer.
+  // Gap 33008 from P454 = 55261931 * 1063#/210 - 13116
+  mpz_primorial_ui (x, 1063);
+  mpz_mul_ui (x, x, 55261931);
+  mpz_divexact_ui (x, x, 210);
+  mpz_sub_ui (x, x, 13116);
+
+  test_largegap(x, 33008);
+
+  mpz_clear (x);
+
+
+  /*
+  // This takes ~30 seconds, it test the deep science magic constant in
+  // nextprime.c but takes too long to be always enabled.
+  // Gap 66520 from P816 = 1931 * 1933# / 7230 - 30244
+  mpz_primorial_ui (x, 1933);
+  mpz_mul_ui (x, x, 1931);
+  mpz_divexact_ui (x, x, 7230);
+  mpz_sub_ui (x, x, 30244);
+
+  test_largegap(x, 66520);
+  */
+
+}
+
+void
 run (const char *start, int reps, const char *end, short diffs[])
 {
   mpz_t x, y;
@@ -73,17 +127,51 @@ extern short diff4[];
 extern short diff5[];
 extern short diff6[];
 
+void
+test_ref(gmp_randstate_ptr rands, int reps) {
+  int i;
+  mpz_t bs, x, next_p, ref_next_p;
+  unsigned long size_range;
+
+  mpz_init (bs);
+  mpz_init (x);
+  mpz_init (next_p);
+  mpz_init (ref_next_p);
+
+  for (i = 0; i < reps; i++)
+    {
+      mpz_urandomb (bs, rands, 32);
+      size_range = mpz_get_ui (bs) % 8 + 2; /* 0..1024 bit operands */
+
+      mpz_urandomb (bs, rands, size_range);
+      mpz_rrandomb (x, rands, mpz_get_ui (bs));
+
+/*      gmp_printf ("%ld: %Zd\n", mpz_sizeinbase (x, 2), x); */
+
+      mpz_nextprime (next_p, x);
+      refmpz_nextprime (ref_next_p, x);
+      if (mpz_cmp (next_p, ref_next_p) != 0)
+	abort ();
+    }
+
+  mpz_clear (bs);
+  mpz_clear (x);
+  mpz_clear (next_p);
+  mpz_clear (ref_next_p);
+}
+
 int
 main (int argc, char **argv)
 {
-  int i;
-  int reps = 20;
   gmp_randstate_ptr rands;
-  mpz_t bs, x, nxtp, ref_nxtp;
-  unsigned long size_range;
+  int reps = 20;
 
   tests_start();
+
   rands = RANDS;
+  TESTS_REPS (reps, argv, argc);
+
+  test_ref(rands, reps);
 
   run ("2", 1000, "0x1ef7", diff1);
 
@@ -101,33 +189,8 @@ main (int argc, char **argv)
   run ("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF80", 50, /* 2^128 - 128 */
        "0x10000000000000000000000000000155B", diff6);
 
-  mpz_init (bs);
-  mpz_init (x);
-  mpz_init (nxtp);
-  mpz_init (ref_nxtp);
-
-  TESTS_REPS (reps, argv, argc);
-
-  for (i = 0; i < reps; i++)
-    {
-      mpz_urandomb (bs, rands, 32);
-      size_range = mpz_get_ui (bs) % 8 + 2; /* 0..1024 bit operands */
-
-      mpz_urandomb (bs, rands, size_range);
-      mpz_rrandomb (x, rands, mpz_get_ui (bs));
-
-/*      gmp_printf ("%ld: %Zd\n", mpz_sizeinbase (x, 2), x); */
-
-      mpz_nextprime (nxtp, x);
-      refmpz_nextprime (ref_nxtp, x);
-      if (mpz_cmp (nxtp, ref_nxtp) != 0)
-	abort ();
-    }
-
-  mpz_clear (bs);
-  mpz_clear (x);
-  mpz_clear (nxtp);
-  mpz_clear (ref_nxtp);
+  // Too slow to include in normal testing.
+  //test_largegaps ();
 
   tests_end ();
   return 0;
