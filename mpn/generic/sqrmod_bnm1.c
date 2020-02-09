@@ -59,8 +59,8 @@ mpn_bc_sqrmod_bnm1 (mp_ptr rp, mp_srcptr ap, mp_size_t rn, mp_ptr tp)
 
 
 /* Input is {ap,rn+1}; output is {rp,rn+1}, in
-   semi-normalised representation, computation is mod B^rn + 1. Needs
-   a scratch area of 2rn + 2 limbs at tp; tp == rp is allowed.
+   normalised representation, computation is mod B^rn + 1. Needs
+   a scratch area of 2rn limbs at tp; tp == rp is allowed.
    Output is normalised. */
 static void
 mpn_bc_sqrmod_bnp1 (mp_ptr rp, mp_srcptr ap, mp_size_t rn, mp_ptr tp)
@@ -69,12 +69,16 @@ mpn_bc_sqrmod_bnp1 (mp_ptr rp, mp_srcptr ap, mp_size_t rn, mp_ptr tp)
 
   ASSERT (0 < rn);
 
-  mpn_sqr (tp, ap, rn + 1);
-  ASSERT (tp[2*rn+1] == 0);
-  ASSERT (tp[2*rn] < GMP_NUMB_MAX);
-  cy = tp[2*rn] + mpn_sub_n (rp, tp, tp+rn, rn);
+  if (UNLIKELY (ap[rn]))
+    {
+      *rp = 1;
+      MPN_FILL (rp + 1, rn, 0);
+      return;
+    }
+  mpn_sqr (tp, ap, rn);
+  cy = mpn_sub_n (rp, tp, tp + rn, rn);
   rp[rn] = 0;
-  MPN_INCR_U (rp, rn+1, cy);
+  MPN_INCR_U (rp, rn + 1, cy);
 }
 
 
