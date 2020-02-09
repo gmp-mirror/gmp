@@ -1,6 +1,6 @@
 /* Test mpz_nextprime.
 
-Copyright 2009, 2015, 2018 Free Software Foundation, Inc.
+Copyright 2009, 2015, 2018, 2020 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library test suite.
 

@@ -1,3 +1,4 @@
+
 /* mulmod_bnm1.c -- multiplication mod B^n-1.
 
    Contributed to the GNU project by Niels Möller, Torbjorn Granlund and
@@ -7,7 +8,7 @@
    SAFE TO REACH THEM THROUGH DOCUMENTED INTERFACES.  IN FACT, IT IS ALMOST
    GUARANTEED THAT THEY WILL CHANGE OR DISAPPEAR IN A FUTURE GNU MP RELEASE.
 
-Copyright 2009, 2010, 2012, 2013 Free Software Foundation, Inc.
+Copyright 2009, 2010, 2012, 2013, 2020 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 

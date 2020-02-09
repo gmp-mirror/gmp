@@ -1,8 +1,9 @@
+
 /* Test for mulmod_bnm1 function.
 
    Contributed to the GNU project by Marco Bodrato.
 
-Copyright 2009 Free Software Foundation, Inc.
+Copyright 2009, 2020 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library test suite.
 
