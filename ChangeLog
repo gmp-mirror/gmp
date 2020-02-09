@@ -1,7 +1,24 @@
+2020-02-09 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/sqrmod_bnm1.c (mpn_bc_sqrmod_bnp1):
+	Shorter mpn_sqr.
+	* mpn/generic/mulmod_bnm1.c (mpn_bc_mulmod_bnp1):
+	Shorter mpn_mul_n.
+
+	* tests/mpn/t-mulmod_bnm1.c: Trigger special cases more often.
+	* tests/mpn/t-sqrmod_bnm1.c: Likewise.
+
+2020-02-09 Seth Troisi <sethtroisi@google.com>
+
+	* tests/mpz/t-nextprime.c: Split into sub-tests.
+
 2020-02-02 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpn/generic/powm.c: Better handling of current window-size.
 	* mpn/generic/powlo.c: Likewise.
+
+	* mpn/generic/jacbase.c (mpn_jacobi_base): Optimise _METHOD 4.
+	* mpz/aors.h: Branches optimisation.
 
 2020-01-31 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
