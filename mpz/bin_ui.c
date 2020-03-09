@@ -146,22 +146,17 @@ rek_raising_fac4 (mpz_ptr r, mpz_ptr p, mpz_ptr P, unsigned long int k, unsigned
       mpz_t lt;
       unsigned long int m;
 
+      ALLOC (lt) = 0;
+      SIZ (lt) = 0;
+      if (t == NULL)
+	t = lt;
       m = ((k + lk) >> 1) + 1;
       rek_raising_fac4 (r, p, P, k, m, t);
 
       posmpz_inc_ui (p, 4*m+2);
       mpz_addmul_ui (P, p, 4*m);
       posmpz_dec_ui (P, m);
-      if (t == NULL)
-	{
-	  mpz_init_set (lt, P);
-	  t = lt;
-	}
-      else
-	{
-	  ALLOC (lt) = 0;
-	  mpz_set (t, P);
-	}
+      mpz_set (t, P);
       rek_raising_fac4 (t, p, P, m - 1, lk, NULL);
 
       mpz_mul (r, r, t);
