@@ -1,4 +1,3 @@
-
 /* mulmod_bnm1.c -- multiplication mod B^n-1.
 
    Contributed to the GNU project by Niels Möller, Torbjorn Granlund and
@@ -74,14 +73,8 @@ mpn_bc_mulmod_bnp1 (mp_ptr rp, mp_srcptr ap, mp_srcptr bp, mp_size_t rn,
 
   if (UNLIKELY (ap[rn] | bp [rn]))
     {
-      if (UNLIKELY (ap[rn] & bp [rn]))
-	{
-	  *rp = 1;
-	  MPN_FILL (rp + 1, rn, 0);
-	  return;
-	}
-      else if (bp[rn] == 0)
-	cy = mpn_neg (rp, bp, rn);
+      if (ap[rn])
+	cy = bp [rn] + mpn_neg (rp, bp, rn);
       else /* ap[rn] == 0 */
 	cy = mpn_neg (rp, ap, rn);
     }
