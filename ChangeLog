@@ -1,3 +1,14 @@
+2020-03-10 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/mulmod_bnm1.c (mpn_bc_mulmod_bnp1):
+	Simplify special cases.
+	* mpz/bin_ui.c (rek_raising_fac4): Reduce allocations.
+	(mpz_bin_ui): Siplify special cases.
+	* tests/mpz/t-bin.c: Use divexact.
+
+	* mpn/generic/mul_fft.c (mpn_fft_mul_modF_K):
+	Fully handle carry propagation in basecase multiplication.
+
 2020-02-12 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpz/cmp.c: Avoid overflow on int even for huge sizes.
