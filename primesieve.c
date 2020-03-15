@@ -65,7 +65,7 @@ primesieve_size (mp_limb_t n) { return n_to_bit(n) / GMP_LIMB_BITS + 1; }
 #define SIEVE_2MSK1 CNST_LIMB(0x9402180c40230184)
 #define SIEVE_2MSK2 CNST_LIMB(0x0285021088402120)
 #define SIEVE_2MSKT CNST_LIMB(0xa41210084421)
-#define SEED_LIMIT 210
+#define SEED_LIMIT 288
 #else
 #define SEED_LIMIT 202
 #endif
