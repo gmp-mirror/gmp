@@ -313,7 +313,7 @@ block_resieve (mp_ptr bit_array, mp_size_t limbs, mp_limb_t offset,
 	       mp_srcptr sieve)
 {
   mp_size_t bits, off = offset;
-  mp_limb_t mask, index, i;
+  mp_limb_t mask, i;
 
   ASSERT (limbs > 0);
   ASSERT (offset >= GMP_LIMB_BITS);
@@ -325,10 +325,9 @@ block_resieve (mp_ptr bit_array, mp_size_t limbs, mp_limb_t offset,
   ASSERT (i < GMP_LIMB_BITS);
 
   mask = CNST_LIMB(1) << i;
-  index = 0;
   do {
     ++i;
-    if ((sieve[index] & mask) == 0)
+    if ((*sieve & mask) == 0)
       {
 	mp_size_t step, lindex;
 	mp_limb_t lmask;
@@ -371,7 +370,7 @@ block_resieve (mp_ptr bit_array, mp_size_t limbs, mp_limb_t offset,
 	};
       }
       mask = mask << 1 | mask >> (GMP_LIMB_BITS-1);
-      index += mask & 1;
+      sieve += mask & 1;
   } while (1);
 }
 

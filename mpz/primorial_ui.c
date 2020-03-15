@@ -48,31 +48,31 @@ see https://www.gnu.org/licenses/.  */
       (PR) *= (P);						\
   } while (0)
 
-#define LOOP_ON_SIEVE_CONTINUE(prime,end,sieve)			\
+#define LOOP_ON_SIEVE_CONTINUE(prime,end)			\
     __max_i = (end);						\
 								\
     do {							\
       ++__i;							\
-      if (((sieve)[__index] & __mask) == 0)			\
+      if ((*__sieve & __mask) == 0)				\
 	{							\
 	  mp_limb_t prime;					\
 	  prime = id_to_n(__i)
 
 #define LOOP_ON_SIEVE_BEGIN(prime,start,end,off,sieve)		\
   do {								\
-    mp_limb_t __mask, __index, __max_i, __i;			\
+    mp_limb_t __mask, *__sieve, __max_i, __i;			\
 								\
     __i = (start)-(off);					\
-    __index = __i / GMP_LIMB_BITS;				\
+    __sieve = (sieve) + __i / GMP_LIMB_BITS;			\
     __mask = CNST_LIMB(1) << (__i % GMP_LIMB_BITS);		\
     __i += (off);						\
 								\
-    LOOP_ON_SIEVE_CONTINUE(prime,end,sieve)
+    LOOP_ON_SIEVE_CONTINUE(prime,end)
 
 #define LOOP_ON_SIEVE_STOP					\
 	}							\
       __mask = __mask << 1 | __mask >> (GMP_LIMB_BITS-1);	\
-      __index += __mask & 1;					\
+      __sieve += __mask & 1;					\
     }  while (__i <= __max_i)
 
 #define LOOP_ON_SIEVE_END					\
