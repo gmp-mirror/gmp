@@ -1,5 +1,5 @@
 /*
-Copyright 2018-2019 Free Software Foundation, Inc.
+Copyright 2018-2020 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library test suite.
 
@@ -237,7 +237,7 @@ check_nprime (unsigned long begin, unsigned long end)
       TRACE(printf ("%li ", begin),1);
       mpz_nextprime (g, g);
       if (mpz_cmp_ui (g, 2) != 0)
-	STOP (something_wrong (g, -1));
+	STOP (something_wrong (g, 2));
       begin = mpz_get_ui (g);
     }
   if (begin < 3)
@@ -246,7 +246,7 @@ check_nprime (unsigned long begin, unsigned long end)
       TRACE(printf ("%li ", begin),1);
       mpz_nextprime (g, g);
       if (mpz_cmp_ui (g, 3) != 0)
-	STOP (something_wrong (g, -1));
+	STOP (something_wrong (g, 3));
       begin = mpz_get_ui (g);
     }
   if (end > 4)
@@ -266,7 +266,81 @@ check_nprime (unsigned long begin, unsigned long end)
 
 	mpz_nextprime (g, g);
 	if (mpz_cmp_ui (g, prime) != 0)
-	  STOP (something_wrong (g, -1));
+	  STOP (something_wrong (g, prime));
+
+	if (prime - start > 200)
+	  {
+	    start = prime;
+	    spinner();
+	    if (prime - begin > 0xfffffff)
+	      {
+		begin = prime;
+		printf ("%li (0x%lx)\n", begin, begin);
+	      }
+	  }
+
+	LOOP_ON_SIEVE_END;
+
+	__GMP_FREE_FUNC_LIMBS (sieve, size);
+      }
+
+  if (mpz_cmp_ui (g, end) < 0)
+    {
+      mpz_nextprime (g, g);
+      if (mpz_cmp_ui (g, end) <= 0)
+	STOP (something_wrong (g, -1));
+    }
+
+  gmp_printf ("%Zd\n", g);
+  return 0;
+}
+
+int
+check_Nprime (unsigned long begin, unsigned long end)
+{
+  mpz_t op;
+  mpz_init_set_ui (op, end);
+
+  for (;begin < 2; ++begin)
+    {
+      *(op->_mp_d) = begin;
+      TRACE(printf ("%li ", begin),1);
+      mpz_nextprime (g, op);
+      if (mpz_cmp_ui (g, 2) != 0)
+	STOP (something_wrong (g, 2));
+    }
+  if (begin < 3)
+    {
+      *(op->_mp_d) = begin;
+      TRACE(printf ("%li ", begin),1);
+      mpz_nextprime (g, op);
+      if (mpz_cmp_ui (g, 3) != 0)
+	STOP (something_wrong (g, 3));
+      begin = 3;
+    }
+  if (end > 4)
+      {
+	mp_limb_t *sieve;
+	mp_size_t size;
+	unsigned long start;
+	unsigned long opl;
+
+	size = primesieve_size (end);
+
+	sieve = __GMP_ALLOCATE_FUNC_LIMBS (size);
+	gmp_primesieve (sieve, end);
+	start = MAX (begin, 5) | 1;
+	opl = begin;
+	LOOP_ON_SIEVE_BEGIN (prime, n_to_bit(start) + (start % 3 == 0),
+			     n_to_bit (end), 0, sieve);
+
+	do {
+	  *(op->_mp_d) = opl;
+	  mpz_nextprime (g, op);
+	  if (mpz_cmp_ui (g, prime) != 0)
+	    STOP (something_wrong (g, prime));
+	  ++opl;
+	} while (opl < prime);
 
 	if (prime - start > 200)
 	  {
@@ -312,6 +386,9 @@ main (int argc, char **argv)
     case 'n':
       mode = 1;
       break;
+    case 'N':
+      mode = 3;
+      break;
     default:
       begin = end;
       end = atol (argv[1]);
@@ -328,6 +405,9 @@ main (int argc, char **argv)
   switch (mode) {
   case 1:
     ret = check_nprime (begin, end);
+    break;
+  case 3:
+    ret = check_Nprime (begin, end);
     break;
   default:
     ret = check_pprime (begin, end, mode);
