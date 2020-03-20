@@ -1,8 +1,9 @@
 /* mpz_nextprime(p,t) - compute the next prime > t and store that in p.
 
-Copyright 1999-2001, 2008, 2009, 2012 Free Software Foundation, Inc.
+Copyright 1999-2001, 2008, 2009, 2012, 2020 Free Software Foundation, Inc.
 
 Contributed to the GNU project by Niels Möller and Torbjorn Granlund.
+Improved by Seth Troisi.
 
 This file is part of the GNU MP Library.
 
@@ -85,23 +86,24 @@ static const unsigned char primegap_small[] =
 
 #define NUMBER_OF_PRIMES 100
 
-long calculate_sievelimit(mp_bitcnt_t nbits) {
-  long sieve_limit;
+static unsigned long
+calculate_sievelimit(mp_bitcnt_t nbits) {
+  unsigned long sieve_limit;
 
-  // Estimate a good sieve bound. Based on derivative of
-  //   Merten's 3rd theorem * avg gap * cost of mod
-  //      vs
-  //   Cost of PRP test O(N^2.55)
+  /* Estimate a good sieve bound. Based on derivative of
+   *   Merten's 3rd theorem * avg gap * cost of mod
+   *      vs
+   *   Cost of PRP test O(N^2.55)
+   */
   if (nbits < 12800)
     {
       mpz_t tmp;
-      // sieve_limit ~= nbits ^ (5/2) / 124
+      /* sieve_limit ~= nbits ^ (5/2) / 124 */
       mpz_init (tmp);
       mpz_ui_pow_ui (tmp, nbits, 5);
       mpz_sqrt (tmp, tmp);
       mpz_tdiv_q_ui(tmp, tmp, 124);
 
-      // TODO: Storing gap/2 would allow this to go far beyond 436M.
       sieve_limit = mpz_get_ui(tmp);
       mpz_clear (tmp);
     }
@@ -109,12 +111,12 @@ long calculate_sievelimit(mp_bitcnt_t nbits) {
     {
       /* Larger threshold is faster but takes ~O(n/ln(n)) memory.
        * For 33,000 bits limitting to 150M is ~12% slower than using the
-       * optimal 1.5B sieve_limit.
+       * optimal 1.5G sieve_limit.
        */
-      sieve_limit = 150000000;
+      sieve_limit = 150000001;
     }
 
-  ASSERT( 1000 < sieve_limit && sieve_limit <= 150000000 );
+  ASSERT( 1000 < sieve_limit && sieve_limit <= 150000001 );
   return sieve_limit;
 }
 
@@ -123,14 +125,11 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
 {
   char *composite;
   const unsigned char *primegap;
-  unsigned prime_limit;
-  unsigned prime;
+  unsigned long prime_limit;
   mp_size_t pn;
   mp_bitcnt_t nbits;
   int i, m;
-  unsigned incr;
   unsigned odds_in_composite_sieve;
-  unsigned long difference;
   TMP_DECL;
 
   /* First handle tiny numbers */
@@ -155,15 +154,20 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
     }
   else
     {
-      long sieve_limit;
+      unsigned long sieve_limit;
       mp_limb_t *sieve;
       unsigned char *primegap_tmp;
-      int last_prime;
+      unsigned long last_prime;
 
       /* sieve numbers up to sieve_limit and save prime count */
       sieve_limit = calculate_sievelimit(nbits);
       sieve = TMP_ALLOC_LIMBS (primesieve_size (sieve_limit));
       prime_limit = gmp_primesieve(sieve, sieve_limit);
+
+      /* TODO: Storing (prime - last_prime)/2 would allow this to go
+	 up to the gap 304599508537+514=304599509051 .
+	 With the current code our limit is 436273009+282=436273291 */
+      ASSERT (sieve_limit < 436273291);
 
       /* Needed to avoid assignment of read-only location */
       primegap_tmp = TMP_ALLOC_TYPE (prime_limit, unsigned char);
@@ -191,9 +195,11 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
   /* composite[2*i] stores if p+2*i is a known composite */
   composite = TMP_SALLOC_TYPE (odds_in_composite_sieve, char);
 
-  difference = 0;
   for (;;)
     {
+      unsigned long difference;
+      unsigned long incr, prime;
+
       memset (composite, 0, odds_in_composite_sieve);
       prime = 3;
       for (i = 0; i < prime_limit; i++)
@@ -210,6 +216,7 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
           prime += primegap[i];
         }
 
+      difference = 0;
       for (incr = 0; incr < odds_in_composite_sieve; difference += 2, incr += 1)
         {
           if (composite[incr])
@@ -220,15 +227,15 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
 
           /* Miller-Rabin test */
           if (mpz_millerrabin (p, 25))
-            goto done;
+	    {
+	      TMP_FREE;
+	      return;
+	    }
         }
 
       /* Sieve next segment, very rare */
       mpz_add_ui (p, p, difference);
-      difference = 0;
     }
- done:
-  TMP_FREE;
 }
 
 #undef LOOP_ON_SIEVE_END
