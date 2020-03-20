@@ -408,6 +408,7 @@ double speed_mpz_fib2_ui (struct speed_params *);
 double speed_mpz_init_clear (struct speed_params *);
 double speed_mpz_init_realloc_clear (struct speed_params *);
 double speed_mpz_nextprime (struct speed_params *);
+double speed_mpz_nextprime_1 (struct speed_params *);
 double speed_mpz_jacobi (struct speed_params *);
 double speed_mpz_lucnum_ui (struct speed_params *);
 double speed_mpz_lucnum2_ui (struct speed_params *);
@@ -2573,6 +2574,52 @@ int speed_routine_count_zeros_setup (struct speed_params *, mp_ptr, int, int);
 #define SPEED_ROUTINE_MPZ_FAC_UI(function)    SPEED_ROUTINE_MPZ_UI(function)
 #define SPEED_ROUTINE_MPZ_FIB_UI(function)    SPEED_ROUTINE_MPZ_UI(function)
 #define SPEED_ROUTINE_MPZ_LUCNUM_UI(function) SPEED_ROUTINE_MPZ_UI(function)
+
+
+#define SPEED_ROUTINE_MPZ_UNARY_1(function)				\
+  {									\
+    mpz_t     z, a;							\
+    unsigned  i;							\
+    mp_limb_t ls;							\
+    double    t;							\
+									\
+    SPEED_RESTRICT_COND (s->size >= 0);					\
+									\
+    mpz_init (z);							\
+    ls = s->size;							\
+    mpz_roinit_n (a, &ls, s->size != 0);				\
+									\
+    if (s->r < 2)							\
+      {									\
+	speed_starttime ();						\
+	i = s->reps;							\
+	do								\
+	  function (z, a);						\
+	while (--i != 0);						\
+	t = speed_endtime ();						\
+      }									\
+    else								\
+      {									\
+	speed_starttime ();						\
+	i = s->reps;							\
+	do								\
+	  {								\
+	    int j = s->r;						\
+	    mpz_set (z, a);						\
+	    do								\
+	      {								\
+		function (z, z);					\
+	      }								\
+	    while (--j != 0);						\
+	  }								\
+	while (--i != 0);						\
+	t = speed_endtime ();						\
+	s->time_divisor = s->r;						\
+      }									\
+									\
+    mpz_clear (z);							\
+    return t;								\
+  }
 
 
 #define SPEED_ROUTINE_MPZ_2_UI(function)				\

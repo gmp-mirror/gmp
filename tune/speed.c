@@ -317,6 +317,7 @@ const struct routine_t {
 #endif
 
   { "mpz_nextprime",     speed_mpz_nextprime        },
+  { "mpz_nextprime_1",   speed_mpz_nextprime_1, FLAG_R_OPTIONAL },
 
   { "mpz_jacobi",        speed_mpz_jacobi           },
   { "mpn_jacobi_base",   speed_mpn_jacobi_base      },
