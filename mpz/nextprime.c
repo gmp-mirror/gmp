@@ -85,6 +85,9 @@ static const unsigned char primegap_small[] =
 };
 
 #define NUMBER_OF_PRIMES 100
+#define LAST_PRIME 557
+/* NP_SMALL_LIMIT = prevprime (LAST_PRIME ^ 2) */
+#define NP_SMALL_LIMIT 310243
 
 static unsigned long
 calculate_sievelimit(mp_bitcnt_t nbits) {
@@ -120,6 +123,32 @@ calculate_sievelimit(mp_bitcnt_t nbits) {
   return sieve_limit;
 }
 
+static unsigned
+mpz_nextprime_small (unsigned t)
+{
+  ASSERT (t > 0); /* Expect t=1 if the operand was smaller.*/
+  /* Technically this should be prev_prime(LAST_PRIME ^ 2) */
+  ASSERT (t < NP_SMALL_LIMIT);
+
+  /* Start from next candidate (2 or odd) */
+  t = (t + 1) | (t > 1);
+  for (; ; t += 2)
+    {
+      unsigned prime = 3;
+      for (int i = 0; ; prime += primegap_small[i++])
+	{
+	  unsigned q, r;
+	  q = t / prime;
+	  r = t - q * prime; /* r = t % prime; */
+	  if (q < prime)
+	    return t;
+	  if (r == 0)
+	    break;
+	  ASSERT (i < NUMBER_OF_PRIMES);
+	}
+    }
+}
+
 void
 mpz_nextprime (mpz_ptr p, mpz_srcptr n)
 {
@@ -132,17 +161,15 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
   unsigned odds_in_composite_sieve;
   TMP_DECL;
 
-  /* First handle tiny numbers */
-  if (mpz_cmp_ui (n, 2) < 0)
+  /* First handle small numbers */
+  if (mpz_cmp_ui (n, NP_SMALL_LIMIT) < 0)
     {
-      mpz_set_ui (p, 2);
+      ASSERT (NP_SMALL_LIMIT < UINT_MAX);
+      mpz_set_ui (p, mpz_nextprime_small (SIZ (n) > 0 ? mpz_get_ui (n) : 1));
       return;
     }
   mpz_add_ui (p, n, 1);
   mpz_setbit (p, 0);
-
-  if (mpz_cmp_ui (p, 7) <= 0)
-    return;
 
   TMP_MARK;
   pn = SIZ(p);
