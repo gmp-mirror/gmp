@@ -151,7 +151,10 @@ test_ref(gmp_randstate_ptr rands, int reps) {
       mpz_nextprime (next_p, x);
       refmpz_nextprime (ref_next_p, x);
       if (mpz_cmp (next_p, ref_next_p) != 0)
-	abort ();
+        {
+          gmp_printf ("Ref mismatch %Zd => %Zd vs %Zd\n", x, ref_next_p, next_p);
+	  abort ();
+        }
     }
 
   mpz_clear (bs);
