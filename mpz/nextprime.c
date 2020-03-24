@@ -127,7 +127,6 @@ static unsigned
 mpz_nextprime_small (unsigned t)
 {
   ASSERT (t > 0); /* Expect t=1 if the operand was smaller.*/
-  /* Technically this should be prev_prime(LAST_PRIME ^ 2) */
   ASSERT (t < NP_SMALL_LIMIT);
 
   /* Start from next candidate (2 or odd) */
