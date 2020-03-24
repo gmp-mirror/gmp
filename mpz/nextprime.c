@@ -109,7 +109,7 @@ calculate_sievelimit(mp_bitcnt_t nbits) {
     }
   else
     {
-      /* Larger threshold is faster but takes ~O(n/ln(n)) memory.
+      /* Larger threshold is faster but takes (n/ln(n) + n/24) memory.
        * For 33,000 bits limitting to 150M is ~12% slower than using the
        * optimal 1.5G sieve_limit.
        */
@@ -168,6 +168,10 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
 	 up to the gap 304599508537+514=304599509051 .
 	 With the current code our limit is 436273009+282=436273291 */
       ASSERT (sieve_limit < 436273291);
+      /* THINK: Memory used by both sieve and primegap_tmp is kept
+	 allocated, but they may overlap if primegap is filled from
+	 larger down to smaller primes...
+       */
 
       /* Needed to avoid assignment of read-only location */
       primegap_tmp = TMP_ALLOC_TYPE (prime_limit, unsigned char);
