@@ -27,10 +27,11 @@ the GNU MP Library test suite.  If not, see https://www.gnu.org/licenses/.  */
      With the parameter "p" (or nothing), tests all numbers. With "c"
      only composites are tested.
 
-   ./primes n [n0] <nMax>
+   ./primes n|N [n0] <nMax>
 
      Checks mpz_nextprime() exhaustively, starting from n=n0 up to
-     nMax.
+     nMax. With "n", only the sequence of primes is checked, with "N"
+     the function is tested on every number in the interval.
 
      WARNING: The full intervall [0..nMax] is sieved at once, even if
      only a piece is needed. This may require a lot of memory!
@@ -234,6 +235,7 @@ check_nprime (unsigned long begin, unsigned long end)
   if (begin < 2)
     {
       *(g->_mp_d) = begin;
+      g->_mp_size = begin;
       TRACE(printf ("%li ", begin),1);
       mpz_nextprime (g, g);
       if (mpz_cmp_ui (g, 2) != 0)
@@ -304,6 +306,7 @@ check_Nprime (unsigned long begin, unsigned long end)
   for (;begin < 2; ++begin)
     {
       *(op->_mp_d) = begin;
+      op->_mp_size = begin;
       TRACE(printf ("%li ", begin),1);
       mpz_nextprime (g, op);
       if (mpz_cmp_ui (g, 2) != 0)
@@ -396,7 +399,7 @@ main (int argc, char **argv)
 
   if (begin >= end)
     {
-      fprintf (stderr, "usage: primes [n|p|c] [n0] <nMax>\n");
+      fprintf (stderr, "usage: primes [N|n|p|c] [n0] <nMax>\n");
       exit (1);
     }
 
