@@ -1,6 +1,11 @@
 2020-04-20  Niels Möller  <nisse@lysator.liu.se>
 
 	* mini-gmp.c (mpz_fits_slong_p): Simplify, by using mpz_cmp_si.
+	(mpz_fits_sint_p, mpz_fits_uint_p, mpz_fits_sshort_p)
+	(mpz_fits_ushort_p): New functions.
+	* mini-gmp.h: Declare new functions.
+	* tests/t-signed.c (try_fits_utype_p, try_fits_sint_p)
+	(try_fits_sshort_p): New tests.
 
 2020-02-02 Marco Bodrato <bodrato@mail.dm.unipi.it>
 

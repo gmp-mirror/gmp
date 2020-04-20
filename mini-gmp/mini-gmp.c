@@ -1564,6 +1564,30 @@ mpz_fits_ulong_p (const mpz_t u)
   return us >= 0 && mpn_absfits_ulong_p (u->_mp_d, us);
 }
 
+int
+mpz_fits_sint_p (const mpz_t u)
+{
+  return mpz_cmp_si (u, INT_MAX) <= 0 && mpz_cmp_si (u, INT_MIN) >= 0;
+}
+
+int
+mpz_fits_uint_p (const mpz_t u)
+{
+  return u->_mp_size >= 0 && mpz_cmpabs_ui (u, UINT_MAX) <= 0;
+}
+
+int
+mpz_fits_sshort_p (const mpz_t u)
+{
+  return mpz_cmp_si (u, SHRT_MAX) <= 0 && mpz_cmp_si (u, SHRT_MIN) >= 0;
+}
+
+int
+mpz_fits_ushort_p (const mpz_t u)
+{
+  return u->_mp_size >= 0 && mpz_cmpabs_ui (u, USHRT_MAX) <= 0;
+}
+
 long int
 mpz_get_si (const mpz_t u)
 {
