@@ -1,3 +1,7 @@
+2020-04-20  Niels Möller  <nisse@lysator.liu.se>
+
+	* mini-gmp.c (mpz_fits_slong_p): Simplify, by using mpz_cmp_si.
+
 2020-02-02 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mini-gmp/mini-gmp.c (gmp_jacobi_coprime): Exit condition on a.
