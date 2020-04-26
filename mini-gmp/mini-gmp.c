@@ -95,12 +95,12 @@ see https://www.gnu.org/licenses/.  */
 #define gmp_clz(count, x) do {						\
     mp_limb_t __clz_x = (x);						\
     unsigned __clz_c = 0;						\
-    int LOCAL_SHIFT_BITS = 8;						\
-    if (GMP_LIMB_BITS > LOCAL_SHIFT_BITS)				\
+    unsigned __clz_LOCAL_SHIFT_BITS = 8;				\
+    if (GMP_LIMB_BITS > __clz_LOCAL_SHIFT_BITS)				\
       for (;								\
 	   (__clz_x & ((mp_limb_t) 0xff << (GMP_LIMB_BITS - 8))) == 0;	\
 	   __clz_c += 8)						\
-	{ __clz_x <<= LOCAL_SHIFT_BITS;	}				\
+	{ __clz_x <<= __clz_LOCAL_SHIFT_BITS;	}			\
     for (; (__clz_x & GMP_LIMB_HIGHBIT) == 0; __clz_c++)		\
       __clz_x <<= 1;							\
     (count) = __clz_c;							\
@@ -131,18 +131,18 @@ see https://www.gnu.org/licenses/.  */
 
 #define gmp_umul_ppmm(w1, w0, u, v)					\
   do {									\
-    int LOCAL_GMP_LIMB_BITS = GMP_LIMB_BITS;				\
+    unsigned __LOCAL_GMP_LIMB_BITS = GMP_LIMB_BITS;			\
     if (sizeof(unsigned int) * CHAR_BIT >= 2 * GMP_LIMB_BITS)		\
       {									\
 	unsigned int __ww = (unsigned int) (u) * (v);			\
 	w0 = (mp_limb_t) __ww;						\
-	w1 = (mp_limb_t) (__ww >> LOCAL_GMP_LIMB_BITS);			\
+	w1 = (mp_limb_t) (__ww >> __LOCAL_GMP_LIMB_BITS);		\
       }									\
     else if (GMP_ULONG_BITS >= 2 * GMP_LIMB_BITS)			\
       {									\
 	unsigned long int __ww = (unsigned long int) (u) * (v);		\
 	w0 = (mp_limb_t) __ww;						\
-	w1 = (mp_limb_t) (__ww >> LOCAL_GMP_LIMB_BITS);			\
+	w1 = (mp_limb_t) (__ww >> __LOCAL_GMP_LIMB_BITS);		\
       }									\
     else {								\
       mp_limb_t __x0, __x1, __x2, __x3;					\
@@ -1488,7 +1488,7 @@ mpz_set_ui (mpz_t r, unsigned long int x)
       MPZ_REALLOC (r, 1)[0] = x;
       if (GMP_LIMB_BITS < GMP_ULONG_BITS)
 	{
-	  int LOCAL_GMP_LIMB_BITS = GMP_LIMB_BITS;
+	  unsigned LOCAL_GMP_LIMB_BITS = GMP_LIMB_BITS;
 	  while (x >>= LOCAL_GMP_LIMB_BITS)
 	    {
 	      ++ r->_mp_size;
@@ -1606,7 +1606,7 @@ mpz_get_ui (const mpz_t u)
 {
   if (GMP_LIMB_BITS < GMP_ULONG_BITS)
     {
-      int LOCAL_GMP_LIMB_BITS = GMP_LIMB_BITS;
+      unsigned LOCAL_GMP_LIMB_BITS = GMP_LIMB_BITS;
       unsigned long r = 0;
       mp_size_t n = GMP_ABS (u->_mp_size);
       n = GMP_MIN (n, 1 + (mp_size_t) (GMP_ULONG_BITS - 1) / GMP_LIMB_BITS);
@@ -4003,7 +4003,7 @@ gmp_popcount_limb (mp_limb_t x)
   unsigned c;
 
   /* Do 16 bits at a time, to avoid limb-sized constants. */
-  int LOCAL_SHIFT_BITS = 16;
+  unsigned LOCAL_SHIFT_BITS = 16;
   for (c = 0; x > 0;)
     {
       unsigned w = x - ((x >> 1) & 0x5555);
@@ -4525,7 +4525,7 @@ mpz_export (void *r, size_t *countp, int order, size_t size, int endian,
       if (!k)
 	{
 	  do {
-	    int LOCAL_CHAR_BIT = CHAR_BIT;
+	    unsigned LOCAL_CHAR_BIT = CHAR_BIT;
 	    k++; limb >>= LOCAL_CHAR_BIT;
 	  } while (limb != 0);
 	}
@@ -4569,7 +4569,7 @@ mpz_export (void *r, size_t *countp, int order, size_t size, int endian,
 		}
 	      else
 		{
-		  int LOCAL_CHAR_BIT = CHAR_BIT;
+		  unsigned LOCAL_CHAR_BIT = CHAR_BIT;
 		  if (bytes == 0)
 		    {
 		      if (i < un)
