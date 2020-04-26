@@ -1,12 +1,3 @@
-2020-04-26  Niels Möller  <nisse@lysator.liu.se>
-
-	* mini-gmp.c (gmp_clz): Make LOCAL_SHIFT_BITS unsigned, to avoid
-	signed/unsigned comparison. Also add a prefix to the name, since
-	this is a macro. Similar change to other LOCAL_* variables for
-	consistency. That these variables are used at all is a workaround
-	to avoid unhelpful compiler warnings, see
-	https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94773.
-
 2020-04-20  Niels Möller  <nisse@lysator.liu.se>
 
 	* mini-gmp.c (mpz_fits_slong_p): Simplify, by using mpz_cmp_si.
