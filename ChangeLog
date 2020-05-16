@@ -1,3 +1,24 @@
+2020-05-12  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/generic/hgcd2-div.h (tabp): Combine several undefined tabp
+	variable definitions with a macro.
+
+	* mpn/generic/strongfibo.c: Avoid defining helper function when unused.
+
+	* mpn/generic/dcpi1_bdiv_q.c (mpn_dcpi1_bdiv_q_n_itch): Disable unused
+	static function.
+
+	* mpz/mul.c: Add some {} to suppress warning.
+
+	* tests/mpn/t-gcd_11.c: Exit main() properly.
+	* tests/mpn/t-gcd_22.c: Likewise.
+	* tests/mpn/t-gcdext_1.c: Likewise.
+
+2020-04-28  Torbjörn Granlund  <tg@gmplib.org>
+
+	* tests/mpz/reuse.c (realloc_if_reducing): New function.
+	(INVOKE_RRS, etc): Use realloc_if_reducing.
+
 2020-03-10 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpn/generic/mulmod_bnm1.c (mpn_bc_mulmod_bnp1):
