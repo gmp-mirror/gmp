@@ -498,9 +498,9 @@ mpq_get_str (char *sp, int base, const mpq_t q)
 
     mp_get_memory_functions (NULL, &gmp_reallocate_func, &gmp_free_func);
     lden = strlen (rden) + 1;
-    res = (char *) gmp_reallocate_func (res, 0, (lden + len) * sizeof (char));
+    res = (char *) gmp_reallocate_func (res, len, (lden + len) * sizeof (char));
     memcpy (res + len, rden, lden);
-    gmp_free_func (rden, 0);
+    gmp_free_func (rden, lden);
   }
 
   res [len - 1] = '/';
@@ -511,15 +511,15 @@ size_t
 mpq_out_str (FILE *stream, int base, const mpq_t x)
 {
   char * str;
-  size_t len;
+  size_t len, n;
   void (*gmp_free_func) (void *, size_t);
 
   str = mpq_get_str (NULL, base, x);
   len = strlen (str);
-  len = fwrite (str, 1, len, stream);
+  n = fwrite (str, 1, len, stream);
   mp_get_memory_functions (NULL, NULL, &gmp_free_func);
-  gmp_free_func (str, 0);
-  return len;
+  gmp_free_func (str, len + 1);
+  return n;
 }
 
 int
@@ -540,11 +540,11 @@ mpq_set_str (mpq_t r, const char *sp, int base)
 
     mp_get_memory_functions (&gmp_allocate_func, NULL, &gmp_free_func);
     numlen = slash - sp;
-    num = (char *) gmp_allocate_func ((numlen + 1) * sizeof (char));
+    num = (char *) gmp_allocate_func (numlen + 1);
     memcpy (num, sp, numlen);
     num[numlen] = '\0';
     ret = mpz_set_str (mpq_numref(r), num, base);
-    gmp_free_func (num, 0);
+    gmp_free_func (num, numlen + 1);
 
     if (ret != 0)
       return ret;

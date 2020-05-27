@@ -1,6 +1,6 @@
 /*
 
-Copyright 2012-2014, 2016, 2018 Free Software Foundation, Inc.
+Copyright 2012-2014, 2016, 2018, 2020 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library test suite.
 
@@ -144,7 +144,7 @@ testmain (int argc, char **argv)
   char *ap;
   char *bp;
   char *rp;
-  size_t rn, arn;
+  size_t rn;
 
   mpq_t a, b;
 
@@ -173,7 +173,6 @@ testmain (int argc, char **argv)
 	    }
 
 	  rn = strlen (rp);
-	  arn = rn - (rp[0] == '-');
 
 	  bp = mpq_get_str (NULL, (i&1 || base > 36) ? base: -base, a);
 	  if (strcmp (bp, rp))
@@ -244,7 +243,7 @@ testmain (int argc, char **argv)
 
 	  free (ap);
 	  free (rp);
-	  testfree (bp);
+	  testfree (bp, strlen(bp) + 1);
 	}
     }
   mpq_clear (a);

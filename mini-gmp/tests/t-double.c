@@ -156,7 +156,7 @@ testmain (int argc, char **argv)
 		   values[i].d, s, values[i].s);
 	  abort ();
 	}
-      testfree (s);
+      testfree (s, strlen(s) + 1);
       mpz_clear (x);
     }
 

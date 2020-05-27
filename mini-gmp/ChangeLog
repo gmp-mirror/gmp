@@ -1,3 +1,23 @@
+2020-05-27  Minux Ma  <minux.ma@gmail.com>
+
+	Pass correct old_size to custom free and reallocate functions.
+	* mini-gmp.c (gmp_alloc): Renamed macro from...
+	(gmp_xalloc): .. old name.
+	(gmp_realloc): New macro, with old_size argument.
+	(gmp_free): Take size argument, and pass on.
+	(gmp_realloc_limbs): Add old_size argument, and rename from
+	(gmp_xrealloc_limbs): ... old name..
+	(gmp_free_limbs): New function, with size argument. Lots of
+	updates, only non-trivial ones listed below.
+	(mpn_div_qr_1_preinv): Use gmp_free_limbs, simplify dealloc logic.
+	(mpz_get_str): Realloc result area when needed, to match final
+	digit count.
+	* mini-mpq.c (mpq_get_str, mpq_out_str, mpq_set_str): Pass correct
+	size to gmp_free_func.
+	* tests/testutils.c (tu_realloc, tu_free): Check that old_size
+	matches size in block header.
+	(testfree): Add size argument. Update all callers.
+
 2020-04-20  Niels Möller  <nisse@lysator.liu.se>
 
 	* mini-gmp.c (mpz_fits_slong_p): Simplify, by using mpz_cmp_si.
