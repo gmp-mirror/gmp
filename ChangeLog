@@ -1,3 +1,7 @@
+2020-05-17 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpq/cmp.c: Avoid overflow on int even for huge sizes.
+
 2020-05-12  Torbjörn Granlund  <tg@gmplib.org>
 
 	* mpn/generic/hgcd2-div.h (tabp): Combine several undefined tabp

@@ -1,3 +1,9 @@
+2020-09-10 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* tests/t-mpq_double.c (mpq_get_d_exact_p): Cleanup.
+
+	* mini-gmp.c (mpz_get_str): Explicit cast from void* to char*.
+
 2020-05-27  Minux Ma  <minux.ma@gmail.com>
 
 	Pass correct old_size to custom free and reallocate functions.
