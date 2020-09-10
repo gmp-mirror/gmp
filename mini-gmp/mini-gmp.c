@@ -4301,7 +4301,7 @@ mpz_get_str (char *sp, int base, const mpz_t u)
 ret:
   sp[sn] = '\0';
   if (osn && osn != sn + 1)
-    sp = gmp_realloc(sp, osn, sn + 1);
+    sp = (char*) gmp_realloc (sp, osn, sn + 1);
   return sp;
 }
 
