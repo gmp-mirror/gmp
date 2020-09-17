@@ -4,6 +4,8 @@
 
 	* mini-gmp.c (mpz_get_str): Explicit cast from void* to char*.
 
+	* mini-gmp.h: Update FILE tests from gmp-h (tx Vincent Lefèvre).
+
 2020-05-27  Minux Ma  <minux.ma@gmail.com>
 
 	Pass correct old_size to custom free and reallocate functions.
