@@ -1331,29 +1331,26 @@ mpn_set_str_bits (mp_ptr rp, const unsigned char *sp, size_t sn,
 		  unsigned bits)
 {
   mp_size_t rn;
-  size_t j;
+  mp_limb_t limb;
   unsigned shift;
 
-  for (j = sn, rn = 0, shift = 0; j-- > 0; )
+  for (limb = 0, rn = 0, shift = 0; sn-- > 0; )
     {
-      if (shift == 0)
+      limb |= (mp_limb_t) sp[sn] << shift;
+      shift += bits;
+      if (shift >= GMP_LIMB_BITS)
 	{
-	  rp[rn++] = sp[j];
-	  shift += bits;
-	}
-      else
-	{
-	  rp[rn-1] |= (mp_limb_t) sp[j] << shift;
-	  shift += bits;
-	  if (shift >= GMP_LIMB_BITS)
-	    {
-	      shift -= GMP_LIMB_BITS;
-	      if (shift > 0)
-		rp[rn++] = (mp_limb_t) sp[j] >> (bits - shift);
-	    }
+	  shift -= GMP_LIMB_BITS;
+	  rp[rn++] = limb;
+	  /* Next line is correct also if shift == 0,
+	     bits == 8, and mp_limb_t == unsigned char. */
+	  limb = (unsigned int) sp[sn] >> (bits - shift);
 	}
     }
-  rn = mpn_normalized_size (rp, rn);
+  if (limb != 0)
+    rp[rn++] = limb;
+  else
+    rn = mpn_normalized_size (rp, rn);
   return rn;
 }
 
