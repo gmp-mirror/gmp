@@ -2723,7 +2723,7 @@ mpz_make_odd (mpz_t r)
 
   assert (r->_mp_size > 0);
   /* Count trailing zeros, equivalent to mpn_scan1, because we know that there is a 1 */
-  shift = mpn_common_scan (r->_mp_d[0], 0, r->_mp_d, 0, 0);
+  shift = mpn_scan1 (r->_mp_d, 0);
   mpz_tdiv_q_2exp (r, r, shift);
 
   return shift;
@@ -3604,7 +3604,8 @@ mpz_probab_prime_p (const mpz_t n, int reps)
   /* Find q and k, where q is odd and n = 1 + 2**k * q.  */
   mpz_abs (nm1, n);
   nm1->_mp_d[0] -= 1;
-  k = mpz_scan1 (nm1, 0);
+  /* Count trailing zeros, equivalent to mpn_scan1, because we know that there is a 1 */
+  k = mpn_scan1 (nm1->_mp_d, 0);
   mpz_tdiv_q_2exp (q, nm1, k);
 
   /* BPSW test */
