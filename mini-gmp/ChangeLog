@@ -1,3 +1,9 @@
+2020-10-18 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mini-gmp.c: Use mpn_scan1 instead of mpz_scan1.
+	(mpn_set_str_bits): Reduce bramches and writes.
+	(mpz_gcdext): Delay mpz_setbit (t0, ...).
+
 2020-10-06  Niels Möller  <nisse@lysator.liu.se>
 
 	* tests/run-tests: Better support for make check on wine or cygwin.
