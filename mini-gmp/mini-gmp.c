@@ -2868,7 +2868,6 @@ mpz_gcdext (mpz_t g, mpz_t s, mpz_t t, const mpz_t u, const mpz_t v)
    * s0 = 0,    s1 = 2^vz
    */
 
-  mpz_setbit (t0, uz);
   mpz_tdiv_qr (t1, tu, tu, tv);
   mpz_mul_2exp (t1, t1, uz);
 
@@ -2879,8 +2878,7 @@ mpz_gcdext (mpz_t g, mpz_t s, mpz_t t, const mpz_t u, const mpz_t v)
     {
       mp_bitcnt_t shift;
       shift = mpz_make_odd (tu);
-      mpz_mul_2exp (t0, t0, shift);
-      mpz_mul_2exp (s0, s0, shift);
+      mpz_setbit (t0, uz + shift);
       power += shift;
 
       for (;;)
@@ -2918,6 +2916,8 @@ mpz_gcdext (mpz_t g, mpz_t s, mpz_t t, const mpz_t u, const mpz_t v)
 	  power += shift;
 	}
     }
+  else
+    mpz_setbit (t0, uz);
 
   /* Now tv = odd part of gcd, and -s0 and t0 are corresponding
      cofactors. */
