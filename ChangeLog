@@ -8,6 +8,10 @@
 	* bootstrap.c (mpz_invert_2exp): Simplify.
 	* mpz/stronglucas.c (mpz_oddjacobi_ui): New helper function.
 
+	* tests/devel/Makefile.am: Remove redundancies.
+
+	* tests/mpz/io.c: Test out-of-range bases for mpz_out_str.
+
 2020-10-14 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* doc/gmp.texi (Number sequences): Remove redundancy. (spotted: TonyMcC)
