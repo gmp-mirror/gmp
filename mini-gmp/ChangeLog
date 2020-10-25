@@ -1,8 +1,11 @@
 2020-10-18 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mini-gmp.c: Use mpn_scan1 instead of mpz_scan1.
-	(mpn_set_str_bits): Reduce bramches and writes.
+	(mpn_set_str_bits): Reduce branches and writes.
 	(mpz_gcdext): Delay mpz_setbit (t0, ...).
+
+	* mini-mpq.c (mpq_out_str): Return 0 when base is out of range.
+	* mini-gmp.c (mpz_out_str): Likewise. (spotted by Paul Eggert)
 
 2020-10-06  Niels Möller  <nisse@lysator.liu.se>
 
