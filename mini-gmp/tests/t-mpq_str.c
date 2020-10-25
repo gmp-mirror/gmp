@@ -160,6 +160,18 @@ testmain (int argc, char **argv)
     fprintf (stderr,
 	     "Failed to create temporary file. Skipping mpq_out_str tests.\n");
 
+  if (mpq_out_str (tmp, 63, a) != 0)
+    {
+      printf ("mpq_out_str did not return 0 (error) with base > 62\n");
+      abort ();
+    }
+
+  if (mpq_out_str (tmp, -37, a) != 0)
+    {
+      printf ("mpq_out_str did not return 0 (error) with base < -37\n");
+      abort ();
+    }
+
   for (i = 0; i < COUNT/60; i++)
     {
       int base;
