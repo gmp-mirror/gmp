@@ -12,6 +12,11 @@
 
 	* tests/mpz/io.c: Test out-of-range bases for mpz_out_str.
 
+2020-10-15  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac: Recognise zen3.
+	* config.guess: Recognise zen3.
+
 2020-10-14 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* doc/gmp.texi (Number sequences): Remove redundancy. (spotted: TonyMcC)
@@ -19,6 +24,29 @@
 2020-10-06  Niels Möller  <nisse@lysator.liu.se>
 
 	* Makefile.am: Better support for make check-mini-gmp on wine or cygwin.
+
+2020-09-22  Torbjörn Granlund  <tg@gmplib.org>
+
+	* tests/mpz/t-mul.c: Print GMP_CHECK_FFT.
+
+	* longlong.h (x86 umul_ppmm): Fix typo.
+
+2020-07-04  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/arm64/bdiv_q_1.asm: Use LEA_HI/LEA_LO
+	* mpn/arm64/invert_limb.asm: Likewise.
+
+	* mpn/arm64/arm64-defs.m4: New file.
+	* mpn/arm64/darwin.m4: New file.
+	* configure.ac: Use arm64/arm64-defs.m4 and arm64/darwin.m4.
+
+2020-06-11  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/powerpc32/powerpc-defs.m4 (aese,aeselst): New macros.
+
+2020-06-10  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac: Recognise armcortexa55.
 
 2020-05-17 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
