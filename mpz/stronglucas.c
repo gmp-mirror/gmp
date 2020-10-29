@@ -5,7 +5,7 @@
    CERTAIN TO BE SUBJECT TO INCOMPATIBLE CHANGES OR DISAPPEAR COMPLETELY IN
    FUTURE GNU MP RELEASES.
 
-Copyright 2018 Free Software Foundation, Inc.
+Copyright 2018, 2020 Free Software Foundation, Inc.
 
 Contributed by Marco Bodrato.
 
@@ -52,7 +52,7 @@ limb_apprsqrt (mp_limb_t x)
   ASSERT (x > 2);
   count_leading_zeros (s, x);
   s = (GMP_LIMB_BITS - s) >> 1;
-  return ((CNST_LIMB(1) << s) + (x >> s)) >> 1;
+  return ((CNST_LIMB(1) << (s - 1)) + (x >> 1 >> s));
 }
 
 static int

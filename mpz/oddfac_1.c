@@ -7,7 +7,7 @@ IT IS ONLY SAFE TO REACH IT THROUGH DOCUMENTED INTERFACES.
 IN FACT, IT IS ALMOST GUARANTEED THAT IT WILL CHANGE OR
 DISAPPEAR IN A FUTURE GNU MP RELEASE.
 
-Copyright 2010-2012, 2015-2017 Free Software Foundation, Inc.
+Copyright 2010-2012, 2015-2017, 2020 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -132,7 +132,7 @@ limb_apprsqrt (mp_limb_t x)
   ASSERT (x > 2);
   count_leading_zeros (s, x);
   s = (GMP_LIMB_BITS - s) >> 1;
-  return ((CNST_LIMB(1) << s) + (x >> s)) >> 1;
+  return ((CNST_LIMB(1) << (s - 1)) + (x >> 1 >> s));
 }
 
 #if 0
