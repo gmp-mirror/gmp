@@ -1,3 +1,11 @@
+2020-10-29 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/aors_ui.h: REALLOC with extra limb only when needed.
+
+	* mpz/bin_uiui.c (limb_apprsqrt): Slightly faster formula.
+	* mpz/oddfac_1.c (limb_apprsqrt): Likewise.
+	* mpz/stronglucas.c (limb_apprsqrt): Likewise.
+
 2020-10-25 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* configfsf.guess: Updated to version 2020-10-22, from gnulib.
