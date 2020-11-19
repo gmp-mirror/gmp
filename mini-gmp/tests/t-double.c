@@ -118,6 +118,10 @@ test_matissa (void)
   mpz_clear (y);
 }
 
+#ifndef M_PI
+#define M_PI 3.141592653589793238462643383279502884
+#endif
+
 static const struct
 {
   double d;
