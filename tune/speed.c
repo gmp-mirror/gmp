@@ -1382,7 +1382,7 @@ main (int argc, char *argv[])
           perror ("getrusage");
         else
           printf ("getrusage(): utime %ld.%06ld data %ld stack %ld maxresident %ld\n",
-                  r.ru_utime.tv_sec, r.ru_utime.tv_usec,
+                  (long) r.ru_utime.tv_sec, (long) r.ru_utime.tv_usec,
                   r.ru_idrss, r.ru_isrss, r.ru_ixrss);
       }
 #else
