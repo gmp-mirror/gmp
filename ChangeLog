@@ -84,6 +84,28 @@
 
 	* configure.ac: Recognise armcortexa55.
 
+2020-05-25  Torbjörn Granlund  <tg@gmplib.org>
+
+	* tests/cxx/t-assign.cc: Use reference parameter for 'catch'.
+	* tests/cxx/t-constr.cc: Likewise.
+	* tests/cxx/t-ops2z.cc: Likewise.
+	* tests/cxx/t-rand.cc: Likewise.
+	* tests/cxx/t-do-exceptions-work-at-all-with-this-compiler.cc: Likewise.
+
+2020-05-21  Torbjörn Granlund  <tg@gmplib.org>
+
+	* tune/time.c (speed_endtime): Cast printf args to right type.
+
+	* tune/speed.c (main): Cast printf args to right type.
+
+	* tests/mpz/reuse.c: Avoid using non-standard function fileno().
+	* tests/spinner.c: Likewise.
+
+	* tests/mpz/convert.c (str_casecmp): New function.
+	(main): Use it instead of non-standard strcasecmp.
+
+	* mpn/generic/get_d.c: Add clarifying parens.
+
 2020-05-17 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpq/cmp.c: Avoid overflow on int even for huge sizes.
