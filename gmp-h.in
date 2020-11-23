@@ -947,6 +947,9 @@ __GMP_DECLSPEC void mpz_neg (mpz_ptr, mpz_srcptr);
 #define mpz_nextprime __gmpz_nextprime
 __GMP_DECLSPEC void mpz_nextprime (mpz_ptr, mpz_srcptr);
 
+#define mpz_prevprime __gmpz_prevprime
+__GMP_DECLSPEC int mpz_prevprime (mpz_ptr, mpz_srcptr);
+
 #define mpz_out_raw __gmpz_out_raw
 #ifdef _GMP_H_HAVE_FILE
 __GMP_DECLSPEC size_t mpz_out_raw (FILE *, mpz_srcptr);
