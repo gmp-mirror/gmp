@@ -124,14 +124,20 @@ calculate_sievelimit(mp_bitcnt_t nbits) {
 }
 
 static unsigned
-mpz_nextprime_small (unsigned t)
+findnext_small (unsigned t, short diff)
 {
-  ASSERT (t > 0); /* Expect t=1 if the operand was smaller.*/
+  /* For diff= 2, expect t = 1 if operand was negative.
+   * For diff=-2, expect t >= 3
+   */
+  ASSERT (t >= 3 || (diff > 0 && t >= 1));
   ASSERT (t < NP_SMALL_LIMIT);
 
   /* Start from next candidate (2 or odd) */
-  t = (t + 1) | (t > 1);
-  for (; ; t += 2)
+  t = diff > 0 ?
+    (t + 1) | (t != 1) :
+    ((t - 2) | 1) + (t == 3);
+
+  for (; ; t += diff)
     {
       unsigned prime = 3;
       for (int i = 0; ; prime += primegap_small[i++])
@@ -148,8 +154,10 @@ mpz_nextprime_small (unsigned t)
     }
 }
 
-void
-mpz_nextprime (mpz_ptr p, mpz_srcptr n)
+static int
+findnext (mpz_ptr p,
+          unsigned long(*negative_mod_ui)(const mpz_t, unsigned long),
+          void(*increment_ui)(mpz_t, const mpz_t, unsigned long))
 {
   char *composite;
   const unsigned char *primegap;
@@ -160,19 +168,14 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
   unsigned odds_in_composite_sieve;
   TMP_DECL;
 
-  /* First handle small numbers */
-  if (mpz_cmp_ui (n, NP_SMALL_LIMIT) < 0)
-    {
-      ASSERT (NP_SMALL_LIMIT < UINT_MAX);
-      mpz_set_ui (p, mpz_nextprime_small (SIZ (n) > 0 ? mpz_get_ui (n) : 1));
-      return;
-    }
-  mpz_add_ui (p, n, 1);
-  mpz_setbit (p, 0);
-
   TMP_MARK;
   pn = SIZ(p);
   MPN_SIZEINBASE_2EXP(nbits, PTR(p), pn, 1);
+  /* Smaller numbers handled earlier */
+  ASSERT (nbits >= 3);
+  /* p odd */
+  ASSERT ((PTR(p)[0] & 1) == 1);
+
   if (nbits / 2 <= NUMBER_OF_PRIMES)
     {
       primegap = primegap_small;
@@ -229,12 +232,14 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
     {
       unsigned long difference;
       unsigned long incr, prime;
+      int primetest;
 
       memset (composite, 0, odds_in_composite_sieve);
       prime = 3;
       for (i = 0; i < prime_limit; i++)
         {
-          m = mpz_cdiv_ui(p, prime);
+          /* Distance to next multiple of prime */
+          m = negative_mod_ui(p, prime);
           /* Only care about odd multiplies of prime. */
           if (m & 1)
             m += prime;
@@ -252,20 +257,60 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
           if (composite[incr])
             continue;
 
-          mpz_add_ui (p, p, difference);
+          increment_ui(p, p, difference);
           difference = 0;
 
           /* Miller-Rabin test */
-          if (mpz_millerrabin (p, 25))
+          primetest = mpz_millerrabin (p, 25);
+          if (primetest)
 	    {
 	      TMP_FREE;
-	      return;
+	      return primetest;
 	    }
         }
 
       /* Sieve next segment, very rare */
-      mpz_add_ui (p, p, difference);
+      increment_ui(p, p, difference);
+  }
+}
+
+void
+mpz_nextprime (mpz_ptr p, mpz_srcptr n)
+{
+  /* Handle negative and small numbers */
+  if (mpz_cmp_ui (n, NP_SMALL_LIMIT) < 0)
+    {
+      ASSERT (NP_SMALL_LIMIT < UINT_MAX);
+      mpz_set_ui (p, findnext_small (SIZ (n) > 0 ? mpz_get_ui (n) : 1, +2));
+      return;
     }
+
+  /* First odd greater than n */
+  mpz_add_ui (p, n, 1);
+  mpz_setbit (p, 0);
+
+  findnext(p, mpz_cdiv_ui, mpz_add_ui);
+}
+
+int
+mpz_prevprime (mpz_ptr p, mpz_srcptr n)
+{
+  /* Handle negative and small numbers */
+  if (mpz_cmp_ui (n, 2) <= 0)
+    return 0;
+
+  if (mpz_cmp_ui (n, NP_SMALL_LIMIT) < 0)
+    {
+      ASSERT (NP_SMALL_LIMIT < UINT_MAX);
+      mpz_set_ui (p, findnext_small (mpz_get_ui (n), -2));
+      return 2;
+    }
+
+  /* First odd less than n */
+  mpz_sub_ui (p, n, 2);
+  mpz_setbit (p, 0);
+
+  return findnext(p, mpz_fdiv_ui, mpz_sub_ui);
 }
 
 #undef LOOP_ON_SIEVE_END
