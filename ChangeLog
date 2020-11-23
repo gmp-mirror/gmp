@@ -1,3 +1,16 @@
+2020-11-23 Seth Troisi <sethtroisi@google.com>
+
+	* mpz/nextprime.c (mpz_prevprime): New function.
+	* gmp-h.in: Declare it.
+	* doc/gmp.texi: Document it.
+	* tests/mpz/t-nextprime.c: Test it.
+
+	* tests/mpz/t-pprime_p.c (check_small): Check return value.
+
+	* tune/common.c (speed_mpz_prevprime{,_1}): New functions.
+	* tune/speed.h: Declare them.
+	* tune/speed.c (routine): Add mpz_nextprime{,_1}.
+
 2020-11-10 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* configure.ac (fat_path): Add bd1, goldmont,silvermont for CPUVEC.
