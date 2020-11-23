@@ -94,7 +94,7 @@ check_small (void)
   for (i = 0; i < 300; i++)
     {
       mpz_set_si (n, i);
-      check_pn (n, isprime (i));
+      check_pn (n, 2 * isprime (i));
     }
 
   mpz_clear (n);
