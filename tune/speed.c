@@ -318,6 +318,8 @@ const struct routine_t {
 
   { "mpz_nextprime",     speed_mpz_nextprime        },
   { "mpz_nextprime_1",   speed_mpz_nextprime_1, FLAG_R_OPTIONAL },
+  { "mpz_prevprime",     speed_mpz_prevprime        },
+  { "mpz_prevprime_1",   speed_mpz_prevprime_1, FLAG_R_OPTIONAL },
 
   { "mpz_jacobi",        speed_mpz_jacobi           },
   { "mpn_jacobi_base",   speed_mpn_jacobi_base      },

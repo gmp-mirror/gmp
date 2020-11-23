@@ -409,6 +409,8 @@ double speed_mpz_init_clear (struct speed_params *);
 double speed_mpz_init_realloc_clear (struct speed_params *);
 double speed_mpz_nextprime (struct speed_params *);
 double speed_mpz_nextprime_1 (struct speed_params *);
+double speed_mpz_prevprime (struct speed_params *);
+double speed_mpz_prevprime_1 (struct speed_params *);
 double speed_mpz_jacobi (struct speed_params *);
 double speed_mpz_lucnum_ui (struct speed_params *);
 double speed_mpz_lucnum2_ui (struct speed_params *);
