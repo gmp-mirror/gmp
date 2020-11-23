@@ -3563,8 +3563,19 @@ primality test. In those older versions of GMP, this function performed
 @deftypefun void mpz_nextprime (mpz_t @var{rop}, const mpz_t @var{op})
 @cindex Next prime function
 Set @var{rop} to the next prime greater than @var{op}.
+@end deftypefun
 
-This function uses a probabilistic algorithm to identify primes.  For
+@deftypefun int mpz_prevprime (mpz_t @var{rop}, const mpz_t @var{op})
+@cindex Previous prime function
+Set @var{rop} to the greatest prime less than @var{op}.
+
+If a previous prime doesn't exist (i.e. @var{op} < 3), rop is unchanged and
+0 is returned.
+
+Return 1 if @var{rop} is a probably prime, and 2 if @var{rop} is definitely
+prime.
+
+These functions use a probabilistic algorithm to identify primes.  For
 practical purposes it's adequate, the chance of a composite passing will be
 extremely small.
 @end deftypefun
