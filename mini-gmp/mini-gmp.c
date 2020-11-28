@@ -2777,9 +2777,13 @@ mpz_gcd (mpz_t g, const mpz_t u, const mpz_t v)
 
 	if (tv->_mp_size == 1)
 	  {
-	    mp_limb_t vl = tv->_mp_d[0];
-	    mp_limb_t ul = mpz_tdiv_ui (tu, vl);
-	    mpz_set_ui (g, mpn_gcd_11 (ul, vl));
+	    mp_limb_t *gp;
+
+	    mpz_tdiv_r (tu, tu, tv);
+	    gp = MPZ_REALLOC (g, 1); /* gp = mpz_limbs_modify (g, 1); */
+	    *gp = mpn_gcd_11 (tu->_mp_d[0], tv->_mp_d[0]);
+
+	    g->_mp_size = *gp != 0; /* mpz_limbs_finish (g, 1); */
 	    break;
 	  }
 	mpz_sub (tu, tu, tv);
