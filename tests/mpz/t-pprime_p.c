@@ -194,7 +194,8 @@ check_fermat_mersenne (int count)
       for (j = 0; j < numberof (fermat_exponents); j++)
 	if (fermat_exponents[j] == i)
 	  {
-	    want = 1;
+	    /* Fermat's primes are small enough for a definite answer. */
+	    want = 2;
 	    break;
 	  }
       check_one (pp, want);
@@ -204,7 +205,7 @@ check_fermat_mersenne (int count)
       for (j = 0; j < numberof (mersenne_exponents); j++)
 	if (mersenne_exponents[j] == i)
 	  {
-	    want = 1;
+	    want = 1 << (i < 50);
 	    break;
 	  }
       check_one (pp, want);
