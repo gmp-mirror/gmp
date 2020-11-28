@@ -63,7 +63,7 @@ the GNU MP Library test suite.  If not, see https://www.gnu.org/licenses/.  */
 /*********************************************************/
 
 static mp_size_t
-primesieve_size (mp_limb_t n) { return n_to_bit(n) / GMP_LIMB_BITS + 1; }
+primesieve_size (mp_limb_t n) { return n_fto_bit(n) / GMP_LIMB_BITS + 1; }
 
 /*************************************************************/
 /* Section macros: common macros, for swing/fac/bin (&sieve) */
@@ -143,7 +143,7 @@ check_pprime (unsigned long begin, unsigned long end, int composites)
 
 	size_s = BLOCK_SIZE * 2;
 	sieve = __GMP_ALLOCATE_FUNC_LIMBS (size_s);
-	off = n_to_bit(begin) + (begin % 3 == 0);
+	off = n_cto_bit(begin);
 
 	do {
 	  TRACE (printf ("off =%li\n", off),3);
@@ -189,8 +189,8 @@ check_pprime (unsigned long begin, unsigned long end, int composites)
 	sieve = __GMP_ALLOCATE_FUNC_LIMBS (size);
 	gmp_primesieve (sieve, end);
 	start = MAX (begin, 5) | 1;
-	LOOP_ON_SIEVE_BEGIN (prime, n_to_bit(start) + (start % 3 == 0),
-			     n_to_bit (end), 0, sieve);
+	LOOP_ON_SIEVE_BEGIN (prime, n_cto_bit(start),
+			     n_fto_bit (end), 0, sieve);
 
 	do {
 	  *(g->_mp_d) = begin;
@@ -263,8 +263,8 @@ check_nprime (unsigned long begin, unsigned long end)
 	gmp_primesieve (sieve, end);
 	start = MAX (begin, 5) | 1;
 	*(g->_mp_d) = begin;
-	LOOP_ON_SIEVE_BEGIN (prime, n_to_bit(start) + (start % 3 == 0),
-			     n_to_bit (end), 0, sieve);
+	LOOP_ON_SIEVE_BEGIN (prime, n_cto_bit(start),
+			     n_fto_bit (end), 0, sieve);
 
 	mpz_nextprime (g, g);
 	if (mpz_cmp_ui (g, prime) != 0)
@@ -334,8 +334,8 @@ check_Nprime (unsigned long begin, unsigned long end)
 	gmp_primesieve (sieve, end);
 	start = MAX (begin, 5) | 1;
 	opl = begin;
-	LOOP_ON_SIEVE_BEGIN (prime, n_to_bit(start) + (start % 3 == 0),
-			     n_to_bit (end), 0, sieve);
+	LOOP_ON_SIEVE_BEGIN (prime, n_cto_bit(start),
+			     n_fto_bit (end), 0, sieve);
 
 	do {
 	  *(op->_mp_d) = opl;
