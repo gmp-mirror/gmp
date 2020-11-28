@@ -1,3 +1,11 @@
+2020-11-28 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* tests/mpz/t-pprime_p.c (check_fermat_mersenne): Check return
+	value.
+
+	* tests/devel/primes.c: Correctly use n_cto_bit or n_fto_bit.
+	* primesieve.c: Differentiate n_to_bit into floor and ceil.
+
 2020-11-23 Seth Troisi <sethtroisi@google.com>
 
 	* mpz/nextprime.c (mpz_prevprime): New function.
