@@ -612,7 +612,7 @@ case $host in
     ;;
 
 
-  arm*-*-* | aarch64*-*-*)
+  arm*-*-* | aarch64*-*-* | [applem[1-9]-*-*])
     abilist="32"
     gcc_cflags="$gcc_cflags $fomit_frame_pointer"
     gcc_cflags_optlist="arch fpmode neon tune"
@@ -777,6 +777,14 @@ case $host in
 	gcc_cflags_arch="-march=armv8-a"
 	gcc_cflags_neon="-mfpu=neon"
 	gcc_cflags_tune=""
+	;;
+      [applem[1-9]*])
+	abilist="64"
+	path_64="arm64/applem1 arm64"
+	gcc_cflags_arch="-march=armv8-a"
+	gcc_cflags_neon="-mfpu=neon"
+	gcc_cflags_tune=""
+	CALLING_CONVENTIONS_OBJS=""
 	;;
       *)
 	path="arm"
@@ -3696,7 +3704,7 @@ if test "$gmp_asm_syntax_testing" != no; then
   GMP_ASM_ALIGN_LOG
 
   case $host in
-    arm*-*-* | aarch64*-*-*)
+    arm*-*-* | aarch64*-*-* | [applem[1-9]-*-*])
       case $ABI in
         32)
 	  GMP_INCLUDE_MPN(arm/arm-defs.m4) ;;

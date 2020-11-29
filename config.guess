@@ -173,6 +173,15 @@ EOF
   ;;
 
 arm*-*-* | aarch64-*-*)
+  if [ $((uname -s) 2>/dev/null) = Darwin ]; then
+      case $(system_profiler SPHardwareDataType | grep Chip) in
+	  *Apple\ M1)
+	    exact_cpu="applem1";;
+	  *Apple\ M2)
+	    exact_cpu="applem2";;
+      esac
+  fi
+
   cpu_code=`sed -n 's/^CPU part.*\(0x.*\)$/\1/p' /proc/cpuinfo 2>/dev/null | sort -r | head -n 1 2>/dev/null`
   cpu_implementer=`sed -n 's/^CPU implementer.*\(0x.*\)$/\1/p' /proc/cpuinfo 2>/dev/null | head -n 1 2>/dev/null`
   case "${cpu_implementer}_${cpu_code}" in
