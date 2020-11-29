@@ -173,7 +173,7 @@ EOF
   ;;
 
 arm*-*-* | aarch64-*-*)
-  if [ $((uname -s) 2>/dev/null) = Darwin ]; then
+  if [ $( (uname -s) 2>/dev/null) = Darwin ]; then
       case $(system_profiler SPHardwareDataType | grep Chip) in
 	  *Apple\ M1)
 	    exact_cpu="applem1";;
