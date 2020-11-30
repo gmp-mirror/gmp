@@ -34,7 +34,7 @@ include(`../config.m4')
 
 dnl TODO
 dnl  * Handle the most significant quotient limb for the unnormalised case
-dml    specially, just like in the C code.  (It is very often 0.)
+dnl    specially, just like in the C code.  (It is very often 0.)
 
 define(`qp_arg',   x0)
 define(`fn_arg',   x1)
