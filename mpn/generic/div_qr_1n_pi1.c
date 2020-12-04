@@ -115,7 +115,7 @@ see https://www.gnu.org/licenses/.  */
 	     "nor	%0, %0, %0"					\
 	   : "=r" (m), "=r" (s1), "=&r" (s0)				\
 	   : "r"  (a1), "r" (b1), "%r" (a0), "rI" (b0)			\
-	   __CLOBBER_CC)
+	     __CLOBBER_CC)
 #endif
 
 #if defined (__s390x__) && W_TYPE_SIZE == 64
@@ -136,6 +136,15 @@ see https://www.gnu.org/licenses/.  */
 	     "adcs	%1, %3, %4\n\t"					\
 	     "movcc	%0, #0\n\t"					\
 	     "movcs	%0, #-1"					\
+	   : "=r" (m), "=r" (sh), "=&r" (sl)				\
+	   : "r" (ah), "rI" (bh), "%r" (al), "rI" (bl) __CLOBBER_CC)
+#endif
+
+#if defined (__aarch64__) && W_TYPE_SIZE == 64
+#define add_mssaaaa(m, sh, sl, ah, al, bh, bl)				\
+  __asm__ (  "adds	%2, %5, %6\n\t"					\
+	     "adcs	%1, %3, %4\n\t"					\
+	     "csinv	%0, xzr, xzr, cs\n\t"				\
 	   : "=r" (m), "=r" (sh), "=&r" (sl)				\
 	   : "r" (ah), "rI" (bh), "%r" (al), "rI" (bl) __CLOBBER_CC)
 #endif
