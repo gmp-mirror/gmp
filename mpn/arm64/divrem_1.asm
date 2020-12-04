@@ -73,7 +73,7 @@ PROLOGUE(mpn_preinv_divrem_1)
 	stp	x21, x22, [sp, #32]
 	stp	x23, x24, [sp, #48]
 
-	add	n, n_arg, #-1
+	sub	n, n_arg, #1
 	add	x7, n, fn_arg
 	add	np, np_arg, n, lsl #3
 	add	qp, qp_arg, x7, lsl #3
@@ -93,7 +93,7 @@ PROLOGUE(mpn_divrem_1)
 	stp	x21, x22, [sp, #32]
 	stp	x23, x24, [sp, #48]
 
-	add	n, n_arg, #-1
+	sub	n, n_arg, #1
 	add	x7, n, fn_arg
 	add	np, np_arg, n, lsl #3
 	add	qp, qp_arg, x7, lsl #3
