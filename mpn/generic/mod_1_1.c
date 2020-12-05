@@ -143,7 +143,7 @@ see https://www.gnu.org/licenses/.  */
 #define add_mssaaaa(m, sh, sl, ah, al, bh, bl)				\
   __asm__ (  "adds	%2, %5, %6\n\t"					\
 	     "adcs	%1, %3, %4\n\t"					\
-	     "csinv	%0, xzr, xzr, cs\n\t"				\
+	     "csinv	%0, xzr, xzr, cc\n\t"				\
 	   : "=r" (m), "=r" (sh), "=&r" (sl)				\
 	   : "r" (ah), "rI" (bh), "%r" (al), "rI" (bl) __CLOBBER_CC)
 #endif
