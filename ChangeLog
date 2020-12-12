@@ -1,3 +1,7 @@
+2020-12-12  Marc Glisse  <marc.glisse@inria.fr>
+
+	* gmp-h.in (_GMP_H_HAVE_FILE): Test also _STDIO (for HPE NonStop).
+
 2020-11-29  Torbjörn Granlund  <tg@gmplib.org>
 
 	* mpn/arm64/divrem_1.asm: New file.
