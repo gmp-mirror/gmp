@@ -499,7 +499,7 @@ __gmp_doscan (const struct gmp_doscan_funs_t *funs, void *data,
   alloc_fmt = __GMP_ALLOCATE_FUNC_TYPE (alloc_fmt_size, char);
 
   fmt = orig_fmt;
-  end_fmt = orig_fmt + orig_fmt_len;
+  ASSERT_CODE (end_fmt = orig_fmt + orig_fmt_len);
 
   for (;;)
     {
