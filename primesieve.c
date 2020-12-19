@@ -260,9 +260,6 @@ first_block_primesieve (mp_ptr bit_array, mp_limb_t n)
     i = fill_bitpattern (bit_array + 1, limbs, 0);
   bit_array[0] = SIEVE_SEED;
 
-  if ((bits + 1) % GMP_LIMB_BITS != 0)
-    bit_array[limbs] |= MP_LIMB_T_MAX << ((bits + 1) % GMP_LIMB_BITS);
-
   if (n > SEED_LIMIT) {
     mp_limb_t mask, index;
 
