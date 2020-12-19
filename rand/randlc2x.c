@@ -76,7 +76,6 @@ lc (mp_ptr rp, gmp_randstate_t rstate)
   mp_size_t tn, seedn, an;
   unsigned long int m2exp;
   unsigned long int bits;
-  int cy;
   mp_size_t xn;
   gmp_rand_lc_struct *p;
   TMP_DECL;
@@ -115,7 +114,7 @@ lc (mp_ptr rp, gmp_randstate_t rstate)
   /* t = t + c.  NOTE: tn is always >= p->_cn (precondition for __GMPN_ADD);
      see initialization.  */
   ASSERT (tn >= p->_cn);
-  __GMPN_ADD (cy, tp, tp, tn, p->_cp, p->_cn);
+  mpn_add (tp, tp, tn, p->_cp, p->_cn);
 
   /* t = t % m */
   tp[m2exp / GMP_NUMB_BITS] &= (CNST_LIMB (1) << m2exp % GMP_NUMB_BITS) - 1;
