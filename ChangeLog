@@ -1,6 +1,24 @@
+2020-12-21  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/arm64/applem1/aorsmul_1.asm: Provide addmul_1c entry point.
+
+2020-12-20  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/arm64/copyi.asm: Rewrite to use scalar regs.
+	* mpn/arm64/copyd.asm: Likewise.
+
 2020-12-12  Marc Glisse  <marc.glisse@inria.fr>
 
 	* gmp-h.in (_GMP_H_HAVE_FILE): Test also _STDIO (for HPE NonStop).
+
+2020-12-04  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/arm64/applem1/gmp-mparam.h: New file.
+
+	* mpn/generic/mod_1_1.c: Provide add_mssaaaa for arm64.
+	* mpn/generic/div_qr_1n_pi1.c: Likewise.
+
+	* mpn/arm64/divrem_1.asm: Use sub insn for subtracting constants.
 
 2020-11-29  Torbjörn Granlund  <tg@gmplib.org>
 
