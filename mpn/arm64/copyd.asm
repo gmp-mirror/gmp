@@ -1,6 +1,6 @@
 dnl  ARM64 mpn_copyd.
 
-dnl  Copyright 2013 Free Software Foundation, Inc.
+dnl  Copyright 2013, 2020 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
