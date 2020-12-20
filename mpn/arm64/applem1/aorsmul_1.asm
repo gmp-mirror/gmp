@@ -1,4 +1,4 @@
-dnl  ARM64 mpn_addmmul_1 and mpn_submul_1.
+dnl  ARM64 mpn_addmul_1 and mpn_submul_1.
 
 dnl  Contributed to the GNU project by Torbjörn Granlund.
 
@@ -47,6 +47,7 @@ define(`rp', x0)
 define(`up', x1)
 define(`n',  x2)
 define(`v0', x3)
+define(`cin',`x4')
 
 define(`CY',x17)
 
@@ -61,11 +62,18 @@ ifdef(`OPERATION_submul_1', `
   define(`COND',	`cs')
   define(`func',	mpn_submul_1)')
 
-MULFUNC_PROLOGUE(mpn_addmul_1 mpn_submul_1)
+MULFUNC_PROLOGUE(mpn_addmul_1 mpn_submul_1 mpn_addmul_1c)
+
+ifdef(`OPERATION_addmul_1', `
+PROLOGUE(mpn_addmul_1c)
+	mov	CY, cin
+	b	L(ent)
+EPILOGUE()
+')
 
 PROLOGUE(func)
 	mov	CY, #0		C W0
-	lsr	x16, n, #2
+L(ent):	lsr	x16, n, #2
 	tbz	n, #0, L(bx0)
 
 L(bx1):	ldr	x4, [up], #8
@@ -98,7 +106,7 @@ L(b01):	ldr	x12, [rp]
 	ADDSUB	x8, x12, x8
 	csinc	x4, x4, x4, COND
 	ADDSUB	x8, x8, CY
-	csinc	CY, x4, x5, COND
+	csinc	CY, x4, x4, COND
 	str	x8, [rp], #8
 	cbnz	x16, L(top)
 	mov	x0, CY
