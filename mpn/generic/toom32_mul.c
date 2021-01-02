@@ -11,7 +11,7 @@
    SAFE TO REACH IT THROUGH DOCUMENTED INTERFACES.  IN FACT, IT IS ALMOST
    GUARANTEED THAT IT WILL CHANGE OR DISAPPEAR IN A FUTURE GNU MP RELEASE.
 
-Copyright 2006-2010, 2020 Free Software Foundation, Inc.
+Copyright 2006-2010, 2020, 2021 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -312,10 +312,8 @@ mpn_toom32_mul (mp_ptr pp,
     {
       hi -= mpn_sub (pp + 2*n, pp + 2*n, 2*n, pp + 4*n, s+t-n);
 
-      if (hi < 0)
-	MPN_DECR_U (pp + 4*n, s+t-n, -hi);
-      else
-	MPN_INCR_U (pp + 4*n, s+t-n, hi);
+      ASSERT (hi >= 0); /* contribution of the middle terms >= 0 */
+      MPN_INCR_U (pp + 4*n, s+t-n, hi);
     }
   else
     ASSERT (hi == 0);
