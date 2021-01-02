@@ -154,12 +154,8 @@ L(f6):	mulx(	(up), %r10, %r8)
 
 L(f1):	mulx(	(up), %r9, %rax)
 	adc	%r11, %r9	
-	jrcxz	L(1)
+	jrcxz	L(end)
 	jmp	L(b1)
-L(1):	mov	%r9, (rp)
-	adc	$0, %rax
-	FUNC_EXIT()
-	ret
 
 L(end):	mov	%r9, (rp)
 	adc	%rcx, %rax		C relies on rcx = 0
