@@ -94,7 +94,10 @@ mpn_binvert (mp_ptr rp, mp_srcptr up, mp_size_t n, mp_ptr scratch)
       /* X <- UR. */
       m = mpn_mulmod_bnm1_next_size (newrn);
       mpn_mulmod_bnm1 (xp, m, up, newrn, rp, rn, xp + m);
-      mpn_sub_1 (xp + m, xp, rn - (m - newrn), 1);
+      /* Only the values in the range xp + rn .. xp + newrn - 1 are
+	 used by the _mullo_n below.
+	 Since m >= newrn, we do not need the following. */
+      /* mpn_sub_1 (xp + m, xp, rn - (m - newrn), 1); */
 
       /* R = R(X/B^rn) */
       mpn_mullo_n (rp + rn, rp, xp + rn, newrn - rn);
