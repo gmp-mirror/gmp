@@ -8,7 +8,7 @@
    With the current implementation, the first 24 MR-tests are substituted by a
    Baillie-PSW probable prime test.
 
-   This implementation the Baillie-PSW test was checked up to 19*2^46,
+   This implementation the Baillie-PSW test was checked up to 23*10^14,
    for smaller values no MR-test is performed, regardless of reps, and
    2 ("surely prime") is returned if the number was not proved composite.
 
@@ -19,7 +19,7 @@
    CERTAIN TO BE SUBJECT TO INCOMPATIBLE CHANGES OR DISAPPEAR COMPLETELY IN
    FUTURE GNU MP RELEASES.
 
-Copyright 1991, 1993, 1994, 1996-2002, 2005, 2014, 2018, 2019 Free
+Copyright 1991, 1993, 1994, 1996-2002, 2005, 2014, 2018-2021 Free
 Software Foundation, Inc.
 
 Contributed by John Amanatides.
@@ -65,7 +65,6 @@ mpz_millerrabin (mpz_srcptr n, int reps)
 {
   mpz_t nm, x, y, q;
   unsigned long int k;
-  gmp_randstate_t rstate;
   int is_prime;
   TMP_DECL;
   TMP_MARK;
@@ -101,12 +100,12 @@ mpz_millerrabin (mpz_srcptr n, int reps)
 	  || SIZ (n) - 64 / GMP_NUMB_BITS == (PTR (n) [64 / GMP_NUMB_BITS] < CNST_LIMB(1) << 64 % GMP_NUMB_BITS)
 #endif
 #else
-	  /* Consider numbers up to 19*2^46 that pass the BPSW test as primes.
-	     This implementation was tested up to 19*2^46 = 2^50+2^47+2^46 */
-	  /* 2^4 < 19 = 0b10011 < 2^5 */
-#define GMP_BPSW_LIMB_CONST CNST_LIMB(19)
-#define GMP_BPSW_BITS_CONST (LOG2C(19) - 1)
-#define GMP_BPSW_BITS_LIMIT (46 + GMP_BPSW_BITS_CONST)
+	  /* Consider numbers up to 65*2^45 that pass the BPSW test as primes.
+	     This implementation was tested up to 23*10^14 > 2^51+2^45 */
+	  /* 2^6 < 65 = 0b1000001 < 2^7 */
+#define GMP_BPSW_LIMB_CONST CNST_LIMB(65)
+#define GMP_BPSW_BITS_CONST (LOG2C(65) - 1)
+#define GMP_BPSW_BITS_LIMIT (45 + GMP_BPSW_BITS_CONST)
 
 #define GMP_BPSW_LIMBS_LIMIT (GMP_BPSW_BITS_LIMIT / GMP_NUMB_BITS)
 #define GMP_BPSW_BITS_MOD (GMP_BPSW_BITS_LIMIT % GMP_NUMB_BITS)
@@ -142,6 +141,7 @@ mpz_millerrabin (mpz_srcptr n, int reps)
 	  reps -= 24;
 	  if (reps > 0)
 	    {
+	      gmp_randstate_t rstate;
 	      /* (n-5)/2 */
 	      mpz_sub_ui (nm, nm, 2L);
 	      ASSERT (mpz_cmp_ui (nm, 1L) >= 0);
@@ -212,11 +212,6 @@ millerrabin (mpz_srcptr n, mpz_ptr x, mpz_ptr y,
       mpz_powm_ui (y, y, 2L, n);
       if (mod_eq_m1 (y, n))
 	return 1;
-      /* y == 1 means that the previous y was a non-trivial square root
-	 of 1 (mod n). y == 0 means that n is a power of the base.
-	 In either case, n is not prime. */
-      if (mpz_cmp_ui (y, 1L) <= 0)
-	return 0;
     }
   return 0;
 }
