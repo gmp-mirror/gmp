@@ -1211,7 +1211,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 "	addx%.l	%2,%0\n"						\
 "	| End inlined umul_ppmm"					\
 	      : "=&d" (xh), "=&d" (xl),					\
-		"=d" (__umul_tmp1), "=&d" (__umul_tmp2)			\
+		"=&d" (__umul_tmp1), "=&d" (__umul_tmp2)			\
 	      : "%2" ((USItype)(a)), "d" ((USItype)(b)));		\
   } while (0)
 #endif /* not mc68020 */
