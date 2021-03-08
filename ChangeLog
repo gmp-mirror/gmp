@@ -1,3 +1,30 @@
+2021-03-08  Torbjörn Granlund  <tg@gmplib.org>
+
+	* longlong.h (68000 umul_ppmm): Add an early-clobber &.
+
+2021-01-18  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/x86_64/zen3/sbpi1_bdiv_r.asm: New grabber file.
+
+2021-01-17  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/x86_64/coreibwl/sbpi1_bdiv_r.asm: New file.
+
+2021-01-01  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac: Handle zen3 different from zen2.
+
+	* mpn/x86_64/zen3/addmul_1.asm: New grabber file.
+	* mpn/x86_64/zen3/mul_basecase.asm: Likewise.
+	* mpn/x86_64/zen3/sqr_basecase.asm: Likewise.
+
+	* mpn/x86_64/zen3/mul_1.asm: New file.
+
+2020-12-25  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/arm64/applem1/sqr_basecase.asm: New file, do 2x and limb squaring
+	in main loop.
+
 2020-12-21  Torbjörn Granlund  <tg@gmplib.org>
 
 	* mpn/arm64/applem1/aorsmul_1.asm: Provide addmul_1c entry point.
