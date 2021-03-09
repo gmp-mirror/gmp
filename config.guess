@@ -1138,6 +1138,13 @@ s390*-*-*)
       2097 | 2098) zcpu="z10"  ;;
       2817 | 2818 | *) zcpu="z196" ;;
     esac
+    if grep "^features.* vxe2" /proc/cpuinfo >/dev/null; then
+      zcpu="z15"
+    elif grep "^features.* vxe" /proc/cpuinfo >/dev/null; then
+      zcpu="z14"
+    elif grep "^features.* vx" /proc/cpuinfo >/dev/null; then
+      zcpu="z13"
+    fi
     case "$guess_full" in
       s390x-*-*) exact_cpu=${zcpu}    ;;
       s390-*-*)  exact_cpu=${zcpu}esa ;;

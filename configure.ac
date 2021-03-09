@@ -347,6 +347,9 @@ AH_VERBATIM([HAVE_HOST_CPU_1],
 #undef HAVE_HOST_CPU_s390_z9
 #undef HAVE_HOST_CPU_s390_z10
 #undef HAVE_HOST_CPU_s390_z196
+#undef HAVE_HOST_CPU_s390_z13
+#undef HAVE_HOST_CPU_s390_z14
+#undef HAVE_HOST_CPU_s390_z15
 
 /* Define to 1 iff we have a s390 with 64-bit registers.  */
 #undef HAVE_HOST_CPU_s390_zarch])
@@ -1367,55 +1370,67 @@ case $host in
     fi
     gcc_32_cflags_maybe="-m31"
 
+    unset cpu gccarch xpath
     case $host_cpu in
       s390)
 	;;
       z900 | z900esa)
         cpu="z900"
         gccarch="$cpu"
-	path="s390_32/esame/$cpu s390_32/esame s390_32"
-	gcc_cflags_arch="-march=$gccarch"
-	AC_DEFINE_UNQUOTED(HAVE_HOST_CPU_s390_$cpu)
-	AC_DEFINE(HAVE_HOST_CPU_s390_zarch)
 	extra_functions=""
         ;;
       z990 | z990esa)
         cpu="z990"
         gccarch="$cpu"
-	path="s390_32/esame/$cpu s390_32/esame s390_32"
-	gcc_cflags_arch="-march=$gccarch"
-	AC_DEFINE_UNQUOTED(HAVE_HOST_CPU_s390_$cpu)
-	AC_DEFINE(HAVE_HOST_CPU_s390_zarch)
 	extra_functions=""
         ;;
       z9 | z9esa)
         cpu="z9"
 	gccarch="z9-109"
-	path="s390_32/esame/$cpu s390_32/esame s390_32"
-	gcc_cflags_arch="-march=$gccarch"
-	AC_DEFINE_UNQUOTED(HAVE_HOST_CPU_s390_$cpu)
-	AC_DEFINE(HAVE_HOST_CPU_s390_zarch)
 	extra_functions=""
         ;;
       z10 | z10esa)
         cpu="z10"
 	gccarch="z10"
-	path="s390_32/esame/$cpu s390_32/esame s390_32"
-	gcc_cflags_arch="-march=$gccarch"
-	AC_DEFINE_UNQUOTED(HAVE_HOST_CPU_s390_$cpu)
-	AC_DEFINE(HAVE_HOST_CPU_s390_zarch)
 	extra_functions=""
         ;;
       z196 | z196esa)
         cpu="z196"
 	gccarch="z196"
-	path="s390_32/esame/$cpu s390_32/esame s390_32"
-	gcc_cflags_arch="-march=$gccarch"
-	AC_DEFINE_UNQUOTED(HAVE_HOST_CPU_s390_$cpu)
-	AC_DEFINE(HAVE_HOST_CPU_s390_zarch)
 	extra_functions=""
         ;;
+      z13 | z13esa)
+        cpu="z13"
+	gccarch="z13"
+	extra_functions=""
+        ;;
+      z14 | z14esa)
+        cpu="z14"
+	gccarch="z14"
+	extra_functions=""
+	xpath="z13"
+        ;;
+      z15 | z15esa)
+        cpu="z15"
+	gccarch="z15"
+	extra_functions=""
+	xpath="z14 z13"
+        ;;
       esac
+
+    if test x"$cpu" != x ; then
+      AC_DEFINE_UNQUOTED(HAVE_HOST_CPU_s390_$cpu)
+      AC_DEFINE(HAVE_HOST_CPU_s390_zarch)
+      path="s390_32/esame s390_32"
+      path_64=""
+      for i in $cpu $xpath; do
+	path_64="$path_64 s390_64/$i"
+      done
+      path_64="$path_64 s390_64"
+    fi
+    if test x"$gccarch" != x ; then
+      gcc_cflags_arch="-march=$gccarch"
+    fi
 
     case $host in
       S390X_PATTERN)
@@ -1423,7 +1438,6 @@ case $host in
 	cclist_64="gcc"
 	gcc_64_cflags_optlist="arch"
 	gcc_64_cflags="$gcc_cflags -m64"
-	path_64="s390_64/$host_cpu s390_64"
 	extra_functions=""
 	;;
       esac

@@ -122,9 +122,9 @@ ultrasparc | ultrasparc2 | ultrasparc2i | ultrasparc3 | ultrasparct[12345])
 sh2)
   test_cpu=sh ;;
 
-z900 | z990 | z9 | z10 | z196)
+z900 | z990 | z9 | z1[0-5] | z196)
   test_cpu=s390x;;
-z900esa | z990esa | z9esa | z10esa | z196esa)
+z900esa | z990esa | z9esa | z1[0-5]esa | z196esa)
   test_cpu=s390;;
 
 armsa1 | armxscale | arm9tdmi | arm9te |				\
