@@ -860,6 +860,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 	     : "0" ((UDItype)(ah)), "r" ((UDItype)(bh)),		\
 	       "1" ((UDItype)(al)), "r" ((UDItype)(bl)) __CLOBBER_CC);	\
   } while (0)
+if !defined (__clang__)
 #define umul_ppmm(xh, xl, m0, m1)					\
   do {									\
     union {unsigned int __attribute__ ((mode(TI))) __ll;		\
@@ -881,6 +882,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 	     : "0" (__x.__ll), "r" ((UDItype)(d)));			\
     (q) = __x.__i.__l; (r) = __x.__i.__h;				\
   } while (0)
+#endif
 #if 0 /* FIXME: Enable for z10 (?) */
 #define count_leading_zeros(cnt, x)					\
   do {									\
