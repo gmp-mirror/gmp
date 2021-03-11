@@ -1,3 +1,13 @@
+2021-03-11  Torbjörn Granlund  <tg@gmplib.org>
+
+	* longlong.h: Disable s390 patterns which makes clang barf.
+
+2021-03-09  Torbjörn Granlund  <tg@gmplib.org>
+
+	With Marius Hillenbrand:
+	* configure.ac, config.guess, config.sub, acinclude.m4:
+	Recognise CPUs z13-z15.
+
 2021-03-08  Torbjörn Granlund  <tg@gmplib.org>
 
 	* longlong.h (68000 umul_ppmm): Add an early-clobber &.
