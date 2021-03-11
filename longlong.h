@@ -860,7 +860,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 	     : "0" ((UDItype)(ah)), "r" ((UDItype)(bh)),		\
 	       "1" ((UDItype)(al)), "r" ((UDItype)(bl)) __CLOBBER_CC);	\
   } while (0)
-if !defined (__clang__)
+#if !defined (__clang__)
 #define umul_ppmm(xh, xl, m0, m1)					\
   do {									\
     union {unsigned int __attribute__ ((mode(TI))) __ll;		\
