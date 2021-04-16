@@ -1,3 +1,12 @@
+2021-04-16 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mini-gmp.c (gmp_millerrabin): Don't check unlikely 0 or 1.
+	* mini-gmp.h: Update FILE tests from gmp-h.
+
+2021-01-02 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mini-gmp.c (mpz_export): Correct error message (tx: Guillermo Monguia)
+
 2020-11-28 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mini-gmp.c (mpz_gcd): Support limbs larger than unsigned long.
