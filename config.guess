@@ -919,8 +919,13 @@ main ()
           else if (model == 0x5e) cpu_64bit = 1, cpu_avx=1, modelstr = "skylake";    /* Skylake */
           else if (model == 0x5f) cpu_64bit = 1,            modelstr = "goldmont";   /* Goldmont */
           else if (model == 0x7a) cpu_64bit = 1,            modelstr = "goldmont";   /* Goldmont Plus */
-          else if (model == 0x8e) cpu_64bit = 1, cpu_avx=1, modelstr = "kabylake";   /* Kabylake Y/U */
-          else if (model == 0x9e) cpu_64bit = 1, cpu_avx=1, modelstr = "kabylake";   /* Kabylake desktop */
+          else if (model == 0x7d) cpu_64bit = 1, cpu_avx=1, modelstr = "icelake";    /* Ice Lake Y */
+          else if (model == 0x7e) cpu_64bit = 1, cpu_avx=1, modelstr = "icelake";    /* Ice Lake U */
+          else if (model == 0x8c) cpu_64bit = 1, cpu_avx=1, modelstr = "tigerlake";  /* Tiger Lake U */
+          else if (model == 0x8d) cpu_64bit = 1, cpu_avx=1, modelstr = "tigerlake";  /* Tiger Lake H */
+          else if (model == 0x8e) cpu_64bit = 1, cpu_avx=1, modelstr = "kabylake";   /* Kaby Lake Y/U */
+          else if (model == 0x9e) cpu_64bit = 1, cpu_avx=1, modelstr = "kabylake";   /* Kaby Lake desktop */
+          else if (model == 0xa7) cpu_64bit = 1, cpu_avx=1, modelstr = "rocketlake"; /* Rocket Lake S */
           else                    cpu_64bit = 1,            modelstr = "nehalem";    /* default */
 
 	  if (strcmp (modelstr, "haswell") == 0 ||
