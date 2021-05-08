@@ -3875,6 +3875,9 @@ Complement bit @var{bit_index} in @var{rop}.
 Test bit @var{bit_index} in @var{op} and return 0 or 1 accordingly.
 @end deftypefun
 
+Shifting is also possible using multiplication (@ref{Integer Arithmetic}) and
+division (@ref{Integer Division}), in particular the @code{2exp} functions.
+
 @node I/O of Integers, Integer Random Numbers, Integer Logic and Bit Fiddling, Integer Functions
 @comment  node-name,  next,  previous,  up
 @section Input and Output Functions
