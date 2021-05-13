@@ -1,3 +1,7 @@
+2021-05-13 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* tests/t-reuse.c: Use numberof() to reduce the risk of typos.
+
 2021-04-16 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mini-gmp.c (gmp_millerrabin): Don't check unlikely 0 or 1.
