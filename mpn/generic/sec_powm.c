@@ -205,6 +205,52 @@ redcify (mp_ptr rp, mp_srcptr up, mp_size_t un, mp_srcptr mp, mp_size_t n, mp_pt
   MPN_COPY (rp, tp, n);
 }
 
+static mp_limb_t
+sec_binvert_limb (mp_limb_t n)
+{
+  mp_limb_t inv, t;
+  ASSERT ((n & 1) == 1);
+  /* 3 + 2 -> 5 */
+  inv = n + (((n + 1) << 1) & 0x18);
+
+  t = n * inv;
+#if GMP_NUMB_BITS <= 10
+  /* 5 x 2 -> 10 */
+  inv = 2 * inv - inv * t;
+#else /* GMP_NUMB_BITS > 10 */
+  /* 5 x 2 + 2 -> 12 */
+  inv = 2 * inv - inv * t + ((inv<<10)&-(t&(1<<5)));
+#endif /* GMP_NUMB_BITS <= 10 */
+
+  if (GMP_NUMB_BITS > 12)
+    {
+      t = n * inv - 1;
+      if (GMP_NUMB_BITS <= 36)
+	{
+	  /* 12 x 3 -> 36 */
+	  inv += inv * t * (t - 1);
+	}
+      else /* GMP_NUMB_BITS > 36 */
+	{
+	  mp_limb_t t2 = t * t;
+#if GMP_NUMB_BITS <= 60
+	  /* 12 x 5 -> 60 */
+	  inv += inv * (t2 + 1) * (t2 - t);
+#else /* GMP_NUMB_BITS > 60 */
+	  /* 12 x 5 + 4 -> 64 */
+	  inv *= (t2 + 1) * (t2 - t) + 1 - ((t<<48)&-(t&(1<<12)));
+
+	  /* 64 -> 128 -> 256 -> ... */
+	  for (int todo = (GMP_NUMB_BITS - 1) >> 6; todo != 0; todo >>= 1)
+	    inv = 2 * inv - inv * inv * n;
+#endif /* GMP_NUMB_BITS <= 60 */
+	}
+    }
+
+  ASSERT ((inv * n & GMP_NUMB_MASK) == 1);
+  return inv & GMP_NUMB_MASK;
+}
+
 /* {rp, n} <-- {bp, bn} ^ {ep, en} mod {mp, n},
    where en = ceil (enb / GMP_NUMB_BITS)
    Requires that {mp, n} is odd (and hence also mp[0] odd).
@@ -230,18 +276,19 @@ mpn_sec_powm (mp_ptr rp, mp_srcptr bp, mp_size_t bn,
 
   windowsize = win_size (enb);
 
-  if (BELOW_THRESHOLD (n, REDC_1_TO_REDC_2_THRESHOLD))
+  mip = ip;
+  mip[0] = sec_binvert_limb (mp[0]);
+  if (ABOVE_THRESHOLD (n, REDC_1_TO_REDC_2_THRESHOLD))
     {
-      mip = ip;
-      binvert_limb (mip[0], mp[0]);
-      mip[0] = -mip[0];
+      mp_limb_t t, dummy, mip0 = mip[0];
+
+      umul_ppmm (t, dummy, mip0, mp[0]);
+      ASSERT (dummy == 1);
+      t += mip0 * mp[1]; /* t = (mp * mip0)[1] */
+
+      mip[1] = t * mip0 - 1; /* ~( - t * mip0) */
     }
-  else
-    {
-      mip = ip;
-      mpn_binvert (mip, mp, 2, tp);
-      mip[0] = -mip[0]; mip[1] = ~mip[1];
-    }
+  mip[0] = -mip[0];
 
   pp = tp;
   tp += (n << windowsize);	/* put tp after power table */
