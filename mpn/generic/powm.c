@@ -6,7 +6,7 @@
    SAFE TO REACH THEM THROUGH DOCUMENTED INTERFACES.  IN FACT, IT IS ALMOST
    GUARANTEED THAT THEY WILL CHANGE OR DISAPPEAR IN A FUTURE GNU MP RELEASE.
 
-Copyright 2007-2012, 2019, 2020 Free Software Foundation, Inc.
+Copyright 2007-2012, 2019-2021 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -163,8 +163,8 @@ static inline int
 win_size (mp_bitcnt_t eb)
 {
   int k;
-  static mp_bitcnt_t x[] = {0,7,25,81,241,673,1793,4609,11521,28161,~(mp_bitcnt_t)0};
-  for (k = 1; eb > x[k]; k++)
+  static mp_bitcnt_t x[] = {7,25,81,241,673,1793,4609,11521,28161,~(mp_bitcnt_t)0};
+  for (k = 0; eb > x[k++]; )
     ;
   return k;
 }

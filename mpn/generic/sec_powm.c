@@ -3,7 +3,7 @@
 
    Contributed to the GNU project by Torbjörn Granlund.
 
-Copyright 2007-2009, 2011-2014, 2018-2019 Free Software Foundation, Inc.
+Copyright 2007-2009, 2011-2014, 2018-2019, 2021 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -185,8 +185,8 @@ win_size (mp_bitcnt_t enb)
      We require that x[k] >= k, then it follows that enb > x[k-1] >=
      k-1, which implies k <= enb.
   */
-  static const mp_bitcnt_t x[] = {0,POWM_SEC_TABLE,~(mp_bitcnt_t)0};
-  for (k = 1; enb > x[k]; k++)
+  static const mp_bitcnt_t x[] = {POWM_SEC_TABLE,~(mp_bitcnt_t)0};
+  for (k = 0; enb > x[k++]; )
     ;
   ASSERT (k <= enb);
   return k;
