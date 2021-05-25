@@ -1,3 +1,10 @@
+2021-05-25 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/sec_powm.c (sec_binvert_limb): New static function.
+
+	* mpn/generic/powm.c (win_size): Remove the unused value from array.
+	* mpn/generic/sec_powm.c (win_size): Likewise.
+
 2021-05-08  Marc Glisse  <marc.glisse@inria.fr>
 
 	* doc/gmp.texi: Mention shifts in bit manipulation.
