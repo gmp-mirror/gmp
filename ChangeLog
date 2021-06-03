@@ -1,3 +1,8 @@
+2021-06-03  Niels Möller  <nisse@lysator.liu.se>
+
+	* mpn/generic/div_qr_1n_pi1.c (mpn_div_qr_1n_pi1): Micro-optimize
+	method 2, and document the main idea of the algorithm.
+
 2021-05-25 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpn/generic/sec_powm.c (sec_binvert_limb): New static function.
