@@ -1,3 +1,7 @@
+2021-06-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* configure.ac (AC_INIT): Avoid comma in BUG-REPORT field.
+
 2021-06-06  Marc Glisse  <marc.glisse@inria.fr>
 
 	* gmp-h.in (gmp_randstate_ptr, gmp_randstate_srcptr): Move declaration
