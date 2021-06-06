@@ -105,7 +105,7 @@ mangle_seed (mpz_ptr r)
  */
 
 static void
-randseed_mt (gmp_randstate_t rstate, mpz_srcptr seed)
+randseed_mt (gmp_randstate_ptr rstate, mpz_srcptr seed)
 {
   int i;
   size_t cnt;
@@ -157,7 +157,7 @@ static const gmp_randfnptr_t Mersenne_Twister_Generator = {
 
 /* Initialize MT-specific data.  */
 void
-gmp_randinit_mt (gmp_randstate_t rstate)
+gmp_randinit_mt (gmp_randstate_ptr rstate)
 {
   __gmp_randinit_mt_noseed (rstate);
   RNG_FNPTR (rstate) = (void *) &Mersenne_Twister_Generator;

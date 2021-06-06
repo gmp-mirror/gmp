@@ -69,7 +69,7 @@ typedef struct {
    result.  */
 
 static unsigned long int
-lc (mp_ptr rp, gmp_randstate_t rstate)
+lc (mp_ptr rp, gmp_randstate_ptr rstate)
 {
   mp_ptr tp, seedp, ap;
   mp_size_t ta;
@@ -148,7 +148,7 @@ lc (mp_ptr rp, gmp_randstate_t rstate)
 
 /* Obtain a sequence of random numbers.  */
 static void
-randget_lc (gmp_randstate_t rstate, mp_ptr rp, unsigned long int nbits)
+randget_lc (gmp_randstate_ptr rstate, mp_ptr rp, unsigned long int nbits)
 {
   unsigned long int rbitpos;
   int chunk_nbits;
@@ -227,7 +227,7 @@ randget_lc (gmp_randstate_t rstate, mp_ptr rp, unsigned long int nbits)
 
 
 static void
-randseed_lc (gmp_randstate_t rstate, mpz_srcptr seed)
+randseed_lc (gmp_randstate_ptr rstate, mpz_srcptr seed)
 {
   gmp_rand_lc_struct *p = (gmp_rand_lc_struct *) RNG_STATE (rstate);
   mpz_ptr seedz = p->_mp_seed;
@@ -242,7 +242,7 @@ randseed_lc (gmp_randstate_t rstate, mpz_srcptr seed)
 
 
 static void
-randclear_lc (gmp_randstate_t rstate)
+randclear_lc (gmp_randstate_ptr rstate)
 {
   gmp_rand_lc_struct *p = (gmp_rand_lc_struct *) RNG_STATE (rstate);
 
@@ -289,7 +289,7 @@ randiset_lc (gmp_randstate_ptr dst, gmp_randstate_srcptr src)
 
 
 void
-gmp_randinit_lc_2exp (gmp_randstate_t rstate,
+gmp_randinit_lc_2exp (gmp_randstate_ptr rstate,
 		      mpz_srcptr a,
 		      unsigned long int c,
 		      mp_bitcnt_t m2exp)

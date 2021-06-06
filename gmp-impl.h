@@ -1287,14 +1287,11 @@ mpn_sqrmod_bnm1_itch (mp_size_t rn, mp_size_t an) {
   return itch;
 }
 
-typedef __gmp_randstate_struct *gmp_randstate_ptr;
-typedef const __gmp_randstate_struct *gmp_randstate_srcptr;
-
 /* Pseudo-random number generator function pointers structure.  */
 typedef struct {
-  void (*randseed_fn) (gmp_randstate_t, mpz_srcptr);
-  void (*randget_fn) (gmp_randstate_t, mp_ptr, unsigned long int);
-  void (*randclear_fn) (gmp_randstate_t);
+  void (*randseed_fn) (gmp_randstate_ptr, mpz_srcptr);
+  void (*randget_fn) (gmp_randstate_ptr, mp_ptr, unsigned long int);
+  void (*randclear_fn) (gmp_randstate_ptr);
   void (*randiset_fn) (gmp_randstate_ptr, gmp_randstate_srcptr);
 } gmp_randfnptr_t;
 
@@ -1313,7 +1310,7 @@ typedef struct {
       (__rstate, rp, bits);						\
   } while (0)
 
-__GMP_DECLSPEC void __gmp_randinit_mt_noseed (gmp_randstate_t);
+__GMP_DECLSPEC void __gmp_randinit_mt_noseed (gmp_randstate_ptr);
 
 
 /* __gmp_rands is the global state for the old-style random functions, and

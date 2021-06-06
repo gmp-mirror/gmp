@@ -1,3 +1,38 @@
+2021-06-06  Marc Glisse  <marc.glisse@inria.fr>
+
+	* gmp-h.in (gmp_randstate_ptr, gmp_randstate_srcptr): Move declaration
+	from gmp-impl.h.
+	(gmp_randinit, gmp_randinit_default, gmp_randinit_lc_2exp,
+	gmp_randinit_lc_2exp_size, gmp_randinit_mt, gmp_randinit_set,
+	gmp_randseed, gmp_randseed_ui, gmp_randclear, gmp_urandomb_ui,
+	gmp_urandomm_ui, mpz_rrandomb, mpz_urandomb, mpz_urandomm,
+	mpf_urandomb): Replace gmp_randstate_t with gmp_randstate_ptr.
+	* gmp-impl.h (gmp_randstate_ptr, gmp_randstate_srcptr): Move
+	declaration to gmp-h.in.
+	(gmp_randfnptr_t, __gmp_randinit_mt_noseed): Replace gmp_randstate_t
+	with gmp_randstate_ptr.
+	* mpf/reldiff.c: Replace mpf_t with mpf_ptr.
+	* mpf/set_q.c: Likewise.
+	* mpf/urandomb.c: Likewise.
+	* mpq/canonicalize.c: Replace mpq_t with mpq_ptr.
+	* mpq/clear.c: Likewise.
+	* mpq/init.c: Likewise.
+	* mpq/set_si.c: Likewise.
+	* mpq/set_ui.c: Likewise.
+	* mpz/rrandomb.c: Replace gmp_randstate_t with gmp_randstate_ptr.
+	* mpz/urandomb.c: Likewise.
+	* mpz/urandomm.c: Likewise.
+	* rand/rand.c: Likewise.
+	* rand/randclr.c: Likewise.
+	* rand/randdef.c: Likewise.
+	* rand/randlc2s.c: Likewise.
+	* rand/randlc2x.c: Likewise.
+	* rand/randmt.c: Likewise.
+	* rand/randmt.h: Likewise.
+	* rand/randmts.c: Likewise.
+	* rand/randsd.c: Likewise.
+	* rand/randsdui.c: Likewise.
+
 2021-06-03  Niels Möller  <nisse@lysator.liu.se>
 
 	* mpn/generic/div_qr_1n_pi1.c (mpn_div_qr_1n_pi1): Micro-optimize
