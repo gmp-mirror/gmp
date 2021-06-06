@@ -33,6 +33,13 @@
 	* rand/randsd.c: Likewise.
 	* rand/randsdui.c: Likewise.
 
+	* gmp-impl.h: Include stdint.h even if we have inttypes.h.
+	* printf/doprnt.c: Likewise.
+	* printf/repl-vsnprintf.c: Likewise.
+	* scanf/doscan.c: Likewise.
+	* tests/misc/t-printf.c: Likewise.
+	* tests/misc/t-scanf.c: Likewise.
+
 2021-06-03  Niels Möller  <nisse@lysator.liu.se>
 
 	* mpn/generic/div_qr_1n_pi1.c (mpn_div_qr_1n_pi1): Micro-optimize

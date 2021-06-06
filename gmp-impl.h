@@ -154,10 +154,11 @@ see https://www.gnu.org/licenses/.  */
 
 #if HAVE_INTTYPES_H      /* for uint_least32_t */
 # include <inttypes.h>
-#else
-# if HAVE_STDINT_H
-#  include <stdint.h>
-# endif
+#endif
+/* On some platforms inttypes.h exists but is incomplete
+   and we still need stdint.h. */
+#if HAVE_STDINT_H
+# include <stdint.h>
 #endif
 
 #ifdef __cplusplus
