@@ -1982,6 +1982,60 @@ gmp_randstate_t rstate;
 Also, in general @code{mp_bitcnt_t} is used for bit counts and ranges, and
 @code{size_t} is used for byte or character counts.
 
+@sp 1
+
+@cindex Pointer types
+@tindex @code{mpz_ptr}
+@tindex @code{mpz_srcptr}
+@tindex @code{mpq_ptr}
+@tindex @code{mpq_srcptr}
+@tindex @code{mpf_ptr}
+@tindex @code{mpf_srcptr}
+@tindex @code{gmp_randstate_ptr}
+@tindex @code{gmp_randstate_srcptr}
+Internally, GMP data types such as @code{mpz_t} are defined as one-element
+arrays, whose element type is part of the GMP internals (@pxref{Internals}).
+
+When an array is used as a function argument in C, it is not passed by value,
+instead its value is a pointer to the first element. In C jargon, this is
+sometimes referred to as the array "decaying" to a pointer. For GMP types like
+@code{mpz_t}, that means that the function called gets a pointer to the
+caller's @code{mpz_t} value, which is why no explicit @code{&} operator is
+needed when passing output arguments (@pxref{Parameter Conventions}).
+
+GMP defines names for these pointer types, e.g., @code{mpz_ptr} corresponding
+to @code{mpz_t}, and @code{mpz_srcptr} corresponding to @code{const mpz_t}.
+Most functions don't need to use these pointer types directly; it works fine to
+declare a function using the @code{mpz_t} or @code{const mpz_t} as the argument
+types, the same "pointer decay" happens in the background regardless.
+
+Occasionally, it is useful to manipulate pointers directly, e.g, to
+conditionally swap @emph{references} to a function's inputs without changing
+the @emph{values} as seen by the caller, or returning a pointer to an
+@code{mpz_t} which is part of a larger structure. For these cases, the pointer
+types are necessary. And a @code{mpz_ptr} can be passed as argument to any GMP
+function declared to take an @code{mpz_t} argument.
+
+Their definition is equivalent to the following code, which is given for
+illustratory purposes only:
+
+@example
+    typedef foo_internal foo_t[1];
+    typedef foo_internal * foo_ptr;
+    typedef const foo_internal * foo_srcptr;
+@end example
+
+The following pointer types are defined by GMP:
+@itemize
+@item @code{mpz_ptr} for pointers to the element type in @code{mpz_t}
+@item @code{mpz_srcptr} for @code{const} pointers to the element type in @code{mpz_t}
+@item @code{mpq_ptr} for pointers to the element type in @code{mpq_t}
+@item @code{mpq_srcptr} for @code{const} pointers to the element type in @code{mpq_t}
+@item @code{mpf_ptr} for pointers to the element type in @code{mpf_t}
+@item @code{mpf_srcptr} for @code{const} pointers to the element type in @code{mpf_t}
+@item @code{gmp_randstate_ptr} for pointers to the element type in @code{gmp_randstate_t}
+@item @code{gmp_randstate_srcptr} for @code{const} pointers to the element type in @code{gmp_randstate_t}
+@end itemize
 
 @node Function Classes, Variable Conventions, Nomenclature and Types, GMP Basics
 @section Function Classes
@@ -2071,7 +2125,9 @@ foo (void)
 
 GMP types like @code{mpz_t} are implemented as one-element arrays of certain
 structures.  Declaring a variable creates an object with the fields GMP needs,
-but variables are normally manipulated by using the pointer to the object.  For
+but variables are normally manipulated by using the pointer to the
+object.  The appropriate pointer types (@ref{Nomenclature and Types}) may
+be used to explicitly manipulate the pointer.  For
 both behavior and efficiency reasons, it is discouraged to make copies of the
 GMP object itself (either directly or via aggregate objects containing such GMP
 objects).  If copies are done, all of them must be used read-only; using a copy
@@ -2129,6 +2185,13 @@ bother supporting that sort of thing.
 
 Since GMP types are implemented as one-element arrays, using a GMP variable as
 a parameter passes a pointer to the object. Hence the call-by-reference.
+A more explicit (and equivalent) prototype for our function @code{foo}
+could be:
+
+@example
+void foo (mpz_ptr result, mpz_srcptr param, unsigned long n);
+@end example
+
 
 
 @need 1000
@@ -4519,10 +4582,13 @@ Note that if an assignment to the numerator and/or denominator could take an
 (@pxref{Rational Number Functions}) then @code{mpq_canonicalize} must be
 called before any other @code{mpq} functions are applied to that @code{mpq_t}.
 
-@deftypefn Macro mpz_t mpq_numref (const mpq_t @var{op})
-@deftypefnx Macro mpz_t mpq_denref (const mpq_t @var{op})
+@deftypefn Macro mpz_ptr mpq_numref (const mpq_t @var{op})
+@deftypefnx Macro mpz_ptr mpq_denref (const mpq_t @var{op})
 Return a reference to the numerator and denominator of @var{op}, respectively.
-The @code{mpz} functions can be used on the result of these macros.
+The @code{mpz} functions can be used on the result of these macros.  Such
+calls may modify the numerator or denominator. However, care
+should be taken so that @var{op} remains in canonical form prior to a
+possible later call to an @code{mpq} function.
 @end deftypefn
 
 @deftypefun void mpq_get_num (mpz_t @var{numerator}, const mpq_t @var{rational})
