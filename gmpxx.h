@@ -1795,6 +1795,12 @@ public:
 #if __GMPXX_USE_CXX11
   __gmp_expr(__gmp_expr &&q)
   { *mp = *q.mp; mpq_init(q.mp); }
+  __gmp_expr(mpz_class &&z)
+  {
+    *mpq_numref(mp) = *z.get_mpz_t();
+    mpz_init_set_ui(mpq_denref(mp), 1);
+    mpz_init(z.get_mpz_t());
+  }
 #endif
   template <class T>
   __gmp_expr(const __gmp_expr<mpz_t, T> &expr)
