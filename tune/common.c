@@ -718,6 +718,16 @@ speed_mpn_div_qr_1n_pi1_2 (struct speed_params *s)
 {
   SPEED_ROUTINE_MPN_DIV_QR_1N_PI1 (mpn_div_qr_1n_pi1_2);
 }
+double
+speed_mpn_div_qr_1n_pi1_3 (struct speed_params *s)
+{
+  SPEED_ROUTINE_MPN_DIV_QR_1N_PI1 (mpn_div_qr_1n_pi1_3);
+}
+double
+speed_mpn_div_qr_1n_pi1_4 (struct speed_params *s)
+{
+  SPEED_ROUTINE_MPN_DIV_QR_1N_PI1 (mpn_div_qr_1n_pi1_4);
+}
 
 double
 speed_mpn_div_qr_1 (struct speed_params *s)

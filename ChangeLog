@@ -1,3 +1,21 @@
+2021-07-01  Niels Möller  <nisse@lysator.liu.se>
+
+	* mpn/generic/div_qr_1n_pi1.c (mpn_div_qr_1n_pi1): New variants,
+	DIV_QR_1N_METHOD 3 and 4.
+
+	* tune/div_qr_1n_pi1_3.c: New file.
+	* tune/div_qr_1n_pi1_4.c: New file.
+	* tune/Makefile.am (libspeed_la_SOURCES): Add new files.
+	* tune/div_qr_1_tune.c (__gmpn_div_qr_1n_pi1): Handle new values
+	of div_qr_1n_pi1_method.
+	* tune/common.c (speed_mpn_div_qr_1n_pi1_3)
+	(speed_mpn_div_qr_1n_pi1_4): New functions.
+	* tune/speed.c (routine): Add mpn_div_qr_1n_pi1_3 and
+	mpn_div_qr_1n_pi1_3 to list.
+	* tune/speed.h: Declare new functions.
+	* tune/tuneup.c (tune_div_qr_1): Extend tuning of
+	DIV_QR_1N_PI1_METHOD.
+
 2021-06-20  Marc Glisse  <marc.glisse@inria.fr>
 
 	* gmpxx.h (mpq_class(mpz_class&&)): New constructor.

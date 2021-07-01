@@ -2253,16 +2253,18 @@ tune_div_qr_1 (void)
   if (!HAVE_NATIVE_mpn_div_qr_1n_pi1)
     {
       static struct param_t  param;
-      speed_function_t f[2] =
+      speed_function_t f[] =
 	{
 	 speed_mpn_div_qr_1n_pi1_1,
 	 speed_mpn_div_qr_1n_pi1_2,
+	 speed_mpn_div_qr_1n_pi1_3,
+	 speed_mpn_div_qr_1n_pi1_4,
 	};
 
       s.size = 10;
       s.r = randlimb_norm ();
 
-      one_method (2, f, "mpn_div_qr_1n_pi1", "DIV_QR_1N_PI1_METHOD", &param);
+      one_method (numberof(f), f, "mpn_div_qr_1n_pi1", "DIV_QR_1N_PI1_METHOD", &param);
     }
 
   {

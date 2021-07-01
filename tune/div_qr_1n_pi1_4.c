@@ -1,4 +1,4 @@
-/* mpn/generic/div_qr_1, using tuned threshold and method.
+/* mpn/generic/div_qr_1n_pi1.c method 4.
 
 Copyright 2013 Free Software Foundation, Inc.
 
@@ -28,22 +28,11 @@ You should have received copies of the GNU General Public License and the
 GNU Lesser General Public License along with the GNU MP Library.  If not,
 see https://www.gnu.org/licenses/.  */
 
-#define TUNE_PROGRAM_BUILD 1
-
 #include "gmp-impl.h"
 
-mp_limb_t mpn_div_qr_1n_pi1_1 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
-mp_limb_t mpn_div_qr_1n_pi1_2 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
-mp_limb_t mpn_div_qr_1n_pi1_3 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
+#undef DIV_QR_1N_METHOD
+#define DIV_QR_1N_METHOD 4
+#undef mpn_div_qr_1n_pi1
+#define mpn_div_qr_1n_pi1 mpn_div_qr_1n_pi1_4
 
-#if !HAVE_NATIVE_mpn_div_qr_1n_pi1
-#define __gmpn_div_qr_1n_pi1						\
-  (div_qr_1n_pi1_method <= 2						\
-   ? (div_qr_1n_pi1_method == 1 ? mpn_div_qr_1n_pi1_1 : mpn_div_qr_1n_pi1_2) \
-   : (div_qr_1n_pi1_method == 3 ? mpn_div_qr_1n_pi1_3 : mpn_div_qr_1n_pi1_4))
-#endif
-
-#undef mpn_div_qr_1
-#define mpn_div_qr_1 mpn_div_qr_1_tune
-
-#include "mpn/generic/div_qr_1.c"
+#include "mpn/generic/div_qr_1n_pi1.c"

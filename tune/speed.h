@@ -210,6 +210,8 @@ double speed_mpn_divrem_2_inv (struct speed_params *);
 double speed_mpn_div_qr_1n_pi1 (struct speed_params *);
 double speed_mpn_div_qr_1n_pi1_1 (struct speed_params *);
 double speed_mpn_div_qr_1n_pi1_2 (struct speed_params *);
+double speed_mpn_div_qr_1n_pi1_3 (struct speed_params *);
+double speed_mpn_div_qr_1n_pi1_4 (struct speed_params *);
 double speed_mpn_div_qr_1 (struct speed_params *);
 double speed_mpn_div_qr_2n (struct speed_params *);
 double speed_mpn_div_qr_2u (struct speed_params *);
@@ -482,6 +484,8 @@ void speed_option_set (const char *);
 
 mp_limb_t mpn_div_qr_1n_pi1_1 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
 mp_limb_t mpn_div_qr_1n_pi1_2 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
+mp_limb_t mpn_div_qr_1n_pi1_3 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
+mp_limb_t mpn_div_qr_1n_pi1_4 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
 
 mp_limb_t mpn_divrem_1_div (mp_ptr, mp_size_t, mp_srcptr, mp_size_t, mp_limb_t);
 mp_limb_t mpn_divrem_1_inv (mp_ptr, mp_size_t, mp_srcptr, mp_size_t, mp_limb_t);

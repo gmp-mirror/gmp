@@ -244,6 +244,8 @@ const struct routine_t {
   { "mpn_div_qr_1n_pi1", speed_mpn_div_qr_1n_pi1, FLAG_R  },
   { "mpn_div_qr_1n_pi1_1",speed_mpn_div_qr_1n_pi1_1, FLAG_R  },
   { "mpn_div_qr_1n_pi1_2",speed_mpn_div_qr_1n_pi1_2, FLAG_R  },
+  { "mpn_div_qr_1n_pi1_3",speed_mpn_div_qr_1n_pi1_3, FLAG_R  },
+  { "mpn_div_qr_1n_pi1_4",speed_mpn_div_qr_1n_pi1_4, FLAG_R  },
   { "mpn_div_qr_1",      speed_mpn_div_qr_1,      FLAG_R },
 
   { "mpn_div_qr_2n",     speed_mpn_div_qr_2n,       },
