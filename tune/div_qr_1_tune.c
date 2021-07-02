@@ -35,6 +35,7 @@ see https://www.gnu.org/licenses/.  */
 mp_limb_t mpn_div_qr_1n_pi1_1 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
 mp_limb_t mpn_div_qr_1n_pi1_2 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
 mp_limb_t mpn_div_qr_1n_pi1_3 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
+mp_limb_t mpn_div_qr_1n_pi1_4 (mp_ptr, mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t, mp_limb_t);
 
 #if !HAVE_NATIVE_mpn_div_qr_1n_pi1
 #define __gmpn_div_qr_1n_pi1						\
