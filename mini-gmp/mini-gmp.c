@@ -3198,6 +3198,7 @@ void
 mpz_rootrem (mpz_t x, mpz_t r, const mpz_t y, unsigned long z)
 {
   int sgn;
+  mp_bitcnt_t bc;
   mpz_t t, u;
 
   sgn = y->_mp_size < 0;
@@ -3216,7 +3217,8 @@ mpz_rootrem (mpz_t x, mpz_t r, const mpz_t y, unsigned long z)
 
   mpz_init (u);
   mpz_init (t);
-  mpz_setbit (t, mpz_sizeinbase (y, 2) / z + 1);
+  bc = (mpz_sizeinbase (y, 2) - 1) / z + 1;
+  mpz_setbit (t, bc);
 
   if (z == 2) /* simplify sqrt loop: z-1 == 1 */
     do {
@@ -3523,7 +3525,8 @@ gmp_stronglucas (const mpz_t x, mpz_t Qk)
   mpz_init (V);
 
   /* n-(D/n) = n+1 = d*2^{b0}, with d = (n>>b0) | 1 */
-  b0 = mpz_scan0 (n, 0);
+  b0 = mpn_common_scan (~ n->_mp_d[0], 0, n->_mp_d, n->_mp_size, GMP_LIMB_MAX);
+  /* b0 = mpz_scan0 (n, 0); */
 
   /* D= P^2 - 4Q; P = 1; Q = (1-D)/4 */
   Q = (D & 2) ? (long) (D >> 2) + 1 : -(long) (D >> 2);
