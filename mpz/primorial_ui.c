@@ -48,55 +48,15 @@ see https://www.gnu.org/licenses/.  */
       (PR) *= (P);						\
   } while (0)
 
-#define LOOP_ON_SIEVE_CONTINUE(prime,end)			\
-    __max_i = (end);						\
-								\
-    do {							\
-      ++__i;							\
-      if ((*__sieve & __mask) == 0)				\
-	{							\
-	  mp_limb_t prime;					\
-	  prime = id_to_n(__i)
-
-#define LOOP_ON_SIEVE_BEGIN(prime,start,end,off,sieve)		\
-  do {								\
-    mp_limb_t __mask, *__sieve, __max_i, __i;			\
-								\
-    __i = (start)-(off);					\
-    __sieve = (sieve) + __i / GMP_LIMB_BITS;			\
-    __mask = CNST_LIMB(1) << (__i % GMP_LIMB_BITS);		\
-    __i += (off);						\
-								\
-    LOOP_ON_SIEVE_CONTINUE(prime,end)
-
-#define LOOP_ON_SIEVE_STOP					\
-	}							\
-      __mask = __mask << 1 | __mask >> (GMP_LIMB_BITS-1);	\
-      __sieve += __mask & 1;					\
-    }  while (__i <= __max_i)
-
-#define LOOP_ON_SIEVE_END					\
-    LOOP_ON_SIEVE_STOP;						\
-  } while (0)
-
 /*********************************************************/
 /* Section sieve: sieving functions and tools for primes */
 /*********************************************************/
 
-#if 0
-static mp_limb_t
-bit_to_n (mp_limb_t bit) { return (bit*3+4)|1; }
-#endif
-
-/* id_to_n (x) = bit_to_n (x-1) = (id*3+1)|1*/
-static mp_limb_t
-id_to_n  (mp_limb_t id)  { return id*3+1+(id&1); }
-
+#if WANT_ASSERT
 /* n_to_bit (n) = ((n-1)&(-CNST_LIMB(2)))/3U-1 */
 static mp_limb_t
 n_to_bit (mp_limb_t n) { return ((n-5)|1)/3U; }
 
-#if WANT_ASSERT
 static mp_size_t
 primesieve_size (mp_limb_t n) { return n_to_bit(n) / GMP_LIMB_BITS + 1; }
 #endif
@@ -141,9 +101,13 @@ mpz_primorial_ui (mpz_ptr x, unsigned long n)
 
 	max_prod = GMP_NUMB_MAX / n;
 
-	LOOP_ON_SIEVE_BEGIN (prime, n_to_bit(5), n_to_bit (n), 0, sieve);
+	for (mp_limb_t i = 4, *sp = sieve; i < n; i += GMP_LIMB_BITS * 3)
+	  for (mp_limb_t b = i, x = ~ *(sp++); x != 0; b += 3, x >>= 1)
+	    if (x & 1)
+	      {
+		mp_limb_t prime = b | 1;
 	FACTOR_LIST_STORE (prime, prod, max_prod, factors, j);
-	LOOP_ON_SIEVE_END;
+	      }
       }
 
       if (j != 0)
