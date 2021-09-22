@@ -1652,7 +1652,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
   } while (0)
 #endif /* RT/ROMP */
 
-#if defined (__riscv64) && W_TYPE_SIZE == 64
+#if defined (__riscv) && defined (__riscv_mul) && W_TYPE_SIZE == 64
 #define umul_ppmm(ph, pl, u, v) \
   do {									\
     UDItype __u = (u), __v = (v);					\
