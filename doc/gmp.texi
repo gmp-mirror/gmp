@@ -9033,7 +9033,7 @@ For inputs larger than @code{GCD_DC_THRESHOLD}, @code{mpz_jacobi},
 @code{mpz_legendre} and @code{mpz_kronecker} are computed via the HGCD (Half
 GCD) function, as a generalization to Lehmer's algorithm.
 
-Most GCD algorithms reduce @math{a} and @math{b} by repeatatily computing the
+Most GCD algorithms reduce @math{a} and @math{b} by repeatedly computing the
 quotient @m{q = \lfloor a/b \rfloor, q = floor(a/b)} and iteratively replacing
 
 @c Couldn't figure out macros with commas.
