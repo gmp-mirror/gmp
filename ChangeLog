@@ -1,3 +1,13 @@
+2021-09-25 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/import.c: Use MPN_BSWAP_REVERSE, reorder branches.
+	* mpz/inp_raw.c: Avoid bit size overflows.
+
+2021-08-21 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/primorial_ui.c: Simpler loop on sieved primes.
+	* mpz/nextprime.c: Likewise.
+
 2021-07-01  Niels Möller  <nisse@lysator.liu.se>
 
 	* mpn/generic/div_qr_1n_pi1.c (mpn_div_qr_1n_pi1): New variants,
