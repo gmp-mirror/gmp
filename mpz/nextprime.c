@@ -1,6 +1,7 @@
 /* mpz_nextprime(p,t) - compute the next prime > t and store that in p.
 
-Copyright 1999-2001, 2008, 2009, 2012, 2020 Free Software Foundation, Inc.
+Copyright 1999-2001, 2008, 2009, 2012, 2020, 2021 Free Software
+Foundation, Inc.
 
 Contributed to the GNU project by Niels Möller and Torbjorn Granlund.
 Improved by Seth Troisi.
@@ -41,39 +42,10 @@ see https://www.gnu.org/licenses/.  */
 /*********************************************************/
 
 static mp_limb_t
-id_to_n  (mp_limb_t id)  { return id*3+1+(id&1); }
-
-static mp_limb_t
 n_to_bit (mp_limb_t n) { return ((n-5)|1)/3U; }
 
 static mp_size_t
 primesieve_size (mp_limb_t n) { return n_to_bit(n) / GMP_LIMB_BITS + 1; }
-
-
-/************************************/
-/* Section macros: macros for sieve */
-/************************************/
-
-#define LOOP_ON_SIEVE_BEGIN(prime,start,end,sieve)     \
-  do {                                                 \
-    mp_limb_t __mask, __index, __max_i, __i;           \
-    __i = (start);                                     \
-    __index = __i / GMP_LIMB_BITS;                     \
-    __mask = CNST_LIMB(1) << (__i % GMP_LIMB_BITS);    \
-    __max_i = (end);                                   \
-    do {                                               \
-      ++__i;                                           \
-      if (((sieve)[__index] & __mask) == 0)            \
-        {                                              \
-          mp_limb_t prime = id_to_n(__i)               \
-
-#define LOOP_ON_SIEVE_END                                 \
-        }                                                 \
-      __mask = __mask << 1 | __mask >> (GMP_LIMB_BITS-1); \
-      __index += __mask & 1;                              \
-    }  while (__i <= __max_i);                            \
-  } while (0)
-
 
 
 static const unsigned char primegap_small[] =
@@ -208,10 +180,15 @@ findnext (mpz_ptr p,
 
       i = 0;
       last_prime = 3;
-      LOOP_ON_SIEVE_BEGIN (prime, n_to_bit (5), n_to_bit (sieve_limit), sieve);
+      /* FIXME: we should get rid of sieve_limit and use (i < prime_limit) */
+      for (mp_limb_t j = 4, *sp = sieve; j < sieve_limit; j += GMP_LIMB_BITS * 3)
+	for (mp_limb_t b = j, x = ~ *(sp++); x != 0; b += 3, x >>= 1)
+	  if (x & 1)
+	    {
+	      mp_limb_t prime = b | 1;
         primegap_tmp[i++] = prime - last_prime;
         last_prime = prime;
-      LOOP_ON_SIEVE_END;
+	    }
 
       /* Both primesieve and prime_limit ignore the first two primes. */
       ASSERT(i == prime_limit);
@@ -313,5 +290,3 @@ mpz_prevprime (mpz_ptr p, mpz_srcptr n)
   return findnext(p, mpz_fdiv_ui, mpz_sub_ui);
 }
 
-#undef LOOP_ON_SIEVE_END
-#undef LOOP_ON_SIEVE_BEGIN
