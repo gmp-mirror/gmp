@@ -1426,8 +1426,8 @@ case $host in
       for i in $cpu $xpath; do
 	path_64="$path_64 s390_64/$i"
       done
-      path_64="$path_64 s390_64"
     fi
+    path_64="$path_64 s390_64"
     if test x"$gccarch" != x ; then
       gcc_cflags_arch="-march=$gccarch"
     fi
