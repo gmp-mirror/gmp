@@ -1657,7 +1657,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
   do {									\
     UDItype __u = (u), __v = (v);					\
     (pl) = __u * __v;							\
-    __asm__ ("mulhu\t%2, %1, %0" : "=r" (ph) : "%r" (__u), "r" (__v));	\
+    __asm__ ("mulhu\t%0, %1, %2" : "=r" (ph) : "%r" (__u), "r" (__v));	\
   } while (0)
 #endif
 
