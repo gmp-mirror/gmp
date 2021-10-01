@@ -45,6 +45,7 @@ see https://www.gnu.org/licenses/.  */
 /* Define macros and static functions already defined by mini-gmp.c */
 #define GMP_LIMB_BITS (sizeof(mp_limb_t) * CHAR_BIT)
 #define GMP_LIMB_HIGHBIT ((mp_limb_t) 1 << (GMP_LIMB_BITS - 1))
+#define GMP_LIMB_MAX ((mp_limb_t) ~ (mp_limb_t) 0)
 #define GMP_NEG_CAST(T,x) (-((T)((x) + 1) - 1))
 #define GMP_MIN(a, b) ((a) < (b) ? (a) : (b))
 
