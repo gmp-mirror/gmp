@@ -1,3 +1,8 @@
+2021-10-01 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mini-gmp.c: Add asserts (removed at compile time) on limb size.
+	* mini-mpq.c: Add #defines needed if mini-gmp.h is not included.
+
 2021-08-02 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mini-gmp.c (mpz_rootrem): Better initial guess.

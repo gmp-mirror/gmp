@@ -1,3 +1,10 @@
+2021-10-01 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* gen-sieve.c: New file to generate a small presieved array.
+	* primesieve.c (first_block_primesieve): Use the presieved array.
+	* gmp-impl.h: #include output of gen-sieve.
+	* Makefile.am: Add rules for gen-sieve and sieve_table.h.
+
 2021-09-25 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpz/import.c: Use MPN_BSWAP_REVERSE, reorder branches.
