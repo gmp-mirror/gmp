@@ -5,15 +5,32 @@
 	* gmp-impl.h: #include output of gen-sieve.
 	* Makefile.am: Add rules for gen-sieve and sieve_table.h.
 
+2021-09-26  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac (s390): Make sure to always include main asm directory.
+
+	* longlong.h (umul_ppmm): Correct Risc V operand order.
+
 2021-09-25 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpz/import.c: Use MPN_BSWAP_REVERSE, reorder branches.
 	* mpz/inp_raw.c: Avoid bit size overflows.
 
+2021-09-22  Torbjörn Granlund  <tg@gmplib.org>
+
+	* config.sub: Update powerpc pattern.
+
+	* longlong.h: Change tested predef for Risc V.
+
 2021-08-21 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpz/primorial_ui.c: Simpler loop on sieved primes.
 	* mpz/nextprime.c: Likewise.
+
+2021-09-14  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/asm-defs.m4: Remove quotes around PIC_ALWAYS.  Reported by
+	George Koehler.
 
 2021-07-01  Niels Möller  <nisse@lysator.liu.se>
 
@@ -102,6 +119,13 @@
 2021-05-08  Marc Glisse  <marc.glisse@inria.fr>
 
 	* doc/gmp.texi: Mention shifts in bit manipulation.
+
+2021-05-02  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac, config.guess, config.sub: Recognise CPUs icelake,
+	tigerlake, and rocketlake.
+
+	* configure.ac: Clean up handling of several Intel CPUs.
 
 2021-03-11  Torbjörn Granlund  <tg@gmplib.org>
 
