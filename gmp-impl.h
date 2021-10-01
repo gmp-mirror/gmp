@@ -146,6 +146,7 @@ see https://www.gnu.org/licenses/.  */
 #include "gmp-mparam.h"
 #include "fib_table.h"
 #include "fac_table.h"
+#include "sieve_table.h"
 #include "mp_bases.h"
 #if WANT_FAT_BINARY
 #include "fat.h"

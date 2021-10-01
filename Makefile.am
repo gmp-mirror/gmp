@@ -353,6 +353,15 @@ gen-fac$(EXEEXT_FOR_BUILD): gen-fac$(U_FOR_BUILD).c bootstrap.c
 DISTCLEANFILES += gen-fac$(EXEEXT_FOR_BUILD)
 EXTRA_DIST += gen-fac.c
 
+sieve_table.h: gen-sieve$(EXEEXT_FOR_BUILD)
+	./gen-sieve $(GMP_LIMB_BITS) >sieve_table.h || (rm -f sieve_table.h; exit 1)
+BUILT_SOURCES += sieve_table.h
+
+gen-sieve$(EXEEXT_FOR_BUILD): gen-sieve$(U_FOR_BUILD).c bootstrap.c
+	$(CC_FOR_BUILD) `test -f 'gen-sieve$(U_FOR_BUILD).c' || echo '$(srcdir)/'`gen-sieve$(U_FOR_BUILD).c -o gen-sieve$(EXEEXT_FOR_BUILD)
+DISTCLEANFILES += gen-sieve$(EXEEXT_FOR_BUILD)
+EXTRA_DIST += gen-sieve.c
+
 
 fib_table.h: gen-fib$(EXEEXT_FOR_BUILD)
 	./gen-fib header $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >fib_table.h || (rm -f fib_table.h; exit 1)
