@@ -102,6 +102,13 @@ mangle_seed (mpz_ptr r)
    with seeds 2^19937-20027, 2^19937-20026, ... the exact same sequences
    are obtained as with seeds 0, 1, etc.; it also means that seed -1
    produces the same sequence as seed 2^19937-20028, etc.
+
+   Moreover, c) is not guaranted, there are many seeds yielding to the
+   same sequence, because gcd (1074888996, 2^19937 - 20023 - 1) = 12.
+   E.g. x and x'=x*19^((2^19937-20023-1) / 12) mod (2^19937-20023), if
+   chosen as seed1, generate the same seed2, for every x.
+   Similarly x" can be obtained from x', obtaining 12 different
+   values.
  */
 
 static void
