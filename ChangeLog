@@ -5,6 +5,8 @@
 	* gmp-impl.h: #include output of gen-sieve.
 	* Makefile.am: Add rules for gen-sieve and sieve_table.h.
 
+	* mpn/x86_64/addaddmul_1msb0.asm: Support DOS ABI, reorder branches.
+
 2021-09-26  Torbjörn Granlund  <tg@gmplib.org>
 
 	* configure.ac (s390): Make sure to always include main asm directory.
