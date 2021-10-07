@@ -181,6 +181,7 @@ double speed_mpn_addmul_5 (struct speed_params *);
 double speed_mpn_addmul_6 (struct speed_params *);
 double speed_mpn_addmul_7 (struct speed_params *);
 double speed_mpn_addmul_8 (struct speed_params *);
+double speed_mpn_addaddmul_1msb0 (struct speed_params *);
 double speed_mpn_cnd_add_n (struct speed_params *);
 double speed_mpn_cnd_sub_n (struct speed_params *);
 double speed_mpn_com (struct speed_params *);
@@ -1076,6 +1077,36 @@ int speed_routine_count_zeros_setup (struct speed_params *, mp_ptr, int, int);
 #define SPEED_ROUTINE_MPN_UNARY_8(function)				\
   SPEED_ROUTINE_MPN_UNARY_N (function, 8)
 
+#define SPEED_ROUTINE_MPN_ADDADDMUL1_MSB0(function)			\
+  {									\
+    mp_ptr     wp;							\
+    unsigned   i;							\
+    double     t;							\
+    mp_limb_t  r;							\
+    TMP_DECL;								\
+									\
+    SPEED_RESTRICT_COND (s->size >= 1);					\
+									\
+    TMP_MARK;								\
+    SPEED_TMP_ALLOC_LIMBS (wp, s->size, s->align_wp);			\
+    speed_operand_src (s, s->xp, s->size);				\
+    speed_operand_src (s, s->yp, s->size);				\
+    speed_operand_dst (s, wp, s->size);					\
+    speed_cache_fill (s);						\
+									\
+    r = s->r != 0 ? s->r : MP_BASES_BIG_BASE_10;			\
+    r &= ~GMP_NUMB_HIGHBIT;						\
+									\
+    speed_starttime ();							\
+    i = s->reps;							\
+    do									\
+      function (wp, s->xp, s->yp, s->size, r, r);			\
+    while (--i != 0);							\
+    t = speed_endtime ();						\
+									\
+    TMP_FREE;								\
+    return t;								\
+  }
 
 /* For mpn_mul, mpn_mul_basecase, xsize=r, ysize=s->size. */
 #define SPEED_ROUTINE_MPN_MUL(function)					\

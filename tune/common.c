@@ -546,6 +546,13 @@ speed_mpn_addmul_8 (struct speed_params *s)
 }
 #endif
 
+#if HAVE_NATIVE_mpn_addaddmul_1msb0
+double
+speed_mpn_addaddmul_1msb0 (struct speed_params *s)
+{
+  SPEED_ROUTINE_MPN_ADDADDMUL1_MSB0 (mpn_addaddmul_1msb0);
+}
+#endif
 double
 speed_mpn_mul_1 (struct speed_params *s)
 {

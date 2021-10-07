@@ -1,3 +1,9 @@
+2021-10-07  Niels Möller  <nisse@lysator.liu.se>
+
+	* tune/speed.h (SPEED_ROUTINE_MPN_ADDADDMUL1_MSB0): New macro.
+	* tune/common.c (speed_mpn_addaddmul_1msb0): New function.
+	* tune/speed.c (routine): Add mpn_addaddmul_1msb0 to list.
+
 2021-10-01 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* gen-sieve.c: New file to generate a small presieved array.
