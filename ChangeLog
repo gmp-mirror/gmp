@@ -1,3 +1,7 @@
+2021-10-08  Niels Möller  <nisse@lysator.liu.se>
+
+	* tests/mpn/t-addaddmul.c: Unit test for mpn_addaddmul_1msb0.
+
 2021-10-07  Niels Möller  <nisse@lysator.liu.se>
 
 	* tune/speed.h (SPEED_ROUTINE_MPN_ADDADDMUL1_MSB0): New macro.
