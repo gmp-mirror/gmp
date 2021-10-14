@@ -7,7 +7,7 @@ IT IS ONLY SAFE TO REACH IT THROUGH DOCUMENTED INTERFACES.
 IN FACT, IT IS ALMOST GUARANTEED THAT IT WILL CHANGE OR
 DISAPPEAR IN A FUTURE GNU MP RELEASE.
 
-Copyright 2010-2012, 2015, 2016 Free Software Foundation, Inc.
+Copyright 2010-2012, 2015, 2016, 2021 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -301,34 +301,11 @@ block_resieve (mp_ptr bit_array, mp_size_t limbs, mp_limb_t offset,
   } while (1);
 }
 
-static void
-first_block_primesieve (mp_ptr bit_array, mp_limb_t n)
-{
-  static mp_limb_t presieved[] = {PRIMESIEVE_INIT_TABLE};
-
-  mp_size_t bits, limbs;
-  mp_limb_t i;
-
-  ASSERT (n > 4);
-
-  bits  = n_fto_bit(n);
-  limbs = bits / GMP_LIMB_BITS + 1;
-
-  for (mp_size_t j = 0, lim = MIN (limbs, PRIMESIEVE_NUMBEROF_TABLE);
-       j < lim; ++j)
-    bit_array [j] = presieved [j]; /* memcopy? */
-
-  if (limbs > PRIMESIEVE_NUMBEROF_TABLE)
-    block_resieve (bit_array + PRIMESIEVE_NUMBEROF_TABLE,
-		   limbs - PRIMESIEVE_NUMBEROF_TABLE,
-		   GMP_LIMB_BITS * PRIMESIEVE_NUMBEROF_TABLE, bit_array);
-}
-
 #define BLOCK_SIZE 2048
 
 /* Fills bit_array with the characteristic function of composite
-   numbers up to the parameter n. I.e. a bit set to "1" represent a
-   composite, a "0" represent a prime.
+   numbers up to the parameter n. I.e. a bit set to "1" represents a
+   composite, a "0" represents a prime.
 
    The primesieve_size(n) limbs pointed to by bit_array are
    overwritten. The returned value counts prime integers in the
@@ -347,21 +324,25 @@ gmp_primesieve (mp_ptr bit_array, mp_limb_t n)
 {
   mp_size_t size;
   mp_limb_t bits;
+  static mp_limb_t presieved[] = {PRIMESIEVE_INIT_TABLE};
 
   ASSERT (n > 4);
 
   bits = n_fto_bit(n);
   size = bits / GMP_LIMB_BITS + 1;
 
-  if (size > BLOCK_SIZE * 2) {
+  for (mp_size_t j = 0, lim = MIN (size, PRIMESIEVE_NUMBEROF_TABLE);
+       j < lim; ++j)
+    bit_array [j] = presieved [j]; /* memcopy? */
+
+  if (size > PRIMESIEVE_NUMBEROF_TABLE) {
     mp_size_t off;
-    off = BLOCK_SIZE + (size % BLOCK_SIZE);
-    first_block_primesieve (bit_array, id_to_n (off * GMP_LIMB_BITS));
-    do {
+    off = size > 2 * BLOCK_SIZE ? BLOCK_SIZE + (size % BLOCK_SIZE) : size;
+    block_resieve (bit_array + PRIMESIEVE_NUMBEROF_TABLE,
+		   off - PRIMESIEVE_NUMBEROF_TABLE,
+		   GMP_LIMB_BITS * PRIMESIEVE_NUMBEROF_TABLE, bit_array);
+    for (; off < size; off += BLOCK_SIZE)
       block_resieve (bit_array + off, BLOCK_SIZE, off * GMP_LIMB_BITS, bit_array);
-    } while ((off += BLOCK_SIZE) < size);
-  } else {
-    first_block_primesieve (bit_array, n);
   }
 
   if ((bits + 1) % GMP_LIMB_BITS != 0)
