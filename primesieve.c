@@ -59,8 +59,6 @@ static mp_size_t
 primesieve_size (mp_limb_t n) { return n_fto_bit(n) / GMP_LIMB_BITS + 1; }
 #endif
 
-#if GMP_LIMB_BITS > 61
-#define SIEVE_SEED CNST_LIMB(0x3294C9E069128480)
 #if GMP_LIMB_BITS == 64
 /* 110bits pre-sieved mask for primes 5, 11*/
 #define SIEVE_MASK1 CNST_LIMB(0x81214a1204892058)
@@ -69,37 +67,14 @@ primesieve_size (mp_limb_t n) { return n_fto_bit(n) / GMP_LIMB_BITS + 1; }
 #define SIEVE_2MSK1 CNST_LIMB(0x9402180c40230184)
 #define SIEVE_2MSK2 CNST_LIMB(0x0285021088402120)
 #define SIEVE_2MSKT CNST_LIMB(0xa41210084421)
-#define SEED_LIMIT (17*17-1)
-#else
-#define SEED_LIMIT 202
 #endif
-#else
-#if GMP_LIMB_BITS > 30
-#define SIEVE_SEED CNST_LIMB(0x69128480)
+
 #if GMP_LIMB_BITS == 32
 /* 70bits pre-sieved mask for primes 5, 7*/
 #define SIEVE_MASK1 CNST_LIMB(0x12148960)
 #define SIEVE_MASK2 CNST_LIMB(0x44a120cc)
 #define SIEVE_MASKT CNST_LIMB(0x1a)
-#define SEED_LIMIT (11*11-1)
-#else
-#define SEED_LIMIT 114
 #endif
-#else
-#if GMP_LIMB_BITS > 15
-#define SIEVE_SEED CNST_LIMB(0x8480)
-#define SEED_LIMIT 54
-#else
-#if GMP_LIMB_BITS > 7
-#define SIEVE_SEED CNST_LIMB(0x80)
-#define SEED_LIMIT 34
-#else
-#define SIEVE_SEED CNST_LIMB(0x0)
-#define SEED_LIMIT (5*5-1)
-#endif /* 7 */
-#endif /* 15 */
-#endif /* 30 */
-#endif /* 61 */
 
 #define SET_OFF1(m1, m2, M1, M2, off, BITS)		\
   if (off) {						\
@@ -352,8 +327,6 @@ gmp_primesieve (mp_ptr bit_array, mp_limb_t n)
 }
 
 #undef BLOCK_SIZE
-#undef SEED_LIMIT
-#undef SIEVE_SEED
 #undef SIEVE_MASK1
 #undef SIEVE_MASK2
 #undef SIEVE_MASKT
