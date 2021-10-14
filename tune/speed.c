@@ -321,6 +321,7 @@ const struct routine_t {
   { "mpn_gcdext_lehmer",     speed_mpn_gcdext_lehmer     },
 #endif
 
+  { "gmp_primesieve",    speed_gmp_primesieve       },
   { "mpz_nextprime",     speed_mpz_nextprime        },
   { "mpz_nextprime_1",   speed_mpz_nextprime_1, FLAG_R_OPTIONAL },
   { "mpz_prevprime",     speed_mpz_prevprime        },

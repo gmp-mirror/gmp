@@ -1781,6 +1781,12 @@ speed_mpn_gcd_22 (struct speed_params *s)
 }
 
 double
+speed_gmp_primesieve (struct speed_params *s)
+{
+  SPEED_ROUTINE_GMP_PRIMESIEVE (gmp_primesieve);
+}
+
+double
 speed_mpz_nextprime (struct speed_params *s)
 {
   SPEED_ROUTINE_MPZ_NEXTPRIME (mpz_nextprime);

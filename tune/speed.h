@@ -410,6 +410,7 @@ double speed_mpz_fib_ui (struct speed_params *);
 double speed_mpz_fib2_ui (struct speed_params *);
 double speed_mpz_init_clear (struct speed_params *);
 double speed_mpz_init_realloc_clear (struct speed_params *);
+double speed_gmp_primesieve (struct speed_params *);
 double speed_mpz_nextprime (struct speed_params *);
 double speed_mpz_nextprime_1 (struct speed_params *);
 double speed_mpz_prevprime (struct speed_params *);
@@ -3247,6 +3248,34 @@ int speed_routine_count_zeros_setup (struct speed_params *, mp_ptr, int, int);
     s->time_divisor = pieces;						\
     return t;								\
   }
+
+#define SPEED_ROUTINE_GMP_PRIMESIEVE(function)				\
+{									\
+    mp_ptr     wp;							\
+    unsigned   i;							\
+    double     t;							\
+    mp_limb_t  a = s->size * GMP_LIMB_BITS * 3;				\
+    TMP_DECL;								\
+									\
+    SPEED_RESTRICT_COND (s->size >= 1);					\
+									\
+    TMP_MARK;								\
+    SPEED_TMP_ALLOC_LIMBS (wp, s->size, s->align_wp);			\
+									\
+    speed_operand_dst (s, wp, s->size);					\
+    speed_cache_fill (s);						\
+									\
+    speed_starttime ();							\
+    i = s->reps;							\
+    do									\
+      function (wp, a);							\
+    while (--i != 0);							\
+    t = speed_endtime ();						\
+									\
+    TMP_FREE;								\
+    return t;								\
+}
+
 
 /* Calculate nextprime(n) for random n of s->size bits (not limbs). */
 #define SPEED_ROUTINE_MPZ_NEXTPRIME(function)				\
