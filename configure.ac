@@ -1968,7 +1968,8 @@ case $host in
 	# extra_functions_64="missing"	 # enable for bmi2/adx simulation
 	x86_have_mulx=yes
 	;;
-      icelake | icelakenoavx | tigerlake | tigerlakenoavx | rocketlake | rocketlakenoavx)
+      icelake | icelakenoavx | tigerlake | tigerlakenoavx | \
+      rocketlake | rocketlakenoavx | alderlake | alderlakenoavx)
 	gcc_cflags_cpu="-mtune=icelake-client -mtune=skylake -mtune=broadwell -mtune=haswell"
 	gcc_cflags_arch="-march=icelake-client -march=skylake -march=broadwell -march=haswell"
 	path="x86/coreihwl x86/coreisbr x86/p6/sse2 x86/p6/p3mmx x86/p6/mmx x86/p6 x86/mmx x86"
