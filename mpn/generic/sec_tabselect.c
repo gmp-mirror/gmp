@@ -1,6 +1,6 @@
 /* mpn_sec_tabselect.
 
-Copyright 2007-2009, 2011, 2013 Free Software Foundation, Inc.
+Copyright 2007-2009, 2011, 2013, 2021 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -30,7 +30,6 @@ see https://www.gnu.org/licenses/.  */
 
 #include "gmp-impl.h"
 
-
 /* Select entry `which' from table `tab', which has nents entries, each `n'
    limbs.  Store the selected entry at rp.  Reads entire table to avoid
    side-channel information leaks.  O(n*nents).  */
@@ -42,13 +41,22 @@ mpn_sec_tabselect (volatile mp_limb_t *rp, volatile const mp_limb_t *tab,
   mp_limb_t mask;
   volatile const mp_limb_t *tp;
 
-  for (k = 0; k < nents; k++)
+  tp = tab;
+
+  /* Place first entry into result area. */
+  for (i = 0; i < n; i++)
+    rp[i] = tp[i];
+
+  /* Conditionally replace entry in result area by entry 1...(nents-1) using
+     masking trickery. */
+  for (k = 1; k < nents; k++)
     {
-      mask = -(mp_limb_t) (which == k);
-      tp = tab + n * k;
+      /* Generate a mask using an expression which all compilers should compile
+	 into branch-free code.  The convoluted expression is designed to both
+	 allow mp_limb_t greater and mp_limb_t smaller than mp_size_t. */
+      mask = -(mp_limb_t) ((-(unsigned long) (which ^ k)) >> (BITS_PER_ULONG - 1));
+      tp += n;
       for (i = 0; i < n; i++)
-	{
-	  rp[i] = (rp[i] & ~mask) | (tp[i] & mask);
-	}
+	rp[i] = (rp[i] & mask) | (tp[i] & ~mask);
     }
 }
