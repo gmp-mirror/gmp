@@ -1,3 +1,7 @@
+2021-10-31 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/fac_ui.c: Save half the products for small values.
+
 2021-10-08  Niels Möller  <nisse@lysator.liu.se>
 
 	* tests/mpn/t-addaddmul.c: Unit test for mpn_addaddmul_1msb0.
