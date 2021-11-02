@@ -77,7 +77,7 @@ PROLOGUE(mpn_sec_tabselect)
 	lea	(rp,n,4), rp
 	lea	(tp,n,4), tp
 L(outer):
-	sub	$1, which
+	subl	$1, which
 	sbb	mask, mask
 
 	mov	n, i
