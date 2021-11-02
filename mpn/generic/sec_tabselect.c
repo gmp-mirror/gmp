@@ -30,9 +30,15 @@ see https://www.gnu.org/licenses/.  */
 
 #include "gmp-impl.h"
 
+#ifndef SEC_TABSELECT_METHOD
+#define SEC_TABSELECT_METHOD 1
+#endif
+
 /* Select entry `which' from table `tab', which has nents entries, each `n'
    limbs.  Store the selected entry at rp.  Reads entire table to avoid
    side-channel information leaks.  O(n*nents).  */
+
+#if SEC_TABSELECT_METHOD == 1
 void
 mpn_sec_tabselect (volatile mp_limb_t *rp, volatile const mp_limb_t *tab,
 		   mp_size_t n, mp_size_t nents, mp_size_t which)
@@ -60,3 +66,65 @@ mpn_sec_tabselect (volatile mp_limb_t *rp, volatile const mp_limb_t *tab,
 	rp[i] = (rp[i] & mask) | (tp[i] & ~mask);
     }
 }
+#endif
+
+#if SEC_TABSELECT_METHOD == 2
+void
+mpn_sec_tabselect (volatile mp_limb_t * restrict rp,
+		   volatile const mp_limb_t * restrict tab,
+		   mp_size_t n, mp_size_t nents, mp_size_t which)
+{
+  mp_size_t k, i;
+  mp_limb_t mask, r0, r1, r2, r3;
+  volatile const mp_limb_t * restrict tp;
+
+  for (i = 0; i <= n - 4; i += 4)
+    {
+      tp = tab + i;
+      r0 = r1 = r2 = r3 = 0;
+      for (k = 0; k < nents; k++)
+	{
+	  mask = (mp_limb_t) ((-(unsigned long) (which ^ k)) >> (BITS_PER_ULONG - 1)) - 1;
+	  r0 += tp[0] & mask;
+	  r1 += tp[1] & mask;
+	  r2 += tp[2] & mask;
+	  r3 += tp[3] & mask;
+	  tp += n;
+	}
+      rp[0] = r0;
+      rp[1] = r1;
+      rp[2] = r2;
+      rp[3] = r3;
+      rp += 4;
+    }
+
+  if (n & 2 != 0)
+    {
+      tp = tab + n - 2;
+      r0 = r1 = 0;
+      for (k = 0; k < nents; k++)
+	{
+	  mask = (mp_limb_t) ((-(unsigned long) (which ^ k)) >> (BITS_PER_ULONG - 1)) - 1;
+	  r0 += tp[0] & mask;
+	  r1 += tp[1] & mask;
+	  tp += n;
+	}
+      rp[0] = r0;
+      rp[1] = r1;
+      rp += 2;
+    }
+
+  if (n & 1 != 0)
+    {
+      tp = tab + n - 1;
+      r0 = r1 = 0;
+      for (k = 0; k < nents; k++)
+	{
+	  mask = (mp_limb_t) ((-(unsigned long) (which ^ k)) >> (BITS_PER_ULONG - 1)) - 1;
+	  r0 += tp[0] & mask;
+	  tp += n;
+	}
+      rp[0] = r0;
+    }
+}
+#endif
