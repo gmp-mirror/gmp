@@ -1,6 +1,35 @@
+2021-11-02  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/s390_64/sec_tabselect.asm: Rewrite.
+
+	* mpn/generic/sec_tabselect.c: Provide alternative function.
+
+2021-10-31  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/riscv/64/sec_tabselect.asm: New file.
+	* mpn/s390_64/sec_tabselect.asm: New file.
+	* mpn/x86/sec_tabselect.asm: Streamline.
+
 2021-10-31 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpz/fac_ui.c: Save half the products for small values.
+
+2021-10-29  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/generic/sec_tabselect.c: Rewrite.
+
+2021-10-16  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac, config.guess, config.sub, acinclude.m4: Recognise more
+	icelake CPUs, and initial alderlake CPUs.
+
+	* mpn/powerpc64/mode64/p9/addaddmul_1msb0.asm: New file.
+
+	* mpn/arm64/applem1/addaddmul_1msb0.asm: New file.
+
+2021-10-10  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/x86_64/k8/addaddmul_1msb0.asm: Moved from "..".
 
 2021-10-08  Niels Möller  <nisse@lysator.liu.se>
 
