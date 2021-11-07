@@ -8,9 +8,18 @@ Changes between GMP version 6.2.* and *.*.*
   BUGS FIXED
   * A possible overflow of type int is avoided for mpz_cmp on huge operands.
 
+  * A possible error condition when a malformed file is read with
+    mpz_inp_raw is now correctly handled.
+
+  FEATURES
+  * New public function mpz_prevprime, companion of the existing
+    mpz_nextprime.
+
   SPEEDUPS
   * New special code for base = 2 in mpz_powm reduces the average time
     for the functions that test primality.
+
+  * Speedup for the function mpz_nextprime on large operands.
 
 Changes between GMP version 6.1.* and 6.2.0
 
