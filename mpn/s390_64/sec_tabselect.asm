@@ -31,7 +31,7 @@ dnl  see https://www.gnu.org/licenses/.
 include(`../config.m4')
 
 C            cycles/limb
-C z900		 -		slfi unsupported
+C z900		 ?
 C z990		 ?
 C z9		 ?
 C z10		 ?
@@ -78,7 +78,8 @@ L(outer):
 	lghi	%r7, 0
 	lghi	%r8, 0
 	lghi	%r9, 0
-L(tp4):	slfi	which, 1
+L(tp4):	lghi	mask, 1
+	slgr	which, mask
 	slbgr	mask, mask
 	lmg	%r10, %r13, 0(tp)
 	ngr	%r10, mask
@@ -103,7 +104,8 @@ L(end4):
 	lg	k, eval(40+FRAME)(%r15)		C nents
 	lghi	%r6, 0
 	lghi	%r7, 0
-L(tp2):	slfi	which, 1
+L(tp2):	lghi	mask, 1
+	slgr	which, mask
 	slbgr	mask, mask
 	lmg	%r10, %r11, 0(tp)
 	ngr	%r10, mask
@@ -122,7 +124,8 @@ L(end2):
 	lg	which, eval(48+FRAME)(%r15)
 	lg	k, eval(40+FRAME)(%r15)		C nents
 	lghi	%r6, 0
-L(tp1):	slfi	which, 1
+L(tp1):	lghi	mask, 1
+	slgr	which, mask
 	slbgr	mask, mask
 	lg	%r10, 0(tp)
 	ngr	%r10, mask
