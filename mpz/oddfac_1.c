@@ -258,9 +258,9 @@ mpz_2multiswing_1 (mpz_ptr x, mp_limb_t n, mp_ptr sieve, mp_ptr factors)
 /*********************************************************/
 
 #if TUNE_PROGRAM_BUILD
-#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD_LIMIT-1)+1))
+#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD_LIMIT*FAC_DSC_THRESHOLD_LIMIT-1)+1) * 2)
 #else
-#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD-1)+1))
+#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD*FAC_DSC_THRESHOLD-1)+1) * 2)
 #endif
 
 /* mpz_oddfac_1 computes the odd part of the factorial of the
@@ -304,7 +304,7 @@ mpz_oddfac_1 (mpz_ptr x, mp_limb_t n, unsigned flag)
       s = 0;
       {
 	mp_limb_t tn;
-	mp_limb_t prod, max_prod, i;
+	mp_limb_t prod, max_prod;
 	mp_size_t j;
 	TMP_SDECL;
 
@@ -325,20 +325,31 @@ mpz_oddfac_1 (mpz_ptr x, mp_limb_t n, unsigned flag)
 
 	prod = 1;
 #if TUNE_PROGRAM_BUILD
-	max_prod = GMP_NUMB_MAX / FAC_DSC_THRESHOLD_LIMIT;
+	max_prod = GMP_NUMB_MAX / (FAC_DSC_THRESHOLD_LIMIT * FAC_DSC_THRESHOLD_LIMIT);
 #else
-	max_prod = GMP_NUMB_MAX / FAC_DSC_THRESHOLD;
+	max_prod = GMP_NUMB_MAX / (FAC_DSC_THRESHOLD * FAC_DSC_THRESHOLD);
 #endif
 
 	ASSERT (tn > ODD_DOUBLEFACTORIAL_TABLE_LIMIT + 1);
 	do {
-	  i = ODD_DOUBLEFACTORIAL_TABLE_LIMIT + 2;
 	  factors[j++] = ODD_DOUBLEFACTORIAL_TABLE_MAX;
-	  do {
-	    FACTOR_LIST_STORE (i, prod, max_prod, factors, j);
-	    i += 2;
-	  } while (i <= tn);
-	  max_prod <<= 1;
+	  mp_limb_t diff = tn - ODD_DOUBLEFACTORIAL_TABLE_LIMIT & -CNST_LIMB (2);
+	  if ((diff & 2) != 0)
+	    {
+	      FACTOR_LIST_STORE (ODD_DOUBLEFACTORIAL_TABLE_LIMIT + diff, prod, max_prod, factors, j);
+	      diff -= 2;
+	    }
+	  if (diff != 0)
+	    {
+	      mp_limb_t fac = (ODD_DOUBLEFACTORIAL_TABLE_LIMIT + 2) *
+		(ODD_DOUBLEFACTORIAL_TABLE_LIMIT + diff);
+	      do {
+		FACTOR_LIST_STORE (fac, prod, max_prod, factors, j);
+		diff -= 4;
+		fac += diff * 2;
+	      } while (diff != 0);
+	    }
+	  max_prod <<= 2;
 	  tn >>= 1;
 	} while (tn > ODD_DOUBLEFACTORIAL_TABLE_LIMIT + 1);
 
