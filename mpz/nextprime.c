@@ -145,8 +145,8 @@ findnext (mpz_ptr p,
   MPN_SIZEINBASE_2EXP(nbits, PTR(p), pn, 1);
   /* Smaller numbers handled earlier */
   ASSERT (nbits >= 3);
-  /* p odd */
-  ASSERT ((PTR(p)[0] & 1) == 1);
+  /* Make p odd */
+  PTR(p)[0] |= 1;
 
   if (nbits / 2 <= NUMBER_OF_PRIMES)
     {
@@ -264,7 +264,6 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
 
   /* First odd greater than n */
   mpz_add_ui (p, n, 1);
-  mpz_setbit (p, 0);
 
   findnext(p, mpz_cdiv_ui, mpz_add_ui);
 }
@@ -285,8 +284,7 @@ mpz_prevprime (mpz_ptr p, mpz_srcptr n)
 
   /* First odd less than n */
   mpz_sub_ui (p, n, 2);
-  mpz_setbit (p, 0);
 
-  return findnext(p, mpz_fdiv_ui, mpz_sub_ui);
+  return findnext(p, mpz_tdiv_ui, mpz_sub_ui);
 }
 
