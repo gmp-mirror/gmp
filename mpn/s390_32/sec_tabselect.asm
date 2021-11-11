@@ -38,7 +38,7 @@ C z10		 ?
 C z196		 ?
 C z13		 ?
 C z14		 ?
-C z15		 1.6
+C z15		 ?
 
 dnl void
 dnl mpn_sec_tabselect (volatile mp_limb_t *rp, volatile const mp_limb_t *tab,
@@ -57,83 +57,84 @@ define(`mask',	`%r14')
 define(`k',	`%r1')
 define(`which',	`%r0')
 
-define(`FRAME', 64)
+define(`FRAME', 32)
 
 ASM_START()
 PROLOGUE(mpn_sec_tabselect)
-	stmg	%r5, %r15, 40(%r15)
-	aghi	%r15, -FRAME
+	stm	%r5, %r15, 20(%r15)
+	ahi	%r15, -FRAME
 
-	sllg	n, n, 3
-	msgr	%r5, n
-	stg	%r5, 16(%r15)			C nents * n * LIMB_BYTES
+	sll	n, 2
+	msr	%r5, n
+	st	%r5, 16(%r15)			C nents * n * LIMB_BYTES
 
-	srlg	%r5, n, 2+3
-	ngr	%r5, %r5
+	lr	%r5, n
+	srl	%r5, 2+2
+	nr	%r5, %r5
 	je	L(end4)
 L(outer):
-	lg	which, eval(48+FRAME)(%r15)
-	lg	k, eval(40+FRAME)(%r15)		C nents
-	lghi	%r6, 0
-	lghi	%r7, 0
-	lghi	%r8, 0
-	lghi	%r9, 0
-L(tp4):	lghi	mask, 1
-	slgr	which, mask
-	slbgr	mask, mask
-	lmg	%r10, %r13, 0(tp)
-	ngr	%r10, mask
-	ngr	%r11, mask
-	ngr	%r12, mask
-	ngr	%r13, mask
-	agr	%r6, %r10
-	agr	%r7, %r11
-	agr	%r8, %r12
-	agr	%r9, %r13
-	agr	tp, n
-	brctg	k, L(tp4)
-	stmg	%r6, %r9, 0(rp)
-	aghi	rp, 32
-	slg	tp, 16(%r15)
-	aghi	tp, eval(4*8)
-	brctg	%r5, L(outer)
+	l	which, eval(24+FRAME)(%r15)
+	l	k, eval(20+FRAME)(%r15)		C nents
+	lhi	%r6, 0
+	lhi	%r7, 0
+	lhi	%r8, 0
+	lhi	%r9, 0
+L(tp4):	lhi	mask, 1
+	slr	which, mask
+	slbr	mask, mask
+	lm	%r10, %r13, 0(tp)
+	nr	%r10, mask
+	nr	%r11, mask
+	nr	%r12, mask
+	nr	%r13, mask
+	ar	%r6, %r10
+	ar	%r7, %r11
+	ar	%r8, %r12
+	ar	%r9, %r13
+	ar	tp, n
+	brct	k, L(tp4)
+	stm	%r6, %r9, 0(rp)
+	ahi	rp, 16
+	sl	tp, 16(%r15)
+	ahi	tp, eval(4*4)
+	brct	%r5, L(outer)
 L(end4):
-	tmll	n, 16
-	je	L(end2)
-	lg	which, eval(48+FRAME)(%r15)
-	lg	k, eval(40+FRAME)(%r15)		C nents
-	lghi	%r6, 0
-	lghi	%r7, 0
-L(tp2):	lghi	mask, 1
-	slgr	which, mask
-	slbgr	mask, mask
-	lmg	%r10, %r11, 0(tp)
-	ngr	%r10, mask
-	ngr	%r11, mask
-	agr	%r6, %r10
-	agr	%r7, %r11
-	agr	tp, n
-	brctg	k, L(tp2)
-	stmg	%r6, %r7, 0(rp)
-	aghi	rp, 16
-	slg	tp, 16(%r15)
-	aghi	tp, eval(2*8)
-L(end2):
 	tmll	n, 8
+	je	L(end2)
+	l	which, eval(24+FRAME)(%r15)
+	l	k, eval(20+FRAME)(%r15)		C nents
+	lhi	%r6, 0
+	lhi	%r7, 0
+L(tp2):	lhi	mask, 1
+	slr	which, mask
+	slbr	mask, mask
+	lm	%r10, %r11, 0(tp)
+	nr	%r10, mask
+	nr	%r11, mask
+	ar	%r6, %r10
+	ar	%r7, %r11
+	ar	tp, n
+	brct	k, L(tp2)
+	stm	%r6, %r7, 0(rp)
+	ahi	rp, 8
+	sl	tp, 16(%r15)
+	ahi	tp, eval(2*4)
+L(end2):
+	tmll	n, 4
 	je	L(end1)
-	lg	which, eval(48+FRAME)(%r15)
-	lg	k, eval(40+FRAME)(%r15)		C nents
-	lghi	%r6, 0
-L(tp1):	lghi	mask, 1
-	slgr	which, mask
-	slbgr	mask, mask
-	lg	%r10, 0(tp)
-	ngr	%r10, mask
-	agr	%r6, %r10
-	agr	tp, n
-	brctg	k, L(tp1)
-	stg	%r6, 0(rp)
+	l	which, eval(24+FRAME)(%r15)
+	l	k, eval(20+FRAME)(%r15)		C nents
+	lhi	%r6, 0
+L(tp1):	lhi	mask, 1
+	slr	which, mask
+	slbr	mask, mask
+	l	%r10, 0(tp)
+	nr	%r10, mask
+	ar	%r6, %r10
+	ar	tp, n
+	brct	k, L(tp1)
+	st	%r6, 0(rp)
 L(end1):
-	lmg	%r5, %r15, eval(40+FRAME)(%r15)
+	lm	%r5, %r15, eval(20+FRAME)(%r15)
 	br	%r14
 EPILOGUE()
