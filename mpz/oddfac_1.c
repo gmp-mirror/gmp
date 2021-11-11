@@ -7,7 +7,7 @@ IT IS ONLY SAFE TO REACH IT THROUGH DOCUMENTED INTERFACES.
 IN FACT, IT IS ALMOST GUARANTEED THAT IT WILL CHANGE OR
 DISAPPEAR IN A FUTURE GNU MP RELEASE.
 
-Copyright 2010-2012, 2015-2017, 2020 Free Software Foundation, Inc.
+Copyright 2010-2012, 2015-2017, 2020, 2021 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -257,10 +257,12 @@ mpz_2multiswing_1 (mpz_ptr x, mp_limb_t n, mp_ptr sieve, mp_ptr factors)
 /* Section oddfac: odd factorial, needed also by binomial*/
 /*********************************************************/
 
+/* FIXME: refine che following estimate. */
+
 #if TUNE_PROGRAM_BUILD
-#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD_LIMIT*FAC_DSC_THRESHOLD_LIMIT-1)+1) * 2)
+#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD_LIMIT*FAC_DSC_THRESHOLD_LIMIT-1)+1) * 2 - 1)
 #else
-#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD*FAC_DSC_THRESHOLD-1)+1) * 2)
+#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD*FAC_DSC_THRESHOLD-1)+1) * 2 - 1)
 #endif
 
 /* mpz_oddfac_1 computes the odd part of the factorial of the
