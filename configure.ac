@@ -3807,7 +3807,7 @@ yes
           GMP_ASM_SPARC_REGISTER
           ;;
       esac
-      GMP_ASM_SPARC_GOTDATA
+      GMP_ASM_SPARC_GDOP
       GMP_ASM_SPARC_SHARED_THUNKS
       ;;
     X86_PATTERN | X86_64_PATTERN)
