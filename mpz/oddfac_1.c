@@ -260,9 +260,9 @@ mpz_2multiswing_1 (mpz_ptr x, mp_limb_t n, mp_ptr sieve, mp_ptr factors)
 /* FIXME: refine che following estimate. */
 
 #if TUNE_PROGRAM_BUILD
-#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD_LIMIT*FAC_DSC_THRESHOLD_LIMIT-1)+1) * 2 - 1)
+#define FACTORS_PER_LIMB (GMP_NUMB_BITS * 2 / (LOG2C(FAC_DSC_THRESHOLD_LIMIT*FAC_DSC_THRESHOLD_LIMIT-1)+1) - 1)
 #else
-#define FACTORS_PER_LIMB (GMP_NUMB_BITS / (LOG2C(FAC_DSC_THRESHOLD*FAC_DSC_THRESHOLD-1)+1) * 2 - 1)
+#define FACTORS_PER_LIMB (GMP_NUMB_BITS * 2 / (LOG2C(FAC_DSC_THRESHOLD*FAC_DSC_THRESHOLD-1)+1) - 1)
 #endif
 
 /* mpz_oddfac_1 computes the odd part of the factorial of the
@@ -335,7 +335,7 @@ mpz_oddfac_1 (mpz_ptr x, mp_limb_t n, unsigned flag)
 	ASSERT (tn > ODD_DOUBLEFACTORIAL_TABLE_LIMIT + 1);
 	do {
 	  factors[j++] = ODD_DOUBLEFACTORIAL_TABLE_MAX;
-	  mp_limb_t diff = tn - ODD_DOUBLEFACTORIAL_TABLE_LIMIT & -CNST_LIMB (2);
+	  mp_limb_t diff = (tn - ODD_DOUBLEFACTORIAL_TABLE_LIMIT) & -CNST_LIMB (2);
 	  if ((diff & 2) != 0)
 	    {
 	      FACTOR_LIST_STORE (ODD_DOUBLEFACTORIAL_TABLE_LIMIT + diff, prod, max_prod, factors, j);
