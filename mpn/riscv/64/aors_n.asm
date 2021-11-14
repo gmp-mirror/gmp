@@ -43,7 +43,7 @@ ifdef(`OPERATION_add_n',`
 ')
 ifdef(`OPERATION_sub_n',`
     define(`ADDSUB',	`sub')
-    define(`CMPCY',	`sltu	$1, $3, $2')
+    define(`CMPCY',	`sltu	$1, $3, $4')
     define(`func',	`mpn_sub_n')
 ')
 
@@ -66,9 +66,9 @@ L(top):	ld	a4, 0(up)
 	addi	n, n, -2	C bookkeeping
 	addi	up, up, 16	C bookkeeping
 	ADDSUB	t0, a4, a6
-	CMPCY(	t2, t0, a4)
+	CMPCY(	t2, t0, a4, a6)
 	ADDSUB	t4, t0, t6	C cycle 3, 9, ...
-	CMPCY(	t3, t4, t0)	C cycle 4, 10, ...
+	CMPCY(	t3, t4, t0, t6)	C cycle 4, 10, ...
 	sd	t4, 0(rp)
 	add	t6, t2, t3	C cycle 5, 11, ...
 L(mid):	ld	a5, -8(up)
@@ -76,9 +76,9 @@ L(mid):	ld	a5, -8(up)
 	addi	vp, vp, 16	C bookkeeping
 	addi	rp, rp, 16	C bookkeeping
 	ADDSUB	t1, a5, a7
-	CMPCY(	t2, t1, a5)
+	CMPCY(	t2, t1, a5, a7)
 	ADDSUB	t4, t1, t6	C cycle 0, 6, ...
-	CMPCY(	t3, t4, t1)	C cycle 1, 7, ...
+	CMPCY(	t3, t4, t1, t6)	C cycle 1, 7, ...
 	sd	t4, -8(rp)
 	add	t6, t2, t3	C cycle 2, 8, ...
 	bne	n, x0, L(top)	C bookkeeping
