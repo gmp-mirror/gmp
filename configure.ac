@@ -1365,56 +1365,58 @@ case $host in
     gcc_cflags="$gcc_cflags $fomit_frame_pointer"
     gcc_cflags_optlist="arch"
     path="s390_32"
+    path_64="s390_64"
     if test "$enable_assembly" = "yes" ; then
        extra_functions="udiv_w_sdiv"
     fi
     gcc_32_cflags_maybe="-m31"
 
-    unset cpu gccarch xpath
+    unset cpu
     case $host_cpu in
       s390)
 	;;
       z900 | z900esa)
         cpu="z900"
-        gccarch="$cpu"
+	gcc_cflags_arch="-march=$cpu"
 	extra_functions=""
         ;;
       z990 | z990esa)
         cpu="z990"
-        gccarch="$cpu"
+	gcc_cflags_arch="-march=$cpu"
 	extra_functions=""
         ;;
       z9 | z9esa)
         cpu="z9"
-	gccarch="z9-109"
+	gcc_cflags_arch="-march=$cpu"
 	extra_functions=""
         ;;
       z10 | z10esa)
         cpu="z10"
-	gccarch="z10"
+	gcc_cflags_arch="-march=$cpu"
 	extra_functions=""
         ;;
       z196 | z196esa)
         cpu="z196"
-	gccarch="z196"
+	gcc_cflags_arch="-march=$cpu"
 	extra_functions=""
         ;;
       z13 | z13esa)
         cpu="z13"
-	gccarch="z13"
+	gcc_cflags_arch="-march=$cpu"
 	extra_functions=""
+	path_64="s390_64/z13 $path_64"
         ;;
       z14 | z14esa)
         cpu="z14"
-	gccarch="z14"
+	gcc_cflags_arch="-march=$cpu -march=z13"
 	extra_functions=""
-	xpath="z13"
+	path_64="s390_64/z14 s390_64/z13 $path_64"
         ;;
       z15 | z15esa)
         cpu="z15"
-	gccarch="z15"
+	gcc_cflags_arch="-march=$cpu -march=z14 -march=z13"
 	extra_functions=""
-	xpath="z14 z13"
+	path_64="s390_64/z15 s390_64/z14 s390_64/z13 $path_64"
         ;;
       esac
 
@@ -1422,14 +1424,6 @@ case $host in
       AC_DEFINE_UNQUOTED(HAVE_HOST_CPU_s390_$cpu)
       AC_DEFINE(HAVE_HOST_CPU_s390_zarch)
       path="s390_32/esame s390_32"
-      path_64=""
-      for i in $cpu $xpath; do
-	path_64="$path_64 s390_64/$i"
-      done
-    fi
-    path_64="$path_64 s390_64"
-    if test x"$gccarch" != x ; then
-      gcc_cflags_arch="-march=$gccarch"
     fi
 
     case $host in
