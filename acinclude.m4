@@ -3085,26 +3085,26 @@ GMP_DEFINE_RAW(["define(<HAVE_REGISTER>,<$gmp_cv_asm_sparc_register>)"])
 ])
 
 
-dnl  GMP_ASM_SPARC_GOTDATA
+dnl  GMP_ASM_SPARC_GDOP
 dnl  ----------------------
-dnl  Determine whether the assembler accepts gotdata relocations.
+dnl  Determine whether the assembler accepts gdop relocations.
 dnl
 dnl  See also mpn/sparc32/sparc-defs.m4 which uses the result of this test.
 
-AC_DEFUN([GMP_ASM_SPARC_GOTDATA],
+AC_DEFUN([GMP_ASM_SPARC_GDOP],
 [AC_REQUIRE([GMP_ASM_TEXT])
-AC_CACHE_CHECK([if the assembler accepts gotdata relocations],
-               gmp_cv_asm_sparc_gotdata,
+AC_CACHE_CHECK([if the assembler accepts gdop relocations],
+               gmp_cv_asm_sparc_gdop,
 [GMP_TRY_ASSEMBLE(
 [	$gmp_cv_asm_text
 	.text
 	sethi	%gdop_hix22(symbol), %g1
 	or	%g1, %gdop_lox10(symbol), %g1
 ],
-[gmp_cv_asm_sparc_gotdata=yes],
-[gmp_cv_asm_sparc_gotdata=no])])
+[gmp_cv_asm_sparc_gdop=yes],
+[gmp_cv_asm_sparc_gdop=no])])
 
-GMP_DEFINE_RAW(["define(<HAVE_GOTDATA>,<$gmp_cv_asm_sparc_gotdata>)"])
+GMP_DEFINE_RAW(["define(<HAVE_GDOP>,<$gmp_cv_asm_sparc_gdop>)"])
 ])
 
 
