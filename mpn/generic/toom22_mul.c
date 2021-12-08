@@ -187,10 +187,10 @@ mpn_toom22_mul (mp_ptr pp,
   /* H(v0) + L(vinf) */
   cy = mpn_add_n (pp + 2 * n, v0 + n, vinf, n);
 
-  /* L(v0) + H(v0) */
+  /* L(v0) + (H(v0) + L(vinf)) */
   cy2 = cy + mpn_add_n (pp + n, pp + 2 * n, v0, n);
 
-  /* L(vinf) + H(vinf) */
+  /* (H(v0) + L(vinf)) + H(vinf) */
   cy += mpn_add (pp + 2 * n, pp + 2 * n, n, vinf + n, s + t - n);
 
   if (vm1_neg)
