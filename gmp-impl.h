@@ -3,7 +3,7 @@
    THE CONTENTS OF THIS FILE ARE FOR INTERNAL USE AND ARE ALMOST CERTAIN TO
    BE SUBJECT TO INCOMPATIBLE CHANGES IN FUTURE GNU MP RELEASES.
 
-Copyright 1991-2018 Free Software Foundation, Inc.
+Copyright 1991-2018, 2021 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -3925,10 +3925,12 @@ __GMP_DECLSPEC extern const int __gmp_0;
 __GMP_DECLSPEC void __gmp_exception (int) ATTRIBUTE_NORETURN;
 __GMP_DECLSPEC void __gmp_divide_by_zero (void) ATTRIBUTE_NORETURN;
 __GMP_DECLSPEC void __gmp_sqrt_of_negative (void) ATTRIBUTE_NORETURN;
+__GMP_DECLSPEC void __gmp_overflow_in_mpz (void) ATTRIBUTE_NORETURN;
 __GMP_DECLSPEC void __gmp_invalid_operation (void) ATTRIBUTE_NORETURN;
 #define GMP_ERROR(code)   __gmp_exception (code)
 #define DIVIDE_BY_ZERO    __gmp_divide_by_zero ()
 #define SQRT_OF_NEGATIVE  __gmp_sqrt_of_negative ()
+#define MPZ_OVERFLOW      __gmp_overflow_in_mpz ()
 
 #if defined _LONG_LONG_LIMB
 #define CNST_LIMB(C) ((mp_limb_t) C##LL)

@@ -1,6 +1,7 @@
 /* Definitions for GNU multiple precision functions.   -*- mode: c -*-
 
-Copyright 1991, 1993-1997, 1999-2016, 2020 Free Software Foundation, Inc.
+Copyright 1991, 1993-1997, 1999-2016, 2020, 2021 Free Software
+Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -2325,7 +2326,8 @@ enum
   GMP_ERROR_UNSUPPORTED_ARGUMENT = 1,
   GMP_ERROR_DIVISION_BY_ZERO = 2,
   GMP_ERROR_SQRT_OF_NEGATIVE = 4,
-  GMP_ERROR_INVALID_ARGUMENT = 8
+  GMP_ERROR_INVALID_ARGUMENT = 8,
+  GMP_ERROR_MPZ_OVERFLOW = 16
 };
 
 /* Define CC and CFLAGS which were used to build this version of GMP */

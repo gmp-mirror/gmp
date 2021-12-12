@@ -1,6 +1,6 @@
 /* _mpz_realloc -- make the mpz_t have NEW_ALLOC digits allocated.
 
-Copyright 1991, 1993-1995, 2000, 2001, 2008, 2015 Free Software
+Copyright 1991, 1993-1995, 2000, 2001, 2008, 2015, 2021 Free Software
 Foundation, Inc.
 
 This file is part of the GNU MP Library.
@@ -44,18 +44,12 @@ _mpz_realloc (mpz_ptr m, mp_size_t new_alloc)
   if (sizeof (mp_size_t) == sizeof (int))
     {
       if (UNLIKELY (new_alloc > ULONG_MAX / GMP_NUMB_BITS))
-	{
-	  fprintf (stderr, "gmp: overflow in mpz type\n");
-	  abort ();
-	}
+	MPZ_OVERFLOW;
     }
   else
     {
       if (UNLIKELY (new_alloc > INT_MAX))
-	{
-	  fprintf (stderr, "gmp: overflow in mpz type\n");
-	  abort ();
-	}
+	MPZ_OVERFLOW;
     }
 
   if (ALLOC (m) == 0)

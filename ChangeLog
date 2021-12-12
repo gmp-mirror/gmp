@@ -1,3 +1,17 @@
+2021-12-11 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/toom3_sqr.c: Use a shorter mul when it's simple.
+	* mpn/generic/toom4_sqr.c: Likewise.
+	* mpn/generic/toom33_mul.c: Likewise.
+	* mpn/generic/toom44_mul.c: Likewise.
+
+	* gmp-h.in (GMP_ERROR_MPZ_OVERFLOW): New enum value.
+	* errno.c (__gmp_overflow_in_mpz): New function.
+	* gmp-impl.h (MPZ_OVERFLOW): New macro calling it.
+	* mpz/init2.c: Use the new macro to rise the overflow error.
+	* mpz/realloc.c: Likewise.
+	* mpz/realloc2.c: Likewise.
+
 2021-11-02  Torbjörn Granlund  <tg@gmplib.org>
 
 	* mpn/s390_64/sec_tabselect.asm: Rewrite.
