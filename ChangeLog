@@ -12,6 +12,9 @@
 	* mpz/realloc.c: Likewise.
 	* mpz/realloc2.c: Likewise.
 
+	* mpz/tdiv_r.c: Special code for divisor with low zero limbs.
+	* mpz/tdiv_qr.c: Likewise.
+
 2021-11-02  Torbjörn Granlund  <tg@gmplib.org>
 
 	* mpn/s390_64/sec_tabselect.asm: Rewrite.
