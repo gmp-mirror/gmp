@@ -2,7 +2,7 @@
 
    Contributed to the GNU project by Marco Bodrato.
 
-Copyright 2021 Free Software Foundation, Inc.
+Copyright 2021, 2022 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -86,10 +86,80 @@ generate (int limb_bits, int limit)
   printf ("#define PRIMESIEVE_NUMBEROF_TABLE %d\n", c);
 
   printf ("/* #define PRIMESIEVE_PRIMES_IN_TABLE %d */\n", totpc);
-  printf ("/* #define PRIMESIEVE_HIGHEST_PRIME %d */\n", maxprime);
+  printf ("#define PRIMESIEVE_HIGHEST_PRIME %d\n", maxprime);
   printf ("/* #define PRIMESIEVE_FIRST_UNCHECKED %d */\n", bit_to_n (limit));
 
   return c;
+}
+
+void
+setmask (mpz_t mask, int a, int b)
+{
+  mpz_set_ui (mask, 0);
+  for (unsigned i = 0; i < 2 * a * b; ++i)
+    if ((bit_to_n (i) % a == 0) || (bit_to_n (i) % b == 0))
+      mpz_setbit (mask, i);
+}
+
+void
+gen_sieve_masks (int limb_bits) {
+  mpz_t  mask, limb;
+
+  mpz_init (mask);
+  mpz_init (limb);
+
+  printf ("\n");
+  if (limb_bits > 60 && limb_bits < 91)
+    {
+      setmask (mask, 5, 11);
+
+      mpz_tdiv_r_2exp (limb, mask, limb_bits);
+      printf ("#define SIEVE_MASK1 CNST_LIMB(0x");
+      mpz_out_str (stdout, -16, limb);
+      printf (")\n");
+      mpz_tdiv_q_2exp (limb, mask, limb_bits);
+      printf ("#define SIEVE_MASKT CNST_LIMB(0x");
+      mpz_out_str (stdout, -16, limb);
+      printf (")\n");
+
+      setmask (mask, 7, 13);
+
+      mpz_tdiv_r_2exp (limb, mask, limb_bits);
+      printf ("#define SIEVE_2MSK1 CNST_LIMB(0x");
+      mpz_out_str (stdout, -16, limb);
+      printf (")\n");
+      mpz_tdiv_q_2exp (mask, mask, limb_bits);
+      mpz_tdiv_r_2exp (limb, mask, limb_bits);
+      printf ("#define SIEVE_2MSK2 CNST_LIMB(0x");
+      mpz_out_str (stdout, -16, limb);
+      printf (")\n");
+      mpz_tdiv_q_2exp (limb, mask, limb_bits);
+      printf ("#define SIEVE_2MSKT CNST_LIMB(0x");
+      mpz_out_str (stdout, -16, limb);
+      printf (")\n");
+    }
+  else if (limb_bits > 23 && limb_bits < 36)
+    {
+      setmask (mask, 5, 7);
+
+      mpz_tdiv_r_2exp (limb, mask, limb_bits);
+      printf ("#define SIEVE_MASK1 CNST_LIMB(0x");
+      mpz_out_str (stdout, -16, limb);
+      printf (")\n");
+      mpz_tdiv_q_2exp (mask, mask, limb_bits);
+      mpz_tdiv_r_2exp (limb, mask, limb_bits);
+      printf ("#define SIEVE_MASK2 CNST_LIMB(0x");
+      mpz_out_str (stdout, -16, limb);
+      printf (")\n");
+      mpz_tdiv_q_2exp (limb, mask, limb_bits);
+      printf ("#define SIEVE_MASKT CNST_LIMB(0x");
+      mpz_out_str (stdout, -16, limb);
+      printf (")\n");
+    }
+  printf ("\n");
+
+  mpz_clear (limb);
+  mpz_clear (mask);
 }
 
 /* 5*2 = 10
@@ -118,6 +188,7 @@ main (int argc, char *argv[])
   if (limit % limb_bits != 0)
     limit += limb_bits - limit % limb_bits;
   generate (limb_bits, limit);
+  gen_sieve_masks (limb_bits);
 
   return 0;
 }

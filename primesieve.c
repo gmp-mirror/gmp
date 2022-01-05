@@ -7,7 +7,7 @@ IT IS ONLY SAFE TO REACH IT THROUGH DOCUMENTED INTERFACES.
 IN FACT, IT IS ALMOST GUARANTEED THAT IT WILL CHANGE OR
 DISAPPEAR IN A FUTURE GNU MP RELEASE.
 
-Copyright 2010-2012, 2015, 2016, 2021 Free Software Foundation, Inc.
+Copyright 2010-2012, 2015, 2016, 2021, 2022 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -57,23 +57,6 @@ n_cto_bit (mp_limb_t n) { return (n|1)/3U-1; }
 #if 0
 static mp_size_t
 primesieve_size (mp_limb_t n) { return n_fto_bit(n) / GMP_LIMB_BITS + 1; }
-#endif
-
-#if GMP_LIMB_BITS == 64
-/* 110bits pre-sieved mask for primes 5, 11*/
-#define SIEVE_MASK1 CNST_LIMB(0x81214a1204892058)
-#define SIEVE_MASKT CNST_LIMB(0xc8130681244)
-/* 182bits pre-sieved mask for primes 7, 13*/
-#define SIEVE_2MSK1 CNST_LIMB(0x9402180c40230184)
-#define SIEVE_2MSK2 CNST_LIMB(0x0285021088402120)
-#define SIEVE_2MSKT CNST_LIMB(0xa41210084421)
-#endif
-
-#if GMP_LIMB_BITS == 32
-/* 70bits pre-sieved mask for primes 5, 7*/
-#define SIEVE_MASK1 CNST_LIMB(0x12148960)
-#define SIEVE_MASK2 CNST_LIMB(0x44a120cc)
-#define SIEVE_MASKT CNST_LIMB(0x1a)
 #endif
 
 #define SET_OFF1(m1, m2, M1, M2, off, BITS)		\
@@ -218,11 +201,10 @@ block_resieve (mp_ptr bit_array, mp_size_t limbs, mp_limb_t offset,
   mp_limb_t mask, i;
 
   ASSERT (limbs > 0);
-  ASSERT (offset >= GMP_LIMB_BITS);
 
   bits = limbs * GMP_LIMB_BITS - 1;
 
-  i = fill_bitpattern (bit_array, limbs, offset - GMP_LIMB_BITS);
+  i = fill_bitpattern (bit_array, limbs, offset);
 
   ASSERT (i < GMP_LIMB_BITS);
 

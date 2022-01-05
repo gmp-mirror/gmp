@@ -1,3 +1,8 @@
+2022-01-05 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* gen-sieve.c: Generate masks depending on bit size.
+	* primesieve.c: Remove fixed size (32 and 64 only) masks.
+
 2021-12-11 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpn/generic/toom3_sqr.c: Use a shorter mul when it's simple.
