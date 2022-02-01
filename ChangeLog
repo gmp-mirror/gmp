@@ -1,3 +1,7 @@
+2022-01-20  Marc Glisse  <marc.glisse@inria.fr>
+
+	* doc/gmp.texi: Clarify C++ includes and library.
+
 2022-01-05 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* gen-sieve.c: Generate masks depending on bit size.

@@ -1860,7 +1860,9 @@ to be incompatible with future versions of GMP.}
 @cindex Include files
 @cindex @code{#include}
 All declarations needed to use GMP are collected in the include file
-@file{gmp.h}.  It is designed to work with both C and C++ compilers.
+@file{gmp.h}, except for the @ref{C++ Class Interface} which comes with its
+own separate header @file{gmpxx.h}.  @file{gmp.h} is designed to work with
+both C and C++ compilers.
 
 @example
 #include <gmp.h>
@@ -1868,7 +1870,7 @@ All declarations needed to use GMP are collected in the include file
 
 @cindex @code{stdio.h}
 Note however that prototypes for GMP functions with @code{FILE *} parameters
-are only provided if @code{<stdio.h>} is included too.
+are only provided if @code{<stdio.h>} is included before.
 
 @example
 #include <stdio.h>
@@ -1892,9 +1894,10 @@ gcc myprogram.c -lgmp
 @end example
 
 @cindex @code{libgmpxx}
-GMP C++ functions are in a separate @file{libgmpxx} library.  This is built
-and installed if C++ support has been enabled (@pxref{Build Options}).  For
-example,
+GMP C++ functions are in a separate @file{libgmpxx} library, including the
+@ref{C++ Class Interface} but also @ref{C++ Formatted Output} for regular
+GMP types.  This is built and installed if C++ support has been enabled
+(@pxref{Build Options}).  For example,
 
 @example
 g++ mycxxprog.cc -lgmpxx -lgmp
