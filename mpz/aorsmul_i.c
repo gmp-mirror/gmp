@@ -4,7 +4,8 @@
    ALMOST CERTAIN TO BE SUBJECT TO INCOMPATIBLE CHANGES OR DISAPPEAR
    COMPLETELY IN FUTURE GNU MP RELEASES.
 
-Copyright 2001, 2002, 2004, 2005, 2012, 2021 Free Software Foundation, Inc.
+Copyright 2001, 2002, 2004, 2005, 2012, 2021, 2022 Free Software
+Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -85,7 +86,7 @@ mpz_aorsmul_1 (mpz_ptr w, mpz_srcptr x, mp_limb_t y, mp_size_t sub)
   if (wsize_signed == 0)
     {
       /* nothing to add to, just set x*y, "sub" gives the sign */
-      wp = MPZ_REALLOC (w, xsize+1);
+      wp = MPZ_NEWALLOC (w, xsize+1);
       cy = mpn_mul_1 (wp, PTR(x), xsize, y);
       wp[xsize] = cy;
       xsize += (cy != 0);
