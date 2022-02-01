@@ -1,6 +1,6 @@
 /* mpz_import -- set mpz from word data.
 
-Copyright 2002, 2012, 2021 Free Software Foundation, Inc.
+Copyright 2002, 2012, 2021, 2022 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -68,31 +68,22 @@ mpz_import (mpz_ptr z, size_t count, int order,
       && size == sizeof (mp_limb_t)
       && (((char *) data - (char *) NULL) % sizeof (mp_limb_t)) == 0 /* align */)
     {
-      if (order == -1 && endian == HOST_ENDIAN)
+      if (order == -1)
 	{
-	  MPN_COPY (zp, (mp_srcptr) data, (mp_size_t) count);
-	  goto done;
+	  if (endian == HOST_ENDIAN)
+	    MPN_COPY (zp, (mp_srcptr) data, (mp_size_t) count);
+	  else /* if (endian == - HOST_ENDIAN) */
+	    MPN_BSWAP (zp, (mp_srcptr) data, (mp_size_t) count);
 	}
-
-      if (order == -1 && endian == - HOST_ENDIAN)
+      else /* if (order == 1) */
 	{
-	  MPN_BSWAP (zp, (mp_srcptr) data, (mp_size_t) count);
-	  goto done;
-	}
-
-      if (order == 1 && endian == HOST_ENDIAN)
-	{
-	  MPN_REVERSE (zp, (mp_srcptr) data, (mp_size_t) count);
-	  goto done;
-	}
-
-      if (order == 1 && endian == -HOST_ENDIAN)
-	{
-	  MPN_BSWAP_REVERSE (zp, (mp_srcptr) data, (mp_size_t) count);
-	  goto done;
+	  if (endian == HOST_ENDIAN)
+	    MPN_REVERSE (zp, (mp_srcptr) data, (mp_size_t) count);
+	  else /* if (endian == - HOST_ENDIAN) */
+	    MPN_BSWAP_REVERSE (zp, (mp_srcptr) data, (mp_size_t) count);
 	}
     }
-
+  else
   {
     mp_limb_t      limb, byte, wbitsmask;
     size_t         i, j, numb, wbytes;
