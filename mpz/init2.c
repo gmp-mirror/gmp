@@ -1,6 +1,6 @@
 /* mpz_init2 -- initialize mpz, with requested size in bits.
 
-Copyright 2001, 2002, 2008, 2021 Free Software Foundation, Inc.
+Copyright 2001, 2002, 2008, 2021, 2022 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
