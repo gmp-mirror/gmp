@@ -160,7 +160,6 @@ mpz_import (mpz_ptr z, size_t count, int order,
 
   }
 
- done:
   zp = PTR(z);
   MPN_NORMALIZE (zp, zsize);
   SIZ(z) = zsize;
