@@ -3053,7 +3053,7 @@ gmp_mpn_functions="$extra_functions					   \
   toom_eval_pm1 toom_eval_pm2 toom_eval_pm2exp toom_eval_pm2rexp	   \
   toom_interpolate_5pts toom_interpolate_6pts toom_interpolate_7pts	   \
   toom_interpolate_8pts toom_interpolate_12pts toom_interpolate_16pts	   \
-  invertappr invert binvert mulmod_bnm1 sqrmod_bnm1			   \
+  invertappr invert binvert mulmod_bnm1 sqrmod_bnm1 mulmod_bknp1	   \
   div_qr_1 div_qr_1n_pi1						   \
   div_qr_2 div_qr_2n_pi1 div_qr_2u_pi1					   \
   sbpi1_div_q sbpi1_div_qr sbpi1_divappr_q				   \
