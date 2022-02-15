@@ -1598,6 +1598,58 @@ speed_mpn_sqrmod_bnm1 (struct speed_params *s)
 }
 
 double
+speed_mpn_mulmod_bknp1 (struct speed_params *s)
+{
+  SPEED_ROUTINE_MPN_MULMOD_BNP1_CALL (mpn_mulmod_bknp1 (wp, s->xp, s->yp, nk, k, tp),1);
+}
+
+double
+speed_mpn_sqrmod_bknp1 (struct speed_params *s)
+{
+  SPEED_ROUTINE_MPN_MULMOD_BNP1_CALL (mpn_sqrmod_bknp1 (wp, s->xp, nk, k, tp),1);
+}
+
+static void
+mpn_bc_mulmod_bnp1 (mp_ptr rp, mp_srcptr ap, mp_srcptr bp, mp_size_t n,
+		    unsigned k, mp_ptr tp)
+{
+  if (k > 2)
+    mpn_mulmod_bknp1 (rp, ap, bp, n, k, tp);
+  else
+    {
+      n *= k;
+      mpn_mul_n (tp, ap, bp, n);
+      mpn_sub_n (rp, tp, tp + n, n);
+    }
+}
+
+static void
+mpn_bc_sqrmod_bnp1 (mp_ptr rp, mp_srcptr ap, mp_size_t n,
+		    unsigned k, mp_ptr tp)
+{
+  if (k > 2)
+    mpn_sqrmod_bknp1 (rp, ap, n, k, tp);
+  else
+    {
+      n *= k;
+      mpn_sqr (tp, ap, n);
+      mpn_sub_n (rp, tp, tp + n, n);
+    }
+}
+
+double
+speed_mpn_mulmod_bnp1 (struct speed_params *s)
+{
+  SPEED_ROUTINE_MPN_MULMOD_BNP1_CALL (mpn_bc_mulmod_bnp1 (wp, s->xp, s->yp, nk, k, tp),0);
+}
+
+double
+speed_mpn_sqrmod_bnp1 (struct speed_params *s)
+{
+  SPEED_ROUTINE_MPN_MULMOD_BNP1_CALL (mpn_bc_sqrmod_bnp1 (wp, s->xp, nk, k, tp),0);
+}
+
+double
 speed_mpn_matrix22_mul (struct speed_params *s)
 {
   /* Speed params only includes 2 inputs, so we have to invent the

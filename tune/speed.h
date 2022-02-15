@@ -388,6 +388,10 @@ double speed_mpn_mulmod_bnm1 (struct speed_params *);
 double speed_mpn_bc_mulmod_bnm1 (struct speed_params *);
 double speed_mpn_mulmod_bnm1_rounded (struct speed_params *);
 double speed_mpn_sqrmod_bnm1 (struct speed_params *);
+double speed_mpn_mulmod_bknp1 (struct speed_params *);
+double speed_mpn_sqrmod_bknp1 (struct speed_params *);
+double speed_mpn_mulmod_bnp1 (struct speed_params *);
+double speed_mpn_sqrmod_bnp1 (struct speed_params *);
 double speed_mpn_udiv_qrnnd (struct speed_params *);
 double speed_mpn_udiv_qrnnd_r (struct speed_params *);
 double speed_mpn_umul_ppmm (struct speed_params *);
@@ -1395,6 +1399,70 @@ int speed_routine_count_zeros_setup (struct speed_params *, mp_ptr, int, int);
     i = s->reps;							\
     do									\
       function (wp, size, s->xp, s->size, s->yp, s->size, tp);		\
+    while (--i != 0);							\
+    t = speed_endtime ();						\
+									\
+    TMP_FREE;								\
+    return t;								\
+  }
+
+#ifndef MOD_BKNP1_USE11
+#define MOD_BKNP1_USE11 0
+#endif
+#ifndef MOD_BKNP1_ONLY3
+#define MOD_BKNP1_ONLY3 0
+#endif
+
+#define SPEED_ROUTINE_MPN_MULMOD_BNP1_CALL(call,use_r)			\
+  {									\
+    mp_ptr    wp, tp;							\
+    unsigned  i, k;							\
+    double    t;							\
+    mp_size_t itch, nk;							\
+    TMP_DECL;								\
+									\
+    SPEED_RESTRICT_COND (s->size >= 1);					\
+    SPEED_RESTRICT_COND (!use_r || (s->r == 0) ||			\
+			 (s->r == 3) || (s->r == 5) || (s->r == 7) ||	\
+			 (s->r == 13) || (s->r == 17) ||		\
+			 ((MOD_BKNP1_USE11) && (s->r == 11)));		\
+									\
+    if (!use_r || (s->r < 2))						\
+      {									\
+	if (s->size % 3 == 0) {nk = s->size / (k = 3);}			\
+	else if (s->size % 5 == 0) {nk = s->size / (k = 5);}		\
+	else if (s->size % 7 == 0) {nk = s->size / (k = 7);}		\
+	else if (s->size % 11 == 0) {nk = s->size / (k = 11);}		\
+	else if (s->size % 13 == 0) {nk = s->size / (k = 13);}		\
+	else if (s->size % 17 == 0) {nk = s->size / (k = 17);}		\
+	else nk = s->size / (k = 1);					\
+      }									\
+    else nk = s->size / (k = s->r);					\
+									\
+    if (MOD_BKNP1_ONLY3)						\
+      k = 3;								\
+    SPEED_RESTRICT_COND ((!use_r || (k > 2)) && (s->size == k * nk));	\
+    SPEED_RESTRICT_COND ((GMP_NUMB_MAX % k == 0) || (nk % 3 != 0) ||	\
+			 ((MOD_BKNP1_USE11) && (k == 11)));		\
+									\
+    itch = mpn_mulmod_bknp1_itch (s->size);				\
+									\
+    TMP_MARK;								\
+    SPEED_TMP_ALLOC_LIMBS (wp, 2 * s->size + 2, s->align_wp);		\
+    SPEED_TMP_ALLOC_LIMBS (tp, itch, s->align_wp2);			\
+									\
+    s->xp [s->size] &= 1;						\
+    s->yp [s->size] &= 1;						\
+    speed_operand_src (s, s->xp, s->size + 1);				\
+    speed_operand_src (s, s->yp, s->size + 1);				\
+    speed_operand_dst (s, wp, 2 * s->size + 2);				\
+    speed_operand_dst (s, tp, itch);					\
+    speed_cache_fill (s);						\
+									\
+    speed_starttime ();							\
+    i = s->reps;							\
+    do									\
+      call;								\
     while (--i != 0);							\
     t = speed_endtime ();						\
 									\
