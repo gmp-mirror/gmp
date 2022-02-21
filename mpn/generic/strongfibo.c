@@ -38,7 +38,8 @@ see https://www.gnu.org/licenses/.  */
 #include "gmp-impl.h"
 
 
-#if ! HAVE_NATIVE_mpn_rsblsh1_n && ! HAVE_NATIVE_mpn_sublsh1_n
+#if HAVE_NATIVE_mpn_rsblsh1_n || HAVE_NATIVE_mpn_sublsh1_n
+#else
 /* Stores |{ap,n}-{bp,n}| in {rp,n},
    returns the sign of {ap,n}-{bp,n}. */
 static int
