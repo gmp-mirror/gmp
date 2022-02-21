@@ -1294,18 +1294,20 @@ mpn_mulmod_bknp1_itch (mp_size_t rn) {
    (((rn) % ((k) = 3) == 0)))
 #else
 #define MPN_MULMOD_BKNP1_USABLE(rn, k, mn)				\
-  ((GMP_NUMB_BITS % 8 == 0) && ((mn) >= 18) && ((rn) > 16) &&		\
-   (((rn) % ((k) = 3) == 0) ||						\
-    ((GMP_NUMB_BITS % 16 != 0) || ((mn) >= 35) && ((rn) >= 32)) &&	\
-    ((GMP_NUMB_BITS % 16 == 0) && ((rn) % ((k) = 5) == 0) ||		\
-     ((mn) >= 49) &&							\
-     (((rn) % ((k) = 7) == 0) ||					\
-      (GMP_NUMB_BITS % 16 == 0) && ((mn) >= 104) && ((rn) >= 64) &&	\
-      ((MOD_BKNP1_USE11 && ((rn) % ((k) = 11) == 0)) ||			\
-       ((rn) % ((k) = 13) == 0) ||					\
-       (GMP_NUMB_BITS % 32 == 0) && ((mn) >= 136) && ((rn) >= 128) &&	\
-       ((rn) % ((k) = 17) == 0)						\
-       )))))
+  (((GMP_NUMB_BITS % 8 == 0) && ((mn) >= 18) && ((rn) > 16) &&		\
+    (((rn) % ((k) = 3) == 0) ||						\
+     (((GMP_NUMB_BITS % 16 != 0) || (((mn) >= 35) && ((rn) >= 32))) &&	\
+      (((GMP_NUMB_BITS % 16 == 0) && ((rn) % ((k) = 5) == 0)) ||	\
+       (((mn) >= 49) &&							\
+	(((rn) % ((k) = 7) == 0) ||					\
+	 ((GMP_NUMB_BITS % 16 == 0) && ((mn) >= 104) && ((rn) >= 64) &&	\
+	  ((MOD_BKNP1_USE11 && ((rn) % ((k) = 11) == 0)) ||		\
+	   ((rn) % ((k) = 13) == 0) ||					\
+	   ((GMP_NUMB_BITS % 32 == 0) && ((mn) >= 136) && ((rn) >= 128) && \
+	    ((rn) % ((k) = 17) == 0)					\
+	    ))))))))) ||						\
+  ((GMP_NUMB_BITS % 16 != 0) && MOD_BKNP1_USE11 &&			\
+   ((mn) >= 104) && ((rn) >= 64) && ((rn) % ((k) = 11) == 0)) )
 #endif
 
 #define mpn_sqrmod_bknp1 __MPN(sqrmod_bknp1)
@@ -1319,18 +1321,20 @@ mpn_sqrmod_bknp1_itch (mp_size_t rn) {
   MPN_MULMOD_BKNP1_USABLE(rn, k, mn)
 #else
 #define MPN_SQRMOD_BKNP1_USABLE(rn, k, mn)				\
-  ((GMP_NUMB_BITS % 8 == 0) && ((mn) >= 27) && ((rn) > 24) &&		\
-   (((rn) % ((k) = 3) == 0) ||						\
-    ((GMP_NUMB_BITS % 16 != 0) || ((mn) >= 55) && ((rn) > 50)) &&	\
-    ((GMP_NUMB_BITS % 16 == 0) && ((rn) % ((k) = 5) == 0) ||		\
-     ((mn) >= 56) &&							\
-     (((rn) % ((k) = 7) == 0) ||					\
-      (GMP_NUMB_BITS % 16 == 0) && ((mn) >= 143) && ((rn) >= 128) &&	\
-      ((MOD_BKNP1_USE11 && ((rn) % ((k) = 11) == 0)) ||			\
-       ((rn) % ((k) = 13) == 0) ||					\
-       (GMP_NUMB_BITS % 32 == 0) && ((mn) >= 272) && ((rn) >= 256) &&	\
-       ((rn) % ((k) = 17) == 0)						\
-       )))))
+  (((GMP_NUMB_BITS % 8 == 0) && ((mn) >= 27) && ((rn) > 24) &&		\
+    (((rn) % ((k) = 3) == 0) ||						\
+     (((GMP_NUMB_BITS % 16 != 0) || (((mn) >= 55) && ((rn) > 50))) &&	\
+      (((GMP_NUMB_BITS % 16 == 0) && ((rn) % ((k) = 5) == 0)) ||	\
+       (((mn) >= 56) &&							\
+	(((rn) % ((k) = 7) == 0) ||					\
+	 ((GMP_NUMB_BITS % 16 == 0) && ((mn) >= 143) && ((rn) >= 128) && \
+	  ((MOD_BKNP1_USE11 && ((rn) % ((k) = 11) == 0)) ||		\
+	   ((rn) % ((k) = 13) == 0) ||					\
+	   ((GMP_NUMB_BITS % 32 == 0) && ((mn) >= 272) && ((rn) >= 256) && \
+	    ((rn) % ((k) = 17) == 0)					\
+	    ))))))))) ||						\
+   ((GMP_NUMB_BITS % 16 != 0) && MOD_BKNP1_USE11 &&			\
+    ((mn) >= 143) && ((rn) >= 128) && ((rn) % ((k) = 11) == 0)) )
 #endif
 
 
