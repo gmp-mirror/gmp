@@ -1,6 +1,6 @@
 /* Header for speed and threshold things.
 
-Copyright 1999-2003, 2005, 2006, 2008-2017, 2019-2021 Free Software
+Copyright 1999-2003, 2005, 2006, 2008-2017, 2019-2022 Free Software
 Foundation, Inc.
 
 This file is part of the GNU MP Library.

@@ -1,6 +1,6 @@
 ## Process this file with automake to generate Makefile.in
 
-# Copyright 2001-2003, 2009-2014, 2018 Free Software Foundation, Inc.
+# Copyright 2001-2003, 2009-2014, 2018, 2019, 2021, 2022 Free Software Foundation, Inc.
 #
 # This file is part of the GNU MP Library test suite.
 #

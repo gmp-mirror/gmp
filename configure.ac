@@ -3,7 +3,7 @@ dnl  Process this file with autoconf to produce a configure script.
 
 define(GMP_COPYRIGHT,[[
 
-Copyright 1996-2020 Free Software Foundation, Inc.
+Copyright 1996-2022 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
