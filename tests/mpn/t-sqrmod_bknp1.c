@@ -130,15 +130,31 @@ main (int argc, char **argv)
 	+ gmp_urandomm_ui (rands, SIZE_LOG + 1 - size_min);
 
       k = supported_k[test % numberof (supported_k)];
-      n = MIN_N
-	+ gmp_urandomm_ui (rands, (1L << size_range) + 1 - MIN_N);
-      rn = k * n;
-      if ((GMP_NUMB_MAX % k != 0) && (rn % 3 == 0))
-	n = rn / (k = 3);
+      if (test < numberof (supported_k))
+	{
+	  n = 1;
+	  rn = k;
+	  ap [rn] = 0;
+	  mp_limb_t x = GMP_NUMB_MAX / k + 1;
+	  ap [0] = x;
+	  for (int i = 1; i < k; i += 2)
+	    {
+	      ap [i] = - x;
+	      ap [i + 1] = x - 1;
+	    }
+	}
+      else
+	{
+	  n = MIN_N
+	    + gmp_urandomm_ui (rands, (1L << size_range) + 1 - MIN_N);
+	  rn = k * n;
+	  if ((GMP_NUMB_MAX % k != 0) && (rn % 3 == 0))
+	    n = rn / (k = 3);
 
-      mpn_random2 (ap, rn + 1);
+	  mpn_random2 (ap, rn + 1);
 
-      ap [rn] &= 1;
+	  ap [rn] &= 1;
+	}
 
       mpn_random2 (pp-1, rn + 3);
       p_before = pp[-1];
