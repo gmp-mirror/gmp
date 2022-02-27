@@ -119,7 +119,7 @@ main (int argc, char **argv)
       unsigned size_min;
       unsigned size_range;
       unsigned k;
-      mp_size_t an,bn,rn,n;
+      mp_size_t rn, n;
       mp_size_t itch;
       mp_limb_t p_before, p_after, s_before, s_after;
 
@@ -137,7 +137,14 @@ main (int argc, char **argv)
       if ((GMP_NUMB_MAX % k != 0) && (rn % 3 == 0))
 	n = rn / (k = 3);
 
-      mpn_random2 (ap, rn + 1);
+      if (test == 0)
+	{
+	  mpn_random2 (ap, n);
+	  mpn_add_1 (ap + n, ap, n, 1); /* {ap,an} = -1 mod B+1 */
+	  MPN_ZERO (ap + 2 * n, rn - 2 * n + 1);
+	}
+      else
+	mpn_random2 (ap, rn + 1);
       mpn_random2 (bp, rn + 1);
 
       bp [rn] &= 1;
@@ -153,7 +160,7 @@ main (int argc, char **argv)
       s_before = scratch[-1];
       s_after = scratch[itch];
 
-      mpn_mulmod_bknp1 (  pp, ap, bp, n, k, scratch);
+      mpn_mulmod_bknp1 ( pp, ap, bp, n, k, scratch);
       ref_mulmod_bnp1 (refp, ap, bp, rn);
       if (pp[-1] != p_before || pp[rn + 1] != p_after
 	  || scratch[-1] != s_before || scratch[itch] != s_after

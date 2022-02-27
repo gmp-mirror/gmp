@@ -118,7 +118,7 @@ main (int argc, char **argv)
       unsigned size_min;
       unsigned size_range;
       unsigned k;
-      mp_size_t an,rn,n;
+      mp_size_t rn, n;
       mp_size_t itch;
       mp_limb_t p_before, p_after, s_before, s_after;
 
