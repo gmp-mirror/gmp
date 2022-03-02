@@ -1975,7 +1975,7 @@ case $host in
 	gcc_cflags_cpu="-mtune=alderlake -mtune=icelake-client -mtune=skylake -mtune=broadwell -mtune=haswell"
 	gcc_cflags_arch="-march=alderlake -march=skylake -march=broadwell -march=haswell"
 	path="x86/coreihwl x86/coreisbr x86/p6/sse2 x86/p6/p3mmx x86/p6/mmx x86/p6 x86/mmx x86"
-	path_64="x86_64/icelake x86_64/skylake x86_64/coreibwl x86_64/coreihwl x86_64/coreisbr x86_64/coreinhm x86_64/core2 x86_64"
+	path_64="x86_64/alderlake x86_64/icelake x86_64/skylake x86_64/coreibwl x86_64/coreihwl x86_64/coreisbr x86_64/coreinhm x86_64/core2 x86_64"
 	# extra_functions_64="missing"	 # enable for bmi2/adx simulation
 	x86_have_mulx=yes
 	;;
