@@ -68,6 +68,7 @@ mpn_bc_mulmod_bnp1 (mp_ptr rp, mp_srcptr ap, mp_srcptr bp, mp_size_t rn,
 		    mp_ptr tp)
 {
   mp_limb_t cy;
+  unsigned k;
 
   ASSERT (0 < rn);
 
@@ -77,6 +78,17 @@ mpn_bc_mulmod_bnp1 (mp_ptr rp, mp_srcptr ap, mp_srcptr bp, mp_size_t rn,
 	cy = bp [rn] + mpn_neg (rp, bp, rn);
       else /* ap[rn] == 0 */
 	cy = mpn_neg (rp, ap, rn);
+    }
+  else if (MPN_MULMOD_BKNP1_USABLE (rn, k, MUL_FFT_MODF_THRESHOLD))
+    {
+      mp_size_t n_k = rn / k;
+      TMP_DECL;
+
+      TMP_MARK;
+      mpn_mulmod_bknp1 (rp, ap, bp, n_k, k,
+                       TMP_ALLOC_LIMBS (mpn_mulmod_bknp1_itch (rn)));
+      TMP_FREE;
+      return;
     }
   else
     {
