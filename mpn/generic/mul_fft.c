@@ -237,14 +237,14 @@ mpn_fft_mul_2exp_modF (mp_ptr r, mp_srcptr a, mp_bitcnt_t d, mp_size_t n)
 
       r[n] = 0;
       /* cc < 2^sh <= 2^(GMP_NUMB_BITS-1) thus no overflow here */
-      cc++;
-      mpn_incr_u (r, cc);
+      ++cc;
+      MPN_INCR_U (r, n + 1, cc);
 
-      rd++;
+      ++rd;
       /* rd might overflow when sh=GMP_NUMB_BITS-1 */
-      cc = (rd == 0) ? 1 : rd;
+      cc = rd + (rd == 0);
       r = r + m + (rd == 0);
-      mpn_incr_u (r, cc);
+      MPN_INCR_U (r, n + 1 - m - (rd == 0), cc);
     }
   else
     {
@@ -284,7 +284,10 @@ mpn_fft_mul_2exp_modF (mp_ptr r, mp_srcptr a, mp_bitcnt_t d, mp_size_t n)
       r[n] = -mpn_sub_1 (r + m, r + m, n - m, cc);
       r[n] -= mpn_sub_1 (r + m, r + m, n - m, rd);
       if (r[n] & GMP_LIMB_HIGHBIT)
-	r[n] = mpn_add_1 (r, r, n, CNST_LIMB(1));
+	{
+	  r[n] = 0;
+	  MPN_INCR_U (r, n + 1, CNST_LIMB(1));
+	}
     }
 }
 
@@ -560,7 +563,9 @@ mpn_fft_mul_modF_K (mp_ptr *ap, mp_ptr *bp, mp_size_t n, mp_size_t K)
 	      */
 	      tp[0] += cc;
 	    }
-	  a[n] = mpn_sub_n (a, tp, tpn, n) && mpn_add_1 (a, a, n, CNST_LIMB(1));
+	  cc = mpn_sub_n (a, tp, tpn, n);
+	  a[n] = 0;
+	  MPN_INCR_U (a, n + 1, cc);
 	}
     }
   TMP_FREE;
@@ -657,8 +662,7 @@ mpn_fft_norm_modF (mp_ptr rp, mp_size_t n, mp_ptr ap, mp_size_t an)
     }
 
   /* remains to subtract {ap+n, l} from {rp, n+1} */
-  cc = mpn_sub_n (rp, rp, ap + n, l);
-  rpn -= mpn_sub_1 (rp + l, rp + l, n - l, cc);
+  rpn -= mpn_sub (rp, rp, n, ap + n, l);
   if (rpn < 0) /* necessarily rpn = -1 */
     rpn = mpn_add_1 (rp, rp, n, CNST_LIMB(1));
   return rpn;
@@ -684,12 +688,18 @@ mpn_mul_fft_decompose (mp_ptr A, mp_ptr *Ap, mp_size_t K, mp_size_t nprime,
   if (nl > Kl) /* normalize {n, nl} mod 2^(Kl*GMP_NUMB_BITS)+1 */
     {
       mp_size_t dif = nl - Kl;
-      mp_limb_signed_t cy;
 
       tmp = TMP_BALLOC_LIMBS(Kl + 1);
+      tmp[Kl] = 0;
 
-      if (dif > Kl)
+#if ! WANT_OLD_FFT_FULL
+      ASSERT_ALWAYS (dif <= Kl);
+#else
+      /* The comment "We must have nl <= 2*K*l." says that
+	 ((dif = nl - Kl) > Kl) should never happen. */
+      if (UNLIKELY (dif > Kl))
 	{
+	  mp_limb_signed_t cy;
 	  int subp = 0;
 
 	  cy = mpn_sub_n (tmp, n, n + Kl, Kl);
@@ -713,16 +723,20 @@ mpn_mul_fft_decompose (mp_ptr A, mp_ptr *Ap, mp_size_t K, mp_size_t nprime,
 	  else
 	    cy -= mpn_add (tmp, tmp, Kl, n, dif);
 	  if (cy >= 0)
-	    cy = mpn_add_1 (tmp, tmp, Kl, cy);
+	    MPN_INCR_U (tmp, Kl + 1, cy);
 	  else
-	    cy = mpn_sub_1 (tmp, tmp, Kl, -cy);
+	    {
+	      tmp[Kl] = 1;
+	      MPN_DECR_U (tmp, Kl + 1, -cy - 1);
+	    }
 	}
       else /* dif <= Kl, i.e. nl <= 2 * Kl */
+#endif
 	{
+	  mp_limb_t cy;
 	  cy = mpn_sub (tmp, n, Kl, n + Kl, dif);
-	  cy = mpn_add_1 (tmp, tmp, Kl, cy);
+	  MPN_INCR_U (tmp, Kl + 1, cy);
 	}
-      tmp[Kl] = cy;
       nl = Kl + 1;
       n = tmp;
     }
@@ -755,7 +769,7 @@ mpn_mul_fft_decompose (mp_ptr A, mp_ptr *Ap, mp_size_t K, mp_size_t nprime,
 
 static mp_limb_t
 mpn_mul_fft_internal (mp_ptr op, mp_size_t pl, int k,
-		      mp_ptr *Ap, mp_ptr *Bp, mp_ptr A, mp_ptr B,
+		      mp_ptr *Ap, mp_ptr *Bp, mp_ptr unusedA, mp_ptr B,
 		      mp_size_t nprime, mp_size_t l, mp_size_t Mp,
 		      int **fft_l, mp_ptr T, int sqr)
 {
@@ -797,9 +811,7 @@ mpn_mul_fft_internal (mp_ptr op, mp_size_t pl, int k,
 
       j = (K - i) & (K - 1);
 
-      if (mpn_add_n (n, n, Bp[j], nprime + 1))
-	cc += mpn_add_1 (n + nprime + 1, n + nprime + 1,
-			  pla - sh - nprime - 1, CNST_LIMB(1));
+      cc += mpn_add (n, n, pla - sh, Bp[j], nprime + 1);
       T[2 * l] = i + 1; /* T = (i + 1)*2^(2*M) */
       if (mpn_cmp (Bp[j], T, nprime + 1) > 0)
 	{ /* subtract 2^N'+1 */
@@ -825,8 +837,7 @@ mpn_mul_fft_internal (mp_ptr op, mp_size_t pl, int k,
 	}
       else
 	{
-	  cc = mpn_sub_1 (p + pla - pl, p + pla - pl, pl, cc);
-	  ASSERT (cc == 0);
+	  MPN_DECR_U (p + pla - pl, pl, cc);
 	}
     }
   else
@@ -918,18 +929,17 @@ mpn_mul_fft (mp_ptr op, mp_size_t pl,
 
   A = TMP_BALLOC_LIMBS (K * (nprime + 1));
   Ap = TMP_BALLOC_MP_PTRS (K);
+  Bp = TMP_BALLOC_MP_PTRS (K);
   mpn_mul_fft_decompose (A, Ap, K, nprime, n, nl, l, Mp, T);
   if (sqr)
     {
       mp_size_t pla;
       pla = l * (K - 1) + nprime + 1; /* number of required limbs for p */
       B = TMP_BALLOC_LIMBS (pla);
-      Bp = TMP_BALLOC_MP_PTRS (K);
     }
   else
     {
       B = TMP_BALLOC_LIMBS (K * (nprime + 1));
-      Bp = TMP_BALLOC_MP_PTRS (K);
       mpn_mul_fft_decompose (B, Bp, K, nprime, m, ml, l, Mp, T);
     }
   h = mpn_mul_fft_internal (op, pl, k, Ap, Bp, A, B, nprime, l, Mp, fft_l, T, sqr);
@@ -1039,6 +1049,6 @@ mpn_mul_fft_full (mp_ptr op,
   ASSERT_MPN_ZERO_P (pad_op + pl - pl3, pl2 + pl3 - pl);
   __GMP_FREE_FUNC_LIMBS (pad_op, pl2);
   /* since the final result has at most pl limbs, no carry out below */
-  mpn_add_1 (op + pl2, op + pl2, pl - pl2, (mp_limb_t) c2);
+  MPN_INCR_U (op + pl2, pl - pl2, (mp_limb_t) c2);
 }
 #endif
