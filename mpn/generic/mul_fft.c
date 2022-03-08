@@ -6,7 +6,8 @@
    SAFE TO REACH THEM THROUGH DOCUMENTED INTERFACES.  IN FACT, IT IS ALMOST
    GUARANTEED THAT THEY WILL CHANGE OR DISAPPEAR IN A FUTURE GNU MP RELEASE.
 
-Copyright 1998-2010, 2012, 2013, 2018, 2020 Free Software Foundation, Inc.
+Copyright 1998-2010, 2012, 2013, 2018, 2020, 2022 Free Software
+Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -281,12 +282,18 @@ mpn_fft_mul_2exp_modF (mp_ptr r, mp_srcptr a, mp_bitcnt_t d, mp_size_t n)
 
       /* now subtract cc and rd from r[m..n] */
 
-      r[n] = -mpn_sub_1 (r + m, r + m, n - m, cc);
-      r[n] -= mpn_sub_1 (r + m, r + m, n - m, rd);
-      if (r[n] & GMP_LIMB_HIGHBIT)
+      r[n] = 2; /* Add a value, to avoid borrow propagation */
+      MPN_DECR_U (r + m, n - m + 1, cc);
+      MPN_DECR_U (r + m, n - m + 1, rd);
+      /* Remove the added value, and check for a possible borrow. */
+      if (UNLIKELY ((r[n] -= 2) != 0))
 	{
+	  mp_limb_t cy = -r[n];
+	  /* cy should always be 1, except in the very unlikely case
+	     m=n-1, r[m]=0, cc+rd>GMP_NUMB_MAX+1. Never triggered.
+	     Is it actually possible? */
 	  r[n] = 0;
-	  MPN_INCR_U (r, n + 1, CNST_LIMB(1));
+	  MPN_INCR_U (r, n + 1, cy);
 	}
     }
 }
@@ -394,9 +401,17 @@ mpn_fft_fft (mp_ptr *Ap, mp_size_t K, int **ll,
       cy = mpn_sub_n (Ap[inc], tp, Ap[inc], n + 1);
 #endif
       if (Ap[0][n] > 1) /* can be 2 or 3 */
-	Ap[0][n] = 1 - mpn_sub_1 (Ap[0], Ap[0], n, Ap[0][n] - 1);
+	{ /* Ap[0][n] = 1 - mpn_sub_1 (Ap[0], Ap[0], n, Ap[0][n] - 1); */
+	  mp_limb_t cc = Ap[0][n] - 1;
+	  Ap[0][n] = 1;
+	  MPN_DECR_U (Ap[0], n + 1, cc);
+	}
       if (cy) /* Ap[inc][n] can be -1 or -2 */
-	Ap[inc][n] = mpn_add_1 (Ap[inc], Ap[inc], n, ~Ap[inc][n] + 1);
+	{ /* Ap[inc][n] = mpn_add_1 (Ap[inc], Ap[inc], n, ~Ap[inc][n] + 1); */
+	  mp_limb_t cc = ~Ap[inc][n] + 1;
+	  Ap[inc][n] = 0;
+	  MPN_INCR_U (Ap[inc], n + 1, cc);
+	}
     }
   else
     {
@@ -591,9 +606,17 @@ mpn_fft_fftinv (mp_ptr *Ap, mp_size_t K, mp_size_t omega, mp_size_t n, mp_ptr tp
       cy = mpn_sub_n (Ap[1], tp, Ap[1], n + 1);
 #endif
       if (Ap[0][n] > 1) /* can be 2 or 3 */
-	Ap[0][n] = 1 - mpn_sub_1 (Ap[0], Ap[0], n, Ap[0][n] - 1);
+	{ /* Ap[0][n] = 1 - mpn_sub_1 (Ap[0], Ap[0], n, Ap[0][n] - 1); */
+	  mp_limb_t cc = Ap[0][n] - 1;
+	  Ap[0][n] = 1;
+	  MPN_DECR_U (Ap[0], n + 1, cc);
+	}
       if (cy) /* Ap[1][n] can be -1 or -2 */
-	Ap[1][n] = mpn_add_1 (Ap[1], Ap[1], n, ~Ap[1][n] + 1);
+	{ /* Ap[1][n] = mpn_add_1 (Ap[1], Ap[1], n, ~Ap[1][n] + 1); */
+	  mp_limb_t cc = ~Ap[1][n] + 1;
+	  Ap[1][n] = 0;
+	  MPN_INCR_U (Ap[1], n + 1, cc);
+	}
     }
   else
     {
