@@ -41,7 +41,7 @@ C AMD bd3	 -
 C AMD bd4	 -
 C AMD zn1	 ?
 C AMD zn2	 ?
-C AMD zn3	 ?
+C AMD zn3	 2.0
 C AMD bt1	 -
 C AMD bt2	 -
 C Intel P4	 -
@@ -54,7 +54,7 @@ C Intel IBR	 -
 C Intel HWL	 -
 C Intel BWL	 ?
 C Intel SKL	 ?
-C Intel RKL	 ?
+C Intel RKL	 2.0
 C Intel ALD	 1.53
 C Intel atom	 -
 C Intel SLM	 -
@@ -78,39 +78,63 @@ PROLOGUE(mpn_submul_1)
 	mov	v0_param, v0
 	mov	%rax, n
 	test	$1, R8(n)
-	mov	$-1, %rax
-	adox(	%rax, %rax)		C Set OF
-	jz	L(b0)
+	jz	L(bx0)
 
-L(b1):	mov	$0, R32(%r8)
-	lea	-8(up), up
-	lea	-8(rp), rp
-	lea	1(n), n
-	jmp	L(lo1)
+L(bx1):	mulx(	(up), %r9, %rax)
+	test	$2, R8(n)
+	stc
+	jz	L(b01)
 
-L(b0):	mov	$0, R32(%r10)
-
-L(top):	mulx(	(up), %r9, %r8)
-	adcx(	%r10, %r9)
-	not	%r9
-	adox(	(rp), %r9)
-	mov	%r9, (rp)
-L(lo1):	mulx(	8,(up), %r11, %r10)
-	adcx(	%r8, %r11)
-	not	%r11
-	adox(	8,(rp), %r11)
-	mov	%r11, 8(rp)
+L(b11):	lea	1(n), n
 	lea	16(up), up
 	lea	16(rp), rp
-	lea	-2(n), n
+	jmp	L(lo3)
+
+L(b01):	lea	3(n), n
+	jmp	L(lo1)
+
+L(bx0):	mulx(	(up), %r9, %r8)
+	test	$2, R8(n)
+	stc
+	jz	L(b00)
+
+L(b10):	lea	8(up), up
+	lea	8(rp), rp
+	lea	2(n), n
+	jmp	L(lo2)
+
+L(b00):	lea	24(up), up
+	lea	24(rp), rp
+	jmp	L(lo0)
+
+L(top):	lea	32(up), up
+	lea	32(rp), rp
+	mulx(	-24,(up), %r9, %r8)
+	adox(	%rax, %r9)
+L(lo0):	not	%r9
+	adcx(	-24,(rp), %r9)
+	mov	%r9, -24(rp)
+	mulx(	-16,(up), %r9, %rax)
+	adox(	%r8, %r9)
+L(lo3):	not	%r9
+	adcx(	-16,(rp), %r9)
+	mov	%r9, -16(rp)
+	mulx(	-8,(up), %r9, %r8)
+	adox(	%rax, %r9)
+L(lo2):	not	%r9
+	adcx(	-8,(rp), %r9)
+	mov	%r9, -8(rp)
+	mulx(	(up), %r9, %rax)
+	adox(	%r8, %r9)
+L(lo1):	not	%r9
+	adcx(	(rp), %r9)
+	mov	%r9, (rp)
+	lea	-4(n), n
 	jrcxz	L(end)
 	jmp	L(top)
 
-L(end):	adcx(	%rcx, %r10)
-	not	%r10
-	adox(	%rcx, %r10)
-	mov	%r10, %rax
-	neg	%rax
+L(end):	adox(	%rcx, %rax)
+	sbb	$-1, %rax
 	ret
 EPILOGUE()
 ASM_END()
