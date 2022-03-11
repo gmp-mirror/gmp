@@ -66,6 +66,7 @@ static void
 mpn_bc_sqrmod_bnp1 (mp_ptr rp, mp_srcptr ap, mp_size_t rn, mp_ptr tp)
 {
   mp_limb_t cy;
+  unsigned k;
 
   ASSERT (0 < rn);
 
@@ -73,6 +74,17 @@ mpn_bc_sqrmod_bnp1 (mp_ptr rp, mp_srcptr ap, mp_size_t rn, mp_ptr tp)
     {
       *rp = 1;
       MPN_FILL (rp + 1, rn, 0);
+      return;
+    }
+  else if (MPN_SQRMOD_BKNP1_USABLE (rn, k, MUL_FFT_MODF_THRESHOLD))
+    {
+      mp_size_t n_k = rn / k;
+      TMP_DECL;
+
+      TMP_MARK;
+      mpn_sqrmod_bknp1 (rp, ap, n_k, k,
+			TMP_ALLOC_LIMBS (mpn_sqrmod_bknp1_itch (rn)));
+      TMP_FREE;
       return;
     }
   mpn_sqr (tp, ap, rn);
