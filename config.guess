@@ -189,6 +189,7 @@ arm*-*-* | aarch64-*-*)
     0x51_0x800) exact_cpu=armcortexa57 ;;
     0x43_0x0a1) exact_cpu=armthunderx  ;;
     0x50_0x000) exact_cpu=armxgene1    ;;
+    0x61_0x023) exact_cpu=applem1      ;;
   esac
   if test -z "$exact_cpu"; then
     case "$cpu_code" in
