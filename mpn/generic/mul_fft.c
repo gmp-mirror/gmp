@@ -474,6 +474,7 @@ static void
 mpn_fft_mul_modF_K (mp_ptr *ap, mp_ptr *bp, mp_size_t n, mp_size_t K)
 {
   int i;
+  unsigned k;
   int sqr = (ap == bp);
   TMP_DECL;
 
@@ -547,6 +548,33 @@ mpn_fft_mul_modF_K (mp_ptr *ap, mp_ptr *bp, mp_size_t n, mp_size_t K)
 	  (*ap)[n] = cy;
 	}
     }
+#if ! TUNE_PROGRAM_BUILD
+  else if (MPN_MULMOD_BKNP1_USABLE (n, k, MUL_FFT_MODF_THRESHOLD))
+    {
+      mp_ptr a;
+      mp_size_t n_k = n / k;
+
+      if (sqr)
+       {
+	 mp_ptr tp = TMP_SALLOC_LIMBS (mpn_sqrmod_bknp1_itch (n));
+         for (i = 0; i < K; i++)
+           {
+             a = *ap++;
+             mpn_sqrmod_bknp1 (a, a, n_k, k, tp);
+           }
+       }
+      else
+       {
+	 mp_ptr b, tp = TMP_SALLOC_LIMBS (mpn_mulmod_bknp1_itch (n));
+         for (i = 0; i < K; i++)
+           {
+             a = *ap++;
+             b = *bp++;
+             mpn_mulmod_bknp1 (a, a, b, n_k, k, tp);
+           }
+       }
+    }
+#endif
   else
     {
       mp_ptr a, b, tp, tpn;
