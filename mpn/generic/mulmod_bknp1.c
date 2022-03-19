@@ -91,8 +91,7 @@ _mpn_modbknp1dbnp1_n (mp_ptr rp, mp_srcptr op, mp_size_t n, unsigned k)
    }
   while (--i != 0);
 
-  rp += k * n;
-  for (; (hl = *rp) != 0; rp += k * n) /* Should run only once... */
+  for (; (hl = *(rp += k * n)) != 0; ) /* Should run only once... */
     {
       *rp = 0;
       i = k >> 1;
@@ -124,9 +123,8 @@ _mpn_modbnp1_neg_ip (mp_ptr r, mp_size_t n, mp_limb_t h)
 {
   r[n] = 0;
   MPN_INCR_U (r, n + 1, -h);
-  h = r[n];
-  if (UNLIKELY (h != 0))
-    _mpn_modbnp1_pn_ip (r, n, h);
+  if (UNLIKELY (r[n] != 0))
+    _mpn_modbnp1_pn_ip (r, n, 1);
 }
 
 static void
@@ -135,12 +133,13 @@ _mpn_modbnp1_nc_ip (mp_ptr r, mp_size_t n, mp_limb_t h)
   if (h & GMP_NUMB_HIGHBIT) /* This means h < 0 */
     {
       _mpn_modbnp1_neg_ip (r, n, h);
-      return;
     }
-
-  r[n] = h;
-  if (h)
-    _mpn_modbnp1_pn_ip(r, n, h);
+  else
+    {
+      r[n] = h;
+      if (h)
+	_mpn_modbnp1_pn_ip(r, n, h);
+    }
 }
 
 /* {rp, rn + 1} = {op, on} mod (B^{rn}+1) */
@@ -180,17 +179,17 @@ _mpn_modbnp1_kn (mp_ptr rp, mp_srcptr op, mp_size_t rn, unsigned k)
 #endif
   ASSERT (k & 1);
   k >>= 1;
-  ASSERT (0 < k && k < GMP_NUMB_HIGHBIT - 1);
+  ASSERT (0 < k && k < GMP_NUMB_HIGHBIT - 3);
   ASSERT (op[(1 + 2 * k) * rn] < GMP_NUMB_HIGHBIT - 2 - k);
 
   cy = - mpn_sub_n (rp, op, op + rn, rn);
-  do {
+  for (;;) {
     op += 2 * rn;
     cy += mpn_add_n (rp, rp, op, rn);
     if (--k == 0)
       break;
     cy -= mpn_sub_n (rp, rp, op + rn, rn);
-  } while (1);
+  };
 
   cy += op[rn];
   _mpn_modbnp1_nc_ip (rp, rn, cy);
@@ -267,12 +266,29 @@ _mpn_crt (mp_ptr rp, mp_srcptr ap, mp_srcptr bp,
   unsigned i;
 
 #if MOD_BKNP1_ONLY3
+  ASSERT (k == 3);
   k = 3;
 #endif
   _mpn_modbnp1_kn (tp, ap, n, k);
   if (mpn_sub_n (tp, bp, tp, n + 1))
     _mpn_modbnp1_neg_ip (tp, n, tp[n]);
 
+  /*
+    Oni komence havis A = {ap, k*n+1},
+    kaj X = {bp, n+1} mod (B^n+1),
+
+    Do oni prenas T = X-A mod (B^n+1) ,
+    kaj ni kalkulas
+    R = T/k * (B^(k*n)+1)/(B^n+1) + A.
+
+    Kompreneble, R = A mod ((B^(k*n)+1)/(B^n+1)) .
+    Plue, cxar k estas ne para
+    (B^(k*n)+1)/(B^n+1) = k mod (B^n+1) ;
+    do R = T/k*k + A = X-A+A = X mod (B^n+1) .
+
+    Kiel oni kalkulas T/k, se T ne estas oblo de k?
+    Oni povas selekti T + m (B^n+1) = 0 mod (k) ;
+  */
 #if MOD_BKNP1_USE11
   if (UNLIKELY (k == 11))
     {
@@ -335,10 +351,11 @@ _mpn_crt (mp_ptr rp, mp_srcptr ap, mp_srcptr bp,
     ASSERT_NOCARRY (mpn_divexact_by3 (tp, tp, n + 1));
   else if ((GMP_NUMB_BITS % 16 == 0) && LIKELY (k == 5))
     mpn_divexact_by5 (tp, tp, n + 1);
-  else if ((GMP_NUMB_BITS % 16 != 0) || LIKELY (k == 7))
+  else if (((! MOD_BKNP1_USE11) && (GMP_NUMB_BITS % 16 != 0))
+	   || LIKELY (k == 7))
     mpn_divexact_by7 (tp, tp, n + 1);
 #if MOD_BKNP1_USE11
-  else if (UNLIKELY (k == 11))
+  else if (k == 11)
     mpn_divexact_by11 (tp, tp, n + 1);
 #endif
   else if ((GMP_NUMB_BITS % 32 != 0) || LIKELY (k == 13))
