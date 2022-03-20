@@ -273,22 +273,6 @@ _mpn_crt (mp_ptr rp, mp_srcptr ap, mp_srcptr bp,
   if (mpn_sub_n (tp, bp, tp, n + 1))
     _mpn_modbnp1_neg_ip (tp, n, tp[n]);
 
-  /*
-    Oni komence havis A = {ap, k*n+1},
-    kaj X = {bp, n+1} mod (B^n+1),
-
-    Do oni prenas T = X-A mod (B^n+1) ,
-    kaj ni kalkulas
-    R = T/k * (B^(k*n)+1)/(B^n+1) + A.
-
-    Kompreneble, R = A mod ((B^(k*n)+1)/(B^n+1)) .
-    Plue, cxar k estas ne para
-    (B^(k*n)+1)/(B^n+1) = k mod (B^n+1) ;
-    do R = T/k*k + A = X-A+A = X mod (B^n+1) .
-
-    Kiel oni kalkulas T/k, se T ne estas oblo de k?
-    Oni povas selekti T + m (B^n+1) = 0 mod (k) ;
-  */
 #if MOD_BKNP1_USE11
   if (UNLIKELY (k == 11))
     {
