@@ -1,3 +1,42 @@
+2022-03-18 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* tests/mpz/t-lucm.c: Remove an unused var.
+	* tests/mpq/io.c: Use a random size.
+	* tests/mpz/t-gcd.c: Do not assume a limb fits for _ui functions.
+
+2022-03-15 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/mul_fft.c: Use _bknp1. Not when tuning, to avoid "noise".
+
+2022-03-08 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/mulmod_bnm1.c: Use mulmod_bknp1, on the bnp1 side.
+	* mpn/generic/sqrmod_bnm1.c: Likewise.
+
+	* mpn/generic/mul_fft.c: Remove a branch and improve carry propagation.
+
+2022-02-15 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/strongfibo.c: Correct condition in #if.
+
+	* mpn/generic/mulmod_bknp1.c: New file, with mpn_{mul,sqr}mod_bknp1.
+	* configure.ac (gmp_mpn_functions): Add new file.
+	* gmp-impl.h: Declare new functions.
+	* gmp-impl.h (MPN_{MUL,SQR}MOD_BKNP1_USABLE): Support new functions.
+
+	* tests/mpn/t-{mul,sqr}mod_bknp1.c: New tests for mpn_{mul,sqr}mod_bknp1.
+	* tests/mpn/Makefile.am: Add new tests.
+
+	* tune/speed.c: Recognise new functions: mpn_{mul,sqr}mod_bknp1.
+	* tune/speed.h: Declare new speed_ functions to measure them.
+	* tune/common.c: Implement speed_ functions.
+
+2022-02-01 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/aorsmul_i.c: Use MPZ_NEWALLOC when the operand is overwritten.
+	* mpz/import.c: Reorder branches.
+	* mpz/{init2.c,realloc.c,realloc2.c}: Remove unneeded #includes.
+
 2022-01-20  Marc Glisse  <marc.glisse@inria.fr>
 
 	* doc/gmp.texi: Clarify C++ includes and library.
@@ -6,6 +45,8 @@
 
 	* gen-sieve.c: Generate masks depending on bit size.
 	* primesieve.c: Remove fixed size (32 and 64 only) masks.
+
+	* tune/speed.c: Add FLAG_NODATA for gmp_primesieve.
 
 2021-12-11 Marco Bodrato <bodrato@mail.dm.unipi.it>
 

@@ -1,3 +1,7 @@
+2022-03-19 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mini-gmp.c (mpz_swap): Use MPN_PTR_SWAP, tx Paul Eggert.
+
 2021-10-01 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mini-gmp.c: Add asserts (removed at compile time) on limb size.
