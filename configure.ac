@@ -333,6 +333,7 @@ AH_VERBATIM([HAVE_HOST_CPU_1],
 #undef HAVE_HOST_CPU_skylake
 #undef HAVE_HOST_CPU_silvermont
 #undef HAVE_HOST_CPU_goldmont
+#undef HAVE_HOST_CPU_tremont
 #undef HAVE_HOST_CPU_k8
 #undef HAVE_HOST_CPU_k10
 #undef HAVE_HOST_CPU_bulldozer
@@ -1996,6 +1997,12 @@ case $host in
 	gcc_cflags_arch="-march=slm -march=atom -march=pentium3"
 	path="x86/goldmont x86/atom/sse2 x86/atom/mmx x86/atom x86/mmx x86"
 	path_64="x86_64/goldmont x86_64/silvermont x86_64/atom x86_64"
+	;;
+      tremont)			# out-of-order pipeline atom
+	gcc_cflags_cpu="-mtune=slm -mtune=atom -mtune=pentium3"
+	gcc_cflags_arch="-march=slm -march=atom -march=pentium3"
+	path="x86/goldmont x86/atom/sse2 x86/atom/mmx x86/atom x86/mmx x86"
+	path_64="x86_64/tremont x86_64/goldmont x86_64/silvermont x86_64/atom x86_64"
 	;;
       nano)
 	gcc_cflags_cpu="-mtune=nano"
