@@ -8,12 +8,25 @@
 
 	* mpn/generic/mul_fft.c: Use _bknp1. Not when tuning, to avoid "noise".
 
+2022-03-09  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/x86_64/alderlake/submul_1.asm: New file.
+
 2022-03-08 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpn/generic/mulmod_bnm1.c: Use mulmod_bknp1, on the bnp1 side.
 	* mpn/generic/sqrmod_bnm1.c: Likewise.
 
 	* mpn/generic/mul_fft.c: Remove a branch and improve carry propagation.
+
+2022-03-03  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/x86_64/alderlake/mul_basecase.asm: New file.
+	* mpn/x86_64/alderlake/addmul_1.asm: New file.
+
+2022-02-21  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac: Handle alderlake specifically, as it lacks avx512.
 
 2022-02-15 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
@@ -30,6 +43,10 @@
 	* tune/speed.c: Recognise new functions: mpn_{mul,sqr}mod_bknp1.
 	* tune/speed.h: Declare new speed_ functions to measure them.
 	* tune/common.c: Implement speed_ functions.
+
+2022-02-14  Torbjörn Granlund  <tg@gmplib.org>
+
+	* config.guess: Recognize Tremont CPU variants.
 
 2022-02-01 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
@@ -64,6 +81,31 @@
 
 	* mpz/tdiv_r.c: Special code for divisor with low zero limbs.
 	* mpz/tdiv_qr.c: Likewise.
+
+2021-11-14  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac: Adapt to acinclude.m4 change.
+
+	* mpn/riscv/64/aors_n.asm: Accept 4th CMPCY operand, allowing for
+	2 c/l mpn_sub_n (mpn_add_n cannot beat 3 c/l with RISC V's ISA).
+
+	* configure.ac (S390_PATTERN): Rewrite to handle path inheritance.
+
+	* acinclude.m4 (GMP_ASM_SPARC_GDOP): Renamed GMP_ASM_SPARC_GOTDATA.
+
+	* mpn/sparc32/sparc-defs.m4 (LEA64): Remove misguided assert.
+	* mpn/sparc32/sparc-defs.m4 (LEA64): Allow PIC withot gdop_*.
+
+	* mpn/sparc64/gcd_11.asm: Optimise out annulled shift insn in loop.
+
+2021-11-07  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/generic/sec_tabselect.c: Make recently added code actually work.
+	(Thanks Marco!)
+
+	* mpn/s390_32/sec_tabselect.asm: New file.
+
+	* mpn/s390_64/sec_tabselect.asm: Avoid "slfi" for portability.
 
 2021-11-02  Torbjörn Granlund  <tg@gmplib.org>
 
