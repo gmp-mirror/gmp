@@ -1156,6 +1156,17 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 #endif /* i960mx */
 #endif /* i960 */
 
+
+#if defined (__loongarch64) && W_TYPE_SIZE == 64
+#define umul_ppmm(w1, w0, u, v) \
+  do {									\
+    UDItype __u = (u), __v = (v);					\
+    (w0) = __u * __v;							\
+    (w1) = (unsigned __int128__) __u * __v >> 64;			\
+  } while (0)
+#endif
+
+
 #if (defined (__mc68000__) || defined (__mc68020__) || defined(mc68020) \
      || defined (__m68k__) || defined (__mc5200__) || defined (__mc5206e__) \
      || defined (__mc5307__)) && W_TYPE_SIZE == 32
