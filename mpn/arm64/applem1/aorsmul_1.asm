@@ -47,7 +47,7 @@ define(`rp', x0)
 define(`up', x1)
 define(`n',  x2)
 define(`v0', x3)
-define(`cin',`x4')
+define(`cin',x4)
 
 define(`CY',x17)
 

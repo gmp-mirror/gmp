@@ -245,7 +245,7 @@ L(cor2):ldp	x10, x11, [up]
 	adc	CY, x4, xzr
 	adds	xzr, x7, x7
 	adc	v0, x10, x10
-L(cor):	mul	x8, x11, v0
+	mul	x8, x11, v0
 	umulh	x4, x11, v0
 	adds	x8, x12, x8
 	adc	x4, x4, xzr
