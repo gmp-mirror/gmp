@@ -1,3 +1,6 @@
+2022-04-17 Marco Bodrato <bodrato@mail.dm.unipi.it>
+	* mini-mpq.c (mpq_helper_canonicalize): Remove tmp parameter.
+
 2022-03-19 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mini-gmp.c (mpz_swap): Use MPN_PTR_SWAP, tx Paul Eggert.
