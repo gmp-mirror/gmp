@@ -1,3 +1,8 @@
+2022-04-18  Niels Möller  <nisse@lysator.liu.se>
+
+	* mini-gmp.c (gmp_assert_nocarry): Avoid warning about unused
+	variable in NDEBUG builds. Reported by Paul Egggert.
+
 2022-04-17 Marco Bodrato <bodrato@mail.dm.unipi.it>
 	* mini-mpq.c (mpq_helper_canonicalize): Remove tmp parameter.
 
