@@ -1,3 +1,7 @@
+2022-04-18  Marc Glisse  <marc.glisse@inria.fr>
+
+	* gmpxx.h (mpz_class): Do not use mp directly.
+
 2022-03-18 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* tests/mpz/t-lucm.c: Remove an unused var.
