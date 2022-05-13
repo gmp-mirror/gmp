@@ -4252,7 +4252,7 @@ mpn_jacobi_update (unsigned bits, unsigned denominator, unsigned q)
      One could maintain the state preshifted 3 bits, to save a shift
      here, but at least on x86, that's no real saving.
   */
-  return bits = jacobi_table[(bits << 3) + (denominator << 2) + q];
+  return jacobi_table[(bits << 3) + (denominator << 2) + q];
 }
 
 /* Matrix multiplication */
