@@ -31,26 +31,20 @@ the GNU MP Library test suite.  If not, see https://www.gnu.org/licenses/.  */
      composite.  */
 
 
-/* return 1 if prime, 0 if composite */
+/* return 2 if prime, 0 if composite */
 int
-isprime (long n)
+isprime (unsigned long n)
 {
-  long  i;
-
-  n = ABS(n);
-
-  if (n < 2)
-    return 0;
   if (n < 4)
-    return 1;
+    return (n & 2);
   if ((n & 1) == 0)
     return 0;
 
-  for (i = 3; i*i <= n; i+=2)
+  for (unsigned long i = 3; i*i <= n; i+=2)
     if ((n % i) == 0)
       return 0;
 
-  return 1;
+  return 2;
 }
 
 void
@@ -60,11 +54,8 @@ check_one (mpz_srcptr n, int want)
 
   got = mpz_probab_prime_p (n, 25);
 
-  /* "definitely prime" is fine if we only wanted "probably prime" */
-  if (got == 2 && want == 1)
-    want = 2;
-
-  if (got != want)
+  /* "definitely prime" (2) is fine if we only wanted "probably prime" (1) */
+  if ((got != want) && (got != want * 2))
     {
       printf ("mpz_probab_prime_p\n");
       mpz_trace ("  n    ", n);
@@ -94,7 +85,7 @@ check_small (void)
   for (i = 0; i < 300; i++)
     {
       mpz_set_si (n, i);
-      check_pn (n, 2 * isprime (i));
+      check_pn (n, isprime (i));
     }
 
   mpz_clear (n);
