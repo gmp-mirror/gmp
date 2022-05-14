@@ -1,6 +1,6 @@
 /* mpz_nextprime(p,t) - compute the next prime > t and store that in p.
 
-Copyright 1999-2001, 2008, 2009, 2012, 2020, 2021 Free Software
+Copyright 1999-2001, 2008, 2009, 2012, 2020-2022 Free Software
 Foundation, Inc.
 
 Contributed to the GNU project by Niels Möller and Torbjorn Granlund.
@@ -129,7 +129,7 @@ findnext_small (unsigned t, short diff)
 static int
 findnext (mpz_ptr p,
           unsigned long(*negative_mod_ui)(const mpz_t, unsigned long),
-          void(*increment_ui)(mpz_t, const mpz_t, unsigned long))
+          void(*increment_ui)(mpz_t, const mpz_t, unsigned long), unsigned long nth)
 {
   char *composite;
   const unsigned char *primegap;
@@ -239,7 +239,7 @@ findnext (mpz_ptr p,
 
           /* Miller-Rabin test */
           primetest = mpz_millerrabin (p, 25);
-          if (primetest)
+          if (primetest && (--nth == 0))
 	    {
 	      TMP_FREE;
 	      return primetest;
@@ -265,7 +265,7 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
   /* First odd greater than n */
   mpz_add_ui (p, n, 1);
 
-  findnext(p, mpz_cdiv_ui, mpz_add_ui);
+  findnext(p, mpz_cdiv_ui, mpz_add_ui, 1);
 }
 
 int
@@ -285,6 +285,6 @@ mpz_prevprime (mpz_ptr p, mpz_srcptr n)
   /* First odd less than n */
   mpz_sub_ui (p, n, 2);
 
-  return findnext(p, mpz_tdiv_ui, mpz_sub_ui);
+  return findnext(p, mpz_tdiv_ui, mpz_sub_ui, 1);
 }
 
