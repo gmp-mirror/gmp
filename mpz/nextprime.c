@@ -70,14 +70,15 @@ calculate_sievelimit(mp_bitcnt_t nbits) {
    *      vs
    *   Cost of PRP test O(N^2.55)
    */
-  if (nbits < 12800)
+  if (nbits < 12818)
     {
       mpz_t tmp;
       /* sieve_limit ~= nbits ^ (5/2) / 124 */
       mpz_init (tmp);
       mpz_ui_pow_ui (tmp, nbits, 5);
+      mpz_tdiv_q_ui(tmp, tmp, 124*124);
+      /* tmp < 12818^5/(124*124) < 2^55 < 2^64 */
       mpz_sqrt (tmp, tmp);
-      mpz_tdiv_q_ui(tmp, tmp, 124);
 
       sieve_limit = mpz_get_ui(tmp);
       mpz_clear (tmp);
