@@ -91,7 +91,7 @@ calculate_sievelimit(mp_bitcnt_t nbits) {
       sieve_limit = 150000001;
     }
 
-  ASSERT( 1000 < sieve_limit && sieve_limit <= 150000001 );
+  ASSERT (1000 < sieve_limit && sieve_limit <= 150000001);
   return sieve_limit;
 }
 
@@ -129,7 +129,7 @@ findnext_small (unsigned t, short diff)
 static int
 findnext (mpz_ptr p,
           unsigned long(*negative_mod_ui)(const mpz_t, unsigned long),
-          void(*increment_ui)(mpz_t, const mpz_t, unsigned long), unsigned long nth)
+          void(*increment_ui)(mpz_t, const mpz_t, unsigned long))
 {
   char *composite;
   const unsigned char *primegap;
@@ -180,14 +180,14 @@ findnext (mpz_ptr p,
 
       i = 0;
       last_prime = 3;
-      /* FIXME: we should get rid of sieve_limit and use (i < prime_limit) */
+      /* THINK: should we get rid of sieve_limit and use (i < prime_limit)? */
       for (mp_limb_t j = 4, *sp = sieve; j < sieve_limit; j += GMP_LIMB_BITS * 3)
 	for (mp_limb_t b = j, x = ~ *(sp++); x != 0; b += 3, x >>= 1)
 	  if (x & 1)
 	    {
 	      mp_limb_t prime = b | 1;
-        primegap_tmp[i++] = prime - last_prime;
-        last_prime = prime;
+	      primegap_tmp[i++] = prime - last_prime;
+	      last_prime = prime;
 	    }
 
       /* Both primesieve and prime_limit ignore the first two primes. */
@@ -239,7 +239,7 @@ findnext (mpz_ptr p,
 
           /* Miller-Rabin test */
           primetest = mpz_millerrabin (p, 25);
-          if (primetest && (--nth == 0))
+          if (primetest)
 	    {
 	      TMP_FREE;
 	      return primetest;
@@ -265,7 +265,7 @@ mpz_nextprime (mpz_ptr p, mpz_srcptr n)
   /* First odd greater than n */
   mpz_add_ui (p, n, 1);
 
-  findnext(p, mpz_cdiv_ui, mpz_add_ui, 1);
+  findnext(p, mpz_cdiv_ui, mpz_add_ui);
 }
 
 int
@@ -285,6 +285,6 @@ mpz_prevprime (mpz_ptr p, mpz_srcptr n)
   /* First odd less than n */
   mpz_sub_ui (p, n, 2);
 
-  return findnext(p, mpz_tdiv_ui, mpz_sub_ui, 1);
+  return findnext(p, mpz_tdiv_ui, mpz_sub_ui);
 }
 
