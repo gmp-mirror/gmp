@@ -209,6 +209,7 @@ run_p (const char *start, int reps, const char *end, short diffs[])
     {
       gmp_printf ("got  %Zd\n", x);
       gmp_printf ("want %Zd\n", y);
+      abort ();
     }
 
   mpz_clear (y);
