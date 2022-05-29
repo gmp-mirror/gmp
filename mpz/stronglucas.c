@@ -122,6 +122,7 @@ mpz_stronglucas (mpz_srcptr x, mpz_ptr V, mpz_ptr Qk)
   /* (2^24 - 1) | (2^{GMP_NUMB_BITS*3/4} - 1)	*/
   /* (2^24 - 1) = (2^12 - 1) * 17 * 241		*/
   else if (! POW2_P (g % 17) && ! POW2_P (17 - g % 17))
+    /* (17/n) = -1, iff n != +-1,+-2,+-4,+-8 (mod 17)	*/
     D = 17; /* Q = -4 */
 #endif
 #else
@@ -179,7 +180,7 @@ mpz_stronglucas (mpz_srcptr x, mpz_ptr V, mpz_ptr Qk)
   /* If Ud != 0 && Vd != 0 */
   if (mpz_lucas_mod (V, Qk, Q, b0, n, T1, T2) == 0)
     if (LIKELY (--b0 != 0))
-      do
+      for (;;)
 	{
 	  /* V_{2k} <- V_k ^ 2 - 2Q^k */
 	  mpz_mul (T2, V, V);
@@ -190,7 +191,7 @@ mpz_stronglucas (mpz_srcptr x, mpz_ptr V, mpz_ptr Qk)
 	  /* Q^{2k} = (Q^k)^2 */
 	  mpz_mul (T2, Qk, Qk);
 	  mpz_tdiv_r (Qk, T2, n);
-	} while (1);
+	}
 
   mpz_clear (T1);
   mpz_clear (T2);
