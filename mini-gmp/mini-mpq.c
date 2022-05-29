@@ -5,7 +5,7 @@
    Acknowledgment: special thanks to Bradley Lucier for his comments
    to the preliminary version of this code.
 
-Copyright 2018-2020 Free Software Foundation, Inc.
+Copyright 2018-2022 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -390,22 +390,25 @@ mpq_mul (mpq_t r, const mpq_t a, const mpq_t b)
   mpq_clear (t);
 }
 
+static void
+mpq_helper_2exp (mpz_t rn, mpz_t rd, const mpz_t qn, const mpz_t qd, mp_bitcnt_t e)
+{
+  mp_bitcnt_t z = mpz_scan1 (qd, 0);
+  z = GMP_MIN (z, e);
+  mpz_mul_2exp (rn, qn, e - z);
+  mpz_tdiv_q_2exp (rd, qd, z);
+}
+
 void
 mpq_div_2exp (mpq_t r, const mpq_t q, mp_bitcnt_t e)
 {
-  mp_bitcnt_t z = mpz_scan1 (mpq_numref (q), 0);
-  z = GMP_MIN (z, e);
-  mpz_mul_2exp (mpq_denref (r), mpq_denref (q), e - z);
-  mpz_tdiv_q_2exp (mpq_numref (r), mpq_numref (q), z);
+  mpq_helper_2exp (mpq_denref (r), mpq_numref (r), mpq_denref (q), mpq_numref (q), e);
 }
 
 void
 mpq_mul_2exp (mpq_t r, const mpq_t q, mp_bitcnt_t e)
 {
-  mp_bitcnt_t z = mpz_scan1 (mpq_denref (q), 0);
-  z = GMP_MIN (z, e);
-  mpz_mul_2exp (mpq_numref (r), mpq_numref (q), e - z);
-  mpz_tdiv_q_2exp (mpq_denref (r), mpq_denref (q), z);
+  mpq_helper_2exp (mpq_numref (r), mpq_denref (r), mpq_numref (q), mpq_denref (q), e);
 }
 
 void
