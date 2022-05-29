@@ -1,6 +1,6 @@
 /* Exercise mpz_probab_prime_p.
 
-Copyright 2002, 2018-2019 Free Software Foundation, Inc.
+Copyright 2002, 2018-2019, 2022 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library test suite.
 
@@ -105,11 +105,15 @@ check_composites (int count)
   mpz_init (bs);
 
   static const char * const composites[] = {
+    "225670644213750121",	/* n=61*C16, if D < 61, (n/D) = 1.	*/
+    "2386342059899637841",	/* n=61*C17, if D < 61, (n/D) = 1.	*/
     "1194649",	/* A square, but strong base-2 pseudoprime,	*/
     "12327121",	/* another base-2 pseudoprime square.	*/
-    "18446744066047760377",	/* Should trigger Fibonacci's test,	*/
-    "1397419",			/* Lucas' test with "large" D=43,	*/
-    "395009109077493751",	/* Lucas' test with large D=113.	*/
+    "18446744066047760377",	/* Should trigger Fibonacci's test;	*/
+    "10323769",			/* &3==1, Lucas' test with D=37;	*/
+    "1397419",			/* &3==3, Lucas' test with D=43;	*/
+    "11708069165918597341",	/* &3==1, Lucas' test with large D=107;	*/
+    "395009109077493751",	/* &3==3, Lucas' test with large D=113.	*/
     NULL
   };
 
@@ -154,6 +158,7 @@ check_primes (void)
   static const char * const primes[] = {
     "2", "53", "1234567891",
     "2055693949", "1125899906842597", "16412292043871650369",
+    "18446744075358702679",	/* Lucas' test with large D=107.	*/
     /* diffie-hellman-group1-sha1, also "Well known group 2" in RFC
        2412, 2^1024 - 2^960 - 1 + 2^64 * { [2^894 pi] + 129093 } */
     "0xFFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1"
