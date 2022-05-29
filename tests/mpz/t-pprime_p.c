@@ -104,6 +104,21 @@ check_composites (int count)
   mpz_init (n);
   mpz_init (bs);
 
+  static const char * const composites[] = {
+    "1194649",	/* A square, but strong base-2 pseudoprime,	*/
+    "12327121",	/* another base-2 pseudoprime square.	*/
+    "18446744066047760377",	/* Should trigger Fibonacci's test,	*/
+    "1397419",			/* Lucas' test with "large" D=43,	*/
+    "395009109077493751",	/* Lucas' test with large D=113.	*/
+    NULL
+  };
+
+  for (i = 0; composites[i]; i++)
+    {
+      mpz_set_str_or_abort (n, composites[i], 0);
+      check_one (n, 0);
+    }
+
   for (i = 0; i < count; i++)
     {
       mpz_urandomb (bs, rands, 32);
