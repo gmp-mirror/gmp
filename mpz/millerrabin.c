@@ -65,7 +65,7 @@ int
 mpz_millerrabin (mpz_srcptr n, int reps)
 {
   mpz_t nm, x, y, q;
-  unsigned long int k;
+  mp_bitcnt_t k;
   int is_prime;
   TMP_DECL;
   TMP_MARK;
@@ -79,7 +79,7 @@ mpz_millerrabin (mpz_srcptr n, int reps)
   MPZ_TMP_INIT (q, SIZ (n));
 
   /* Find q and k, where q is odd and n = 1 + 2**k * q.  */
-  k = mpz_scan1 (nm, 0L);
+  k = mpn_scan1 (PTR (nm), 0);
   mpz_tdiv_q_2exp (q, nm, k);
   ++k;
 
@@ -199,16 +199,14 @@ mod_eq_m1 (mpz_srcptr x, mpz_srcptr m)
 
 static int
 millerrabin (mpz_srcptr n, mpz_ptr x, mpz_ptr y,
-	     mpz_srcptr q, unsigned long int k)
+	     mpz_srcptr q, mp_bitcnt_t k)
 {
-  unsigned long int i;
-
   mpz_powm (y, x, q, n);
 
   if (mpz_cmp_ui (y, 1L) == 0 || mod_eq_m1 (y, n))
     return 1;
 
-  for (i = 1; i < k; i++)
+  for (mp_bitcnt_t i = 1; i < k; ++i)
     {
       mpz_powm_ui (y, y, 2L, n);
       if (mod_eq_m1 (y, n))
