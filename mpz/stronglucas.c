@@ -148,20 +148,34 @@ mpz_stronglucas (mpz_srcptr x, mpz_ptr V, mpz_ptr Qk)
       maxD = GMP_NUMB_MAX;
     maxD = MIN (maxD, ULONG_MAX);
 
-    D = GMP_NUMB_BITS % 16 == 0 ? (GMP_NUMB_BITS % 32 == 0 ? 17 : 15) : 5;
+    unsigned Ddiff = 2;
+#if GMP_NUMB_BITS % 16 == 0
+    const unsigned D2 = 6;
+#if GMP_NUMB_BITS % 32 == 0
+    D = 19;
+    Ddiff = 4;
+#else
+    D = 17;
+#endif
+#else
+    const unsigned D2 = 4;
+    D = 7;
+#endif
 
-    /* Search a D such that (D/n) = -1 in the sequence 5,-7,9,-11,.. */
-    /* For those Ds we have (D/n) = (n/|D|) */
+    /* Search a D such that (D/n) = -1 in the sequence 5,-7,9,-11,..	*/
+    /* For those Ds we have (D/n) = (n/|D|)	*/
     /* FIXME: Should we loop only on prime Ds?	*/
-    /* The only interesting composite D is 15.	*/
-    do
+    /* The only interesting composite D is 15, because 3 is not tested.	*/
+    for (;;)
       {
+	jac = mpz_oddjacobi_ui (n, D);
+	if (jac != 1)
+	  break;
 	if (UNLIKELY (D >= maxD))
 	  return 1;
-	D += 2;
-	jac = mpz_oddjacobi_ui (n, D);
+	D += Ddiff;
+	Ddiff = D2 - Ddiff;
       }
-    while (jac == 1);
 
     if (UNLIKELY (jac == 0))
       return 0;
