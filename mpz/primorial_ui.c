@@ -102,8 +102,8 @@ mpz_primorial_ui (mpz_ptr x, unsigned long n)
 	max_prod = GMP_NUMB_MAX / n;
 
 	for (mp_limb_t i = 4, *sp = sieve; i < n; i += GMP_LIMB_BITS * 3)
-	  for (mp_limb_t b = i, x = ~ *(sp++); x != 0; b += 3, x >>= 1)
-	    if (x & 1)
+	  for (mp_limb_t b = i, k = ~ *(sp++); k != 0; b += 3, k >>= 1)
+	    if (k & 1)
 	      {
 		mp_limb_t prime = b | 1;
 	FACTOR_LIST_STORE (prime, prod, max_prod, factors, j);
