@@ -1,3 +1,21 @@
+2022-08-11 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/primorial_ui.c: Rename some variables and add comments.
+
+2022-06-19 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/millerrabin.c: Use mp_bitcnt_t.
+	* mpz/stronglucas.c: Skip some impossible values searching for D.
+
+2022-05-14 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/nextprime.c: Smaller operand for mpz_sqrt.
+	* tests/mpz/t-nextprime.c: Exit on error.
+	* tests/mpz/t-pprime_p.c: More cases to trigger unlikely branches.
+
+	* tests/mpz/t-aorsmul.c: Test the (r,x,x) case.
+	* mpz/aorsmul.c: Speed-up the (r,x,x) case (tx:Fredrik Johansson).
+
 2022-04-18  Marc Glisse  <marc.glisse@inria.fr>
 
 	* gmpxx.h (mpz_class): Do not use mp directly.
