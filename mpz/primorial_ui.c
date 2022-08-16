@@ -1,4 +1,4 @@
-/* mpz_primorial_ui(RESULT, N) -- Set RESULT to N# the product of primes <= N.
+/* mpz_primorial_ui(RES, N) -- Set RES to N# the product of primes <= N.
 
 Contributed to the GNU project by Marco Bodrato.
 
@@ -66,14 +66,16 @@ primesieve_size (mp_limb_t n) { return n_to_bit(n) / GMP_LIMB_BITS + 1; }
 /*********************************************************/
 
 void
-mpz_primorial_ui (mpz_ptr x, unsigned long n)
+mpz_primorial_ui (mpz_ptr res, unsigned long n)
 {
   ASSERT (n <= GMP_NUMB_MAX);
 
   if (n < 5)
     {
-      MPZ_NEWALLOC (x, 1)[0] = (066211 >> (n*3)) & 7;
-      SIZ (x) = 1;
+      /* The smallest 5 results for primorial are stored */
+      /* in a 15-bits constant (five octal digits)	 */
+      MPZ_NEWALLOC (res, 1)[0] = (066211 >> (n * 3)) & 7;
+      SIZ (res) = 1;
     }
   else
     {
@@ -82,10 +84,12 @@ mpz_primorial_ui (mpz_ptr x, unsigned long n)
       mp_limb_t prod;
       TMP_DECL;
 
+      /* Try to estimate the result size, to avoid	*/
+      /* resizing, and to initially store the sieve.	*/
       size = n / GMP_NUMB_BITS;
       size = size + (size >> 1) + 1;
       ASSERT (size >= primesieve_size (n));
-      sieve = MPZ_NEWALLOC (x, size);
+      sieve = MPZ_NEWALLOC (res, size);
       size = (gmp_primesieve (sieve, n) + 1) / log_n_max (n) + 1;
 
       TMP_MARK;
@@ -101,24 +105,25 @@ mpz_primorial_ui (mpz_ptr x, unsigned long n)
 
 	max_prod = GMP_NUMB_MAX / n;
 
+	/* Loop on sieved primes. */
 	for (mp_limb_t i = 4, *sp = sieve; i < n; i += GMP_LIMB_BITS * 3)
-	  for (mp_limb_t b = i, k = ~ *(sp++); k != 0; b += 3, k >>= 1)
-	    if (k & 1)
+	  for (mp_limb_t b = i, x = ~ *(sp++); x != 0; b += 3, x >>= 1)
+	    if (x & 1)
 	      {
 		mp_limb_t prime = b | 1;
-	FACTOR_LIST_STORE (prime, prod, max_prod, factors, j);
+		FACTOR_LIST_STORE (prime, prod, max_prod, factors, j);
 	      }
       }
 
       if (j != 0)
 	{
 	  factors[j++] = prod;
-	  mpz_prodlimbs (x, factors, j);
+	  mpz_prodlimbs (res, factors, j);
 	}
       else
 	{
-	  PTR (x)[0] = prod;
-	  SIZ (x) = 1;
+	  PTR (res)[0] = prod;
+	  SIZ (res) = 1;
 	}
 
       TMP_FREE;
