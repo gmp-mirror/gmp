@@ -21,6 +21,9 @@ Changes between GMP version 6.2.* and *.*.*
 
   * Speedup for the function mpz_nextprime on large operands.
 
+  * Speedup for multiplications (some sizes only) thanks to new
+    internal functions to compute small negacyclic products.
+
 Changes between GMP version 6.1.* and 6.2.0
 
   BUGS FIXED
