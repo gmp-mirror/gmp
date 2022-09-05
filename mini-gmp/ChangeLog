@@ -1,3 +1,8 @@
+2022-09-05  Niels Möller  <nisse@lysator.liu.se>
+
+	* mini-gmp.c (mpz_powm): Fix case of x^0 (mod 1), should be 0.
+	Reported by Guido Vranken.
+
 2022-05-29 Marco Bodrato <bodrato@mail.dm.unipi.it>
 	* mini-mpq.c (mpq_helper_2exp): New helper (internal) function.
 
