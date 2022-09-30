@@ -4717,7 +4717,7 @@ computer often differ from the results on a computer with a different word
 size.
 
 New projects should consider using the GMP extension library MPFR
-(@url{http://mpfr.org}) instead.  MPFR provides well-defined precision and
+(@url{https://www.mpfr.org/}) instead.  MPFR provides well-defined precision and
 accurate rounding, and thereby naturally extends IEEE P754.
 
 @menu

@@ -1,3 +1,8 @@
+2022-09-30  Marc Glisse  <marc.glisse@inria.fr>
+
+	* doc/projects.html: Update URL for MPFR.
+	* doc/gmp.texi: Likewise.
+
 2022-08-11 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpz/primorial_ui.c: Rename some variables and add comments.
