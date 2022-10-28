@@ -1,3 +1,8 @@
+2022-10-28 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/nextprime.c (findnext): Use TMP_ALLOC_TYPE to allocate
+	composite array (tx: Jiayi Lin)
+
 2022-09-30  Marc Glisse  <marc.glisse@inria.fr>
 
 	* doc/projects.html: Update URL for MPFR.
