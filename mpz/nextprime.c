@@ -204,7 +204,7 @@ findnext (mpz_ptr p,
     odds_in_composite_sieve = 5 * nbits;
 
   /* composite[2*i] stores if p+2*i is a known composite */
-  composite = TMP_SALLOC_TYPE (odds_in_composite_sieve, char);
+  composite = TMP_ALLOC_TYPE (odds_in_composite_sieve, char);
 
   for (;;)
     {
