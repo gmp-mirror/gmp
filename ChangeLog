@@ -1,3 +1,13 @@
+2023-06-23 Marius Hillenbrand <mhillen@linux.ibm.com>
+	   Stefan Liebler <stli@linux.ibm.com>
+
+	* mpn/s390_64/z13/addmul_1.c: New file.
+	* mpn/s390_64/z13/aormul_2.c: New file.
+	* mpn/s390_64/z13/common-vec.h: New file.
+	* mpn/s390_64/z13/gmp-mparam.h: New file.
+	* mpn/s390_64/z13/mul_1.c: New file.
+	* mpn/s390_64/z13/mul_basecase.c: New file.
+
 2022-10-28 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpz/nextprime.c (findnext): Use TMP_ALLOC_TYPE to allocate
