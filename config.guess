@@ -456,6 +456,7 @@ main ()
   case 0x004c:
   case 0x004d: puts ("power8");      break;
   case 0x004e: puts ("power9");      break;
+  case 0x0080: puts ("power10");     break;
   case 0x0050: puts ("powerpc860");  break;
   case 0x8000: puts ("powerpc7450"); break;
   case 0x8001: puts ("powerpc7455"); break;
