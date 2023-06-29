@@ -51,7 +51,7 @@ define(M68K_PATTERN,
 [[m68k-*-* | m68[0-9][0-9][0-9]-*-*]])
 
 define(POWERPC64_PATTERN,
-[[powerpc64-*-* | powerpc64le-*-* | powerpc620-*-* | powerpc630-*-* | powerpc970-*-* | power[3-9]-*-*]])
+[[powerpc64-*-* | powerpc64le-*-* | powerpc620-*-* | powerpc630-*-* | powerpc970-*-* | power[3-9]-*-* | power1[0-9]-*-*]])
 
 define(S390_PATTERN,
 [[s390-*-* | z900esa-*-* | z990esa-*-* | z9esa-*-* | z1[0-5]esa-*-* | z196esa-*-*]])
