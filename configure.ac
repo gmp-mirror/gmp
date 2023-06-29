@@ -1635,7 +1635,8 @@ case $host in
         # it until we're sure.  (Might want -xarch=v9a or -xarch=v9b for the
         # higher cpu types instead.)
         #
-        gcc_64_cflags="$gcc_cflags -m64 -mptr64"
+        gcc_64_cflags="$gcc_cflags -m64"
+        gcc_64_cflags_maybe="-mptr64"
         gcc_64_ldflags="-Wc,-m64"
         gcc_64_cflags_optlist="cpu asm"
 
