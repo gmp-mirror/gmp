@@ -936,6 +936,8 @@ main ()
           else if (model == 0x9c) cpu_64bit = 1,            modelstr = "tremont";    /* Tremont */
           else if (model == 0x9e) cpu_64bit = 1, cpu_avx=1, modelstr = "kabylake";   /* Kaby Lake desktop */
           else if (model == 0xa7) cpu_64bit = 1, cpu_avx=1, modelstr = "rocketlake"; /* Rocket Lake S */
+          else if (model == 0xba) cpu_64bit = 1, cpu_avx=1, modelstr = "alderlake";  /* Raptor Lake */
+          else if (model == 0xb7) cpu_64bit = 1, cpu_avx=1, modelstr = "alderlake";  /* Raptor Lake */
           else                    cpu_64bit = 1,            modelstr = "nehalem";    /* default */
 
 	  if (strcmp (modelstr, "haswell") == 0 ||
@@ -1003,10 +1005,9 @@ main ()
 	case 22:		/* Jaguar, an improved bobcat */
 	  cpu_64bit = 1, cpu_avx = 1, modelstr = "jaguar";
 	  break;
-	case 23:		/* Zen */
+	case 23:		/* Zen 1, 2 */
 	  cpu_64bit = 1, cpu_avx = 1;
-	  switch (model)
-	    {
+	  switch (model) {
 	    case 1:
 	    case 8:
 	    case 17:
@@ -1018,10 +1019,22 @@ main ()
 	      break;
 	    }
 	  break;
-	case 25:		/* Zen 3 */
+	case 25:                /* Zen 3, 4 */
 	  cpu_64bit = 1, cpu_avx = 1;
-	  modelstr = "zen3";
-	  break;
+	  switch (model) {
+	    case 0x00:
+	    case 0x01:
+	    case 0x08:
+	    case 0x21:
+	    case 0x40:
+	    case 0x44:
+	    case 0x50:
+	      modelstr = "zen3";
+	      break;
+	    default:
+	      modelstr = "zen4";
+	      break;
+	    }
 	}
     }
   else if (strcmp (vendor_string, "HygonGenuine") == 0)
