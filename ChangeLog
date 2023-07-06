@@ -2,6 +2,9 @@
 
 	* doc/gmp.texi: Mention snapshots in bug report instructions.
 
+	* configfsf.guess: Updated to version 2023-06-23, from gnulib.
+	* configfsf.sub: Updated to version 2023-06-26, from gnulib.
+
 2023-06-23 Marius Hillenbrand <mhillen@linux.ibm.com>
 	   Stefan Liebler <stli@linux.ibm.com>
 
