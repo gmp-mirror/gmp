@@ -2969,7 +2969,8 @@ much to ask you to report the bugs you find.
 
 Before you report a bug, check it's not already addressed in @ref{Known Build
 Problems}, or perhaps @ref{Notes for Particular Systems}.  You may also want
-to check @uref{https://gmplib.org/} for patches for this release.
+to check @uref{https://gmplib.org/} for patches for this release, or try a
+recent snapshot from @uref{https://gmplib.org/download/snapshot/}.
 
 Please include the following in any report:
 
