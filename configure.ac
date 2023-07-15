@@ -1167,25 +1167,25 @@ case $host in
 		    xlc_cflags_arch="-qarch=970 -qarch=pwr3"
 		    vmx_path="powerpc64/vmx"
 		    cpu_path="p4 p3-p7" ;;
-      power4)	    gcc_cflags_cpu="-mtune=power4"
+      power4)	    gcc_cflags_cpu="-mcpu=power4"
 		    xlc_cflags_arch="-qarch=pwr4"
 		    cpu_path="p4 p3-p7" ;;
-      power5)	    gcc_cflags_cpu="-mtune=power5 -mtune=power4"
+      power5)	    gcc_cflags_cpu="-mcpu=power5 -mcpu=power4"
 		    xlc_cflags_arch="-qarch=pwr5"
 		    cpu_path="p5 p4 p3-p7" ;;
-      power6)	    gcc_cflags_cpu="-mtune=power6"
+      power6)	    gcc_cflags_cpu="-mcpu=power6"
 		    xlc_cflags_arch="-qarch=pwr6"
 		    cpu_path="p6 p3-p7" ;;
-      power7)	    gcc_cflags_cpu="-mtune=power7 -mtune=power5"
+      power7)	    gcc_cflags_cpu="-mcpu=power7 -mcpu=power5"
 		    xlc_cflags_arch="-qarch=pwr7 -qarch=pwr5"
 		    cpu_path="p7 p5 p4 p3-p7" ;;
-      power8)	    gcc_cflags_cpu="-mtune=power8 -mtune=power7 -mtune=power5"
+      power8)	    gcc_cflags_cpu="-mcpu=power8 -mcpu=power7 -mcpu=power5"
 		    xlc_cflags_arch="-qarch=pwr8 -qarch=pwr7 -qarch=pwr5"
 		    cpu_path="p8 p7 p5 p4 p3-p7" ;;
-      power9)	    gcc_cflags_cpu="-mtune=power9 -mtune=power8 -mtune=power7 -mtune=power5"
+      power9)	    gcc_cflags_cpu="-mcpu=power9 -mcpu=power8 -mcpu=power7 -mcpu=power5"
 		    xlc_cflags_arch="-qarch=pwr9 -qarch=pwr8 -qarch=pwr7 -qarch=pwr5"
 		    cpu_path="p9 p8 p7 p5 p4 p3-p7" ;;
-      power10)	    gcc_cflags_cpu="-mtune=power10 -mtune=power9 -mtune=power8 -mtune=power7 -mtune=power5"
+      power10)	    gcc_cflags_cpu="-mcpu=power10 -mcpu=power9 -mcpu=power8 -mcpu=power7 -mcpu=power5"
 		    xlc_cflags_arch="-qarch=pwr10 -qarch=pwr9 -qarch=pwr8 -qarch=pwr7 -qarch=pwr5"
 		    cpu_path="p9 p8 p7 p5 p4 p3-p7" ;;
     esac
