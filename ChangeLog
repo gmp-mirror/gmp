@@ -5,6 +5,12 @@
 	* configfsf.guess: Updated to version 2023-06-23, from gnulib.
 	* configfsf.sub: Updated to version 2023-06-26, from gnulib.
 
+2023-06-29  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac: Make sparc -mptr64 argument optional.
+
+	* configure.ac, config.guess, config.sub, acinclude.m4: Handle power10.
+
 2023-06-23 Marius Hillenbrand <mhillen@linux.ibm.com>
 	   Stefan Liebler <stli@linux.ibm.com>
 
@@ -14,6 +20,13 @@
 	* mpn/s390_64/z13/gmp-mparam.h: New file.
 	* mpn/s390_64/z13/mul_1.c: New file.
 	* mpn/s390_64/z13/mul_basecase.c: New file.
+
+2022-11-02  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/x86_64/bd1/popcount.asm: Prefer movd to movq for register moves.
+	* mpn/x86_64/bd1/hamdist.asm: Likewise.
+	* mpn/x86_64/core2/hamdist.asm: Likewise.
+	* mpn/x86_64/core2/popcount.asm: Likewise.
 
 2022-10-28 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
@@ -43,9 +56,20 @@
 	* tests/mpz/t-aorsmul.c: Test the (r,x,x) case.
 	* mpz/aorsmul.c: Speed-up the (r,x,x) case (tx:Fredrik Johansson).
 
+2022-04-24  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/arm/v5/gcd_22.asm: New file.
+
 2022-04-18  Marc Glisse  <marc.glisse@inria.fr>
 
 	* gmpxx.h (mpz_class): Do not use mp directly.
+
+2022-03-30  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac, config.guess, config.sub, acinclude.m4: Handle Intel
+	tremont separately.
+
+	* longlong.h (loongarch64 umul_ppmm): New #define.
 
 2022-03-18 Marco Bodrato <bodrato@mail.dm.unipi.it>
 

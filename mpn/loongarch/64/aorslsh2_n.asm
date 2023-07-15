@@ -1,6 +1,8 @@
-dnl  S/390-64 mpn_submul_1
+dnl  Loongarch mpn_addlsh1_n, mpn_sublsh1_n.
 
-dnl  Copyright 2011 Free Software Foundation, Inc.
+dnl  Contributed to the GNU project by Torbjorn Granlund.
+
+dnl  Copyright 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -30,41 +32,19 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
-C            cycles/limb
-C z900		35
-C z990		24
-C z9		 ?
-C z10		28
-C z196		 ?
+define(LSH, 2)
+define(RSH, 62)
 
-C INPUT PARAMETERS
-define(`rp',	`%r2')
-define(`up',	`%r3')
-define(`n',	`%r4')
-define(`v0',	`%r5')
+ifdef(`OPERATION_addlsh2_n',`
+  define(`ADDSUB', `add.d')
+  define(`CARRY',  `sltu $1,$2,$3')
+  define(`func',   `mpn_addlsh2_n')
+')
+ifdef(`OPERATION_sublsh2_n',`
+  define(`ADDSUB', `sub.d')
+  define(`CARRY',  `sltu $1,$3,$2')
+  define(`func',   `mpn_sublsh2_n')
+')
 
-ASM_START()
-PROLOGUE(mpn_submul_1)
-	stmg	%r9, %r12, 72(%r15)
-	lghi	%r12, 0
-	slgr	%r11, %r11
-
-L(top):	lg	%r1, 0(%r12,up)
-	lg	%r10, 0(%r12,rp)
-	mlgr	%r0, v0
-	slbgr	%r10, %r1
-	slbgr	%r9, %r9
-	slgr	%r0, %r9		C conditional incr
-	slgr	%r10, %r11
-	lgr	%r11, %r0
-	stg	%r10, 0(%r12,rp)
-	la	%r12, 8(%r12)
-	brctg	%r4,  L(top)
-
-	lgr	%r2, %r11
-	slbgr	%r9, %r9
-	slgr	%r2, %r9
-
-	lmg	%r9, %r12, 72(%r15)
-	br	%r14
-EPILOGUE()
+MULFUNC_PROLOGUE(mpn_addlsh2_n mpn_sublsh2_n)
+include_mpn(`loongarch/64/aorslshC_n.asm')

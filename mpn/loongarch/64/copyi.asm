@@ -1,6 +1,8 @@
-dnl  S/390-64 mpn_submul_1
+dnl  Loongarch mpn_copyi
 
-dnl  Copyright 2011 Free Software Foundation, Inc.
+dnl  Contributed to the GNU project by Torbjorn Granlund.
+
+dnl  Copyright 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -30,41 +32,42 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
-C            cycles/limb
-C z900		35
-C z990		24
-C z9		 ?
-C z10		28
-C z196		 ?
-
 C INPUT PARAMETERS
-define(`rp',	`%r2')
-define(`up',	`%r3')
-define(`n',	`%r4')
-define(`v0',	`%r5')
+define(`rp',	`$a0')
+define(`ap',	`$a1')
+define(`n',	`$a2')
+
+define(`i',	`$a3')
 
 ASM_START()
-PROLOGUE(mpn_submul_1)
-	stmg	%r9, %r12, 72(%r15)
-	lghi	%r12, 0
-	slgr	%r11, %r11
+PROLOGUE(mpn_copyi)
+	srli.d	i, n, 2
+	beqz	i, L(end)
 
-L(top):	lg	%r1, 0(%r12,up)
-	lg	%r10, 0(%r12,rp)
-	mlgr	%r0, v0
-	slbgr	%r10, %r1
-	slbgr	%r9, %r9
-	slgr	%r0, %r9		C conditional incr
-	slgr	%r10, %r11
-	lgr	%r11, %r0
-	stg	%r10, 0(%r12,rp)
-	la	%r12, 8(%r12)
-	brctg	%r4,  L(top)
+L(top):	addi.d	i, i, -1
+	ld.d	$t0, ap, 0
+	st.d	$t0, rp, 0
+	ld.d	$t1, ap, 8
+	st.d	$t1, rp, 8
+	ld.d	$t2, ap, 16
+	st.d	$t2, rp, 16
+	ld.d	$t3, ap, 24
+	st.d	$t3, rp, 24
+	addi.d	ap, ap, 32
+	addi.d	rp, rp, 32
+	bnez	i, L(top)
 
-	lgr	%r2, %r11
-	slbgr	%r9, %r9
-	slgr	%r2, %r9
-
-	lmg	%r9, %r12, 72(%r15)
-	br	%r14
+L(end):	andi	$t1, n, 2
+	beqz	$t1, L(b0x)
+	ld.d	$t0, ap, 0
+	st.d	$t0, rp, 0
+	ld.d	$t1, ap, 8
+	st.d	$t1, rp, 8
+	addi.d	ap, ap, 16
+	addi.d	rp, rp, 16
+L(b0x):	andi	$t0, n, 1
+	beqz	$t0, L(bx0)
+	ld.d	$t0, ap, 0
+	st.d	$t0, rp, 0
+L(bx0):	jr	$r1
 EPILOGUE()

@@ -1015,6 +1015,11 @@ case $host in
     ;;
 
 
+  loongarch64-*-*)
+    path="loongarch/64"
+    ;;
+
+
   # IRIX 5 and earlier can only run 32-bit o32.
   #
   # IRIX 6 and up always has a 64-bit mips CPU can run n32 or 64.  n32 is

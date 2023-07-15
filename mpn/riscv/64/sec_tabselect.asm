@@ -1,6 +1,6 @@
 dnl  RISC-V/64 mpn_sec_tabselect
 
-dnl  Copyright 2021 Free Software Foundation, Inc.
+dnl  Copyright 2016 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -30,48 +30,111 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
-dnl This is compiler output, mildly edited.  We don't expect this to be faster
-dnl than the C fallback code, but providing this in assembly avoids problems
-dnl with compilers which generate side channel leaky code.
-
+C  INPUT PARAMETERS
 define(`rp',	`a0')
 define(`tp',	`a1')
 define(`n',	`a2')
 define(`nents',	`a3')
 define(`which',	`a4')
 
+define(`i',	`a6')
+define(`j',	`a7')
+define(`mask',	`s0')
+define(`k',	`nents')
+define(`one',	`s3')
+
 ASM_START()
 PROLOGUE(mpn_sec_tabselect)
+	addi	sp,sp,-32
+	sd	s0,24(sp)
+	sd	s1,16(sp)
+	sd	s2,8(sp)
+	sd	s3,0(sp)
+
+	addi	j, n, -4
 	slli	n, n, 3
-	add	t4, a0, n
+	li	one, 1
 
-L(cpy):	ld	a7, 0(tp)
-	addi	tp, tp, 8
-	addi	rp, rp, 8
-	sd	a7, -8(rp)
-	bne	rp, t4, L(cpy)
+	sub	k, which, nents
+	blt	j, zero, L(outer_end)
+L(outer_top):
+	mv	s2, tp
+	li	t0, 0
+	li	t1, 0
+	li	t2, 0
+	li	t3, 0
+	addi	j, j, -4
+	mv	i, which
 
-	li	t5, 1
-	ble	nents, t5, L(ret)
+	ALIGN(16)
+L(top):	ld	t4, 0(tp)
+	ld	t5, 8(tp)
+	sltu	mask, i, one
+	addi	i, i, -1
+	neg	mask, mask
+	ld	t6, 16(tp)
+	ld	a5, 24(tp)
+	and	t4, mask, t4
+	and	t5, mask, t5
+	or	t0, t4, t0
+	or	t1, t5, t1
+	and	t6, mask, t6
+	and	a5, mask, a5
+	or	t2, t6, t2
+	or	t3, a5, t3
+	add	tp, tp, n
+	bne	i, k, L(top)
 
-L(outer):
-	xor	t3, which, t5
-	neg	t3, t3
-	srai	t3, t3, 63
-	sub	rp, rp, n
+	sd	t0, 0(rp)
+	sd	t1, 8(rp)
+	sd	t2, 16(rp)
+	sd	t3, 24(rp)
+	add	tp, s2, 32
+	add	rp, rp, 32
+	bge	j, zero, L(outer_top)
+L(outer_end):
+	andi	t0, n, 2*8
+	beq	t0, zero, L(b0x)
+L(b1x):	mv	s2, tp
+	li	t0, 0
+	li	t1, 0
+	mv	i, which
+	ALIGN(16)
+L(tp2):	ld	t4, 0(tp)
+	ld	t5, 8(tp)
+	sltu	mask, i, one
+	neg	mask, mask
+	addi	i, i, -1
+	and	t4, mask, t4
+	and	t5, mask, t5
+	or	t0, t4, t0
+	or	t1, t5, t1
+	add	tp, tp, n
+	bne	i, k, L(tp2)
+	sd	t0, 0(rp)
+	sd	t1, 8(rp)
+	addi	tp, s2, 16
+	addi	rp, rp, 16
 
-L(top):	ld	a5, 0(rp)
-	ld	t1, 0(tp)
-	addi	rp, rp, 8
-	addi	tp, tp, 8
-	xor	a5, a5, t1
-	and	a5, a5, t3
-	xor	a5, a5, t1
-	sd	a5, -8(rp)
-	bne	t4, rp, L(top)
+L(b0x):	andi	t0, n, 1*8
+	beq	t0, zero, L(b00)
+L(b01):	li	t0, 0
+	mv	i, which
+	ALIGN(16)
+L(tp1):	ld	t4, 0(tp)
+	sltu	mask, i, one
+	neg	mask, mask
+	addi	i, i, -1
+	and	t4, mask, t4
+	or	t0, t4, t0
+	add	tp, tp, n
+	bne	i, k, L(tp1)
+	sd	t0, 0(rp)
 
-	addi	t5, t5, 1
-	bne	nents, t5, L(outer)
-
-L(ret):	ret
+L(b00):	ld	s0,24(sp)
+	ld	s1,16(sp)
+	ld	s2,8(sp)
+	ld	s3,0(sp)
+	addi	sp,sp,32
+	jr	ra
 EPILOGUE()

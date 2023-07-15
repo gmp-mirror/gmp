@@ -1,6 +1,8 @@
-dnl  S/390-64 mpn_submul_1
+dnl  Loongarch mpn_mul_1
 
-dnl  Copyright 2011 Free Software Foundation, Inc.
+dnl  Contributed to the GNU project by Torbjorn Granlund.
+
+dnl  Copyright 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -30,41 +32,32 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
-C            cycles/limb
-C z900		35
-C z990		24
-C z9		 ?
-C z10		28
-C z196		 ?
-
 C INPUT PARAMETERS
-define(`rp',	`%r2')
-define(`up',	`%r3')
-define(`n',	`%r4')
-define(`v0',	`%r5')
+define(`rp_arg',`$r4')
+define(`ap',	`$r5')
+define(`n',	`$r6')
+define(`b0',	`$r7')
+
+define(`rp',	`$r8')
+
 
 ASM_START()
-PROLOGUE(mpn_submul_1)
-	stmg	%r9, %r12, 72(%r15)
-	lghi	%r12, 0
-	slgr	%r11, %r11
+PROLOGUE(mpn_mul_1)
+	alsl.d	rp, n, rp_arg, 3
+	alsl.d	ap, n, ap, 3
+	sub.d	n, $r0, n
+	slli.d	n, n, 3
+	or	$r4, $r0, $r0
 
-L(top):	lg	%r1, 0(%r12,up)
-	lg	%r10, 0(%r12,rp)
-	mlgr	%r0, v0
-	slbgr	%r10, %r1
-	slbgr	%r9, %r9
-	slgr	%r0, %r9		C conditional incr
-	slgr	%r10, %r11
-	lgr	%r11, %r0
-	stg	%r10, 0(%r12,rp)
-	la	%r12, 8(%r12)
-	brctg	%r4,  L(top)
+L(top):	ldx.d	$r13, ap, n
+	mul.d	$r17, $r13, b0
+	mulh.du	$r13, $r13, b0
+	add.d	$r17, $r17, $r4
+	sltu	$r4, $r17, $r4
+	stx.d	$r17, rp, n
+	addi.d	n, n, 8			C bookkeeping
+	add.d	$r4, $r13, $r4
+	bnez	n, L(top)
 
-	lgr	%r2, %r11
-	slbgr	%r9, %r9
-	slgr	%r2, %r9
-
-	lmg	%r9, %r12, 72(%r15)
-	br	%r14
+	jr	$r1
 EPILOGUE()
