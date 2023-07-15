@@ -1,3 +1,8 @@
+2023-07-15  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/riscv/64: Improve Risc V asm support.
+	* mpn/loongarch/64: Provide basic Loongarch asm support.
+
 2023-07-06  Marc Glisse  <marc.glisse@inria.fr>
 
 	* doc/gmp.texi: Mention snapshots in bug report instructions.
