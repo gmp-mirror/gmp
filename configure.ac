@@ -3739,7 +3739,7 @@ fi
 
 if test "$gmp_asm_syntax_testing" != no; then
   SAVE_CFLAGS="$CFLAGS"
-  CFLAGS="`echo $SAVE_CFLAGS | sed 's;-flto[-=a-z0-9]*;;g'`"
+  CFLAGS="`echo $SAVE_CFLAGS | sed 's;-flto[[-=a-z0-9]]*;;g'`"
   GMP_ASM_TEXT
   GMP_ASM_DATA
   GMP_ASM_LABEL_SUFFIX
