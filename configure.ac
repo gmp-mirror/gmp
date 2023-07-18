@@ -3738,6 +3738,8 @@ if test $found_asm = no && test $found_S = no; then
 fi
 
 if test "$gmp_asm_syntax_testing" != no; then
+  SAVE_CFLAGS="$CFLAGS"
+  CFLAGS="`echo $SAVE_CFLAGS | sed 's;-flto[-=a-z0-9]*;;g'`"
   GMP_ASM_TEXT
   GMP_ASM_DATA
   GMP_ASM_LABEL_SUFFIX
@@ -3750,6 +3752,7 @@ if test "$gmp_asm_syntax_testing" != no; then
   GMP_ASM_LSYM_PREFIX
   GMP_ASM_W32
   GMP_ASM_ALIGN_LOG
+  CFLAGS="$SAVE_CFLAGS"
 
   case $host in
     arm*-*-* | aarch64*-*-* | [applem[1-9]-*-*])
