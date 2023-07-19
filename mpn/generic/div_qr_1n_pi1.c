@@ -142,11 +142,11 @@ see https://www.gnu.org/licenses/.  */
 
 #if defined (__aarch64__) && W_TYPE_SIZE == 64
 #define add_mssaaaa(m, sh, sl, ah, al, bh, bl)				\
-  __asm__ (  "adds	%2, %5, %6\n\t"					\
-	     "adcs	%1, %3, %4\n\t"					\
+  __asm__ (  "adds	%2, %x5, %6\n\t"				\
+	     "adcs	%1, %x3, %x4\n\t"				\
 	     "csinv	%0, xzr, xzr, cc\n\t"				\
 	   : "=r" (m), "=r" (sh), "=&r" (sl)				\
-	   : "r" (ah), "rI" (bh), "%r" (al), "rI" (bl) __CLOBBER_CC)
+	   : "rZ" (ah), "rZ" (bh), "%rZ" (al), "rI" (bl) __CLOBBER_CC)
 #endif
 #endif /* defined (__GNUC__) */
 
