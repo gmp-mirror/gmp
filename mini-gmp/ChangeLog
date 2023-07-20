@@ -1,3 +1,12 @@
+2023-07-20  Niels Möller  <nisse@lysator.liu.se>
+
+	* mini-gmp.c (gmp_umullo_limb): New macro, to avoid unintended
+	promotion to signed int, in case mp_limb_t is a size smaller than
+	int. In particular, mp_limb_t configured to be a 16-bit unsigned
+	short, with 32-bit int, leads to undefined signed overflow.
+	Problem reported by Vincent Lefevre.
+	(gmp_udiv_qrnnd_preinv, gmp_udiv_qr_3by2): Use new macro.
+
 2022-09-08 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* tests/t-powm.c: Test some corner cases (e.g. 1^0 mod 1).
