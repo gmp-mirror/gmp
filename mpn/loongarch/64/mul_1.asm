@@ -33,31 +33,65 @@ dnl  see https://www.gnu.org/licenses/.
 include(`../config.m4')
 
 C INPUT PARAMETERS
-define(`rp_arg',`$r4')
-define(`ap',	`$r5')
-define(`n',	`$r6')
-define(`b0',	`$r7')
+define(`rp',	`$a0')
+define(`ap',	`$a1')
+define(`n',	`$a2')
+define(`b0',	`$a3')
 
-define(`rp',	`$r8')
+define(`cy',	`$a4')
+define(`i',	`$a5')
 
+define(`BLOCK', `
+	mul.d	$t1, $t2, b0
+	mulh.du	$t0, $t2, b0
+	ld.d	$t2, ap, $1
+	add.d	$t6, $t1, cy
+	sltu	$t5, $t6, $t1
+	st.d	$t6, rp, eval($1-8)
+	add.d	cy, $t0, $t5')
 
 ASM_START()
+
+PROLOGUE(mpn_mul_1c)
+	srli.d	i, n, 2
+	b	L(ent)
+EPILOGUE()
+
 PROLOGUE(mpn_mul_1)
-	alsl.d	rp, n, rp_arg, 3
-	alsl.d	ap, n, ap, 3
-	sub.d	n, $r0, n
-	slli.d	n, n, 3
-	or	$r4, $r0, $r0
+	srli.d	i, n, 2
+	or	cy, $r0, $r0
+L(ent):	ld.d	$t2, ap, 0
 
-L(top):	ldx.d	$r13, ap, n
-	mul.d	$r17, $r13, b0
-	mulh.du	$r13, $r13, b0
-	add.d	$r17, $r17, $r4
-	sltu	$r4, $r17, $r4
-	stx.d	$r17, rp, n
-	addi.d	n, n, 8			C bookkeeping
-	add.d	$r4, $r13, $r4
-	bnez	n, L(top)
+	andi	$t0, n, 1
+	andi	$t1, n, 2
+	bnez	$t0, L(bx1)
+L(bx0):	beqz	$t1, L(b0)
+L(b10):	addi.d	ap, ap, -16
+	addi.d	rp, rp, -16
+	b	L(b2)
+L(bx1):	beqz	$t1, L(b01)
+L(b11):	addi.d	ap, ap, -8
+	addi.d	rp, rp, -8
+	b	L(b3)
+L(b01):	addi.d	ap, ap, 8
+	addi.d	rp, rp, 8
+	beqz	i, L(end)
 
+L(top):
+L(b1):	BLOCK(0)
+L(b0):	BLOCK(8)
+	addi.d	i, i, -1
+L(b3):	BLOCK(16)
+L(b2):	BLOCK(24)
+	addi.d	ap, ap, 32
+	addi.d	rp, rp, 32
+	bnez	i, L(top)
+
+L(end):	mul.d	$t1, $t2, b0
+	mulh.du	$t0, $t2, b0
+	add.d	$t6, $t1, cy
+	sltu	$t5, $t6, $t1
+	st.d	$t6, rp, -8
+	add.d	$a0, $t0, $t5
 	jr	$r1
 EPILOGUE()
