@@ -1,3 +1,17 @@
+2023-07-20  Torbjörn Granlund  <tg@gmplib.org>
+
+	* config.guess: Generalise sparc patterns.
+
+2023-07-19  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/generic/div_qr_1n_pi2.c, mpn/generic/div_qr_1n_pi1.c,
+	mpn/generic/mod_1_1.c, mpn/generic/div_qr_1u_pi2.c,
+	mpn/generic/div_qr_2.c: Get arm64 asm contraints right for adcs.
+
+2023-07-18  Torbjörn Granlund  <tg@gmplib.org>
+
+	* configure.ac: Suppress any -flto flags for running GMP_ASM_*.
+
 2023-07-15  Torbjörn Granlund  <tg@gmplib.org>
 
 	* configure.ac: Pass -mcpu= instead of -mtune= consistently for ibm power.

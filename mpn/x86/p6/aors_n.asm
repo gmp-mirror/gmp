@@ -67,11 +67,12 @@ L(start):
 	push	%edi
 	push	%esi
 	push	%ebx
+	push	%ebp
 
-	mov	16(%esp), rp
-	mov	20(%esp), up
-	mov	24(%esp), vp
-	mov	28(%esp), n
+	mov	20(%esp), rp
+	mov	24(%esp), up
+	mov	28(%esp), vp
+	mov	32(%esp), n
 
 	lea	(up,n,4), up
 	lea	(vp,n,4), vp
@@ -82,12 +83,17 @@ L(start):
 	and	$-8, n
 	and	$7, %eax
 	shl	$2, %eax			C 4x
+ifelse(1,1,`
+	LEAL(L(ent), %ebp)
+	lea	(%eax,%eax,2), %eax		C 12x
+	add	%ebp, %eax
+',`	
 ifdef(`PIC',`
 	call	L(pic_calc)
 L(here):
 ',`
 	lea	L(ent) (%eax,%eax,2), %eax	C 12x
-')
+')')
 
 	shr	%edx				C set cy flag
 	jmp	*%eax
@@ -104,6 +110,7 @@ L(pic_calc):
 L(end):
 	sbb	%eax, %eax
 	neg	%eax
+	pop	%ebp
 	pop	%ebx
 	pop	%esi
 	pop	%edi
