@@ -1,3 +1,8 @@
+2023-07-26  Niels Möller  <nisse@lysator.liu.se>
+
+	* tune/speed.h (mpn_hgcd_appr_lehmer): Fix declaration to use
+	correct return type.
+
 2023-07-26  Torbjörn Granlund  <tg@gmplib.org>
 
 	* mpn/s390_64/z13/submul_1.asm: New file.
