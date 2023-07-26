@@ -1,3 +1,19 @@
+2023-07-26  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/s390_64/z13/submul_1.asm: New file.
+	* mpn/s390_64/z13/popcount.asm: New file.
+	* mpn/s390_64/z13/hamdist.asm: New file.
+
+2023-07-25  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/s390_64/z13/addmul_2.asm: New file.
+	* mpn/s390_64/z13/addmul_1.asm: New file.
+	* mpn/s390_64/z13/addmul_2.asm: New file.
+	* mpn/s390_64/z13/mul_1.asm: New file.
+	* mpn/s390_64/z13/mul_2.asm: New file.
+	* mpn/s390_64/z13/mul_basecase.asm: New file.
+	* mpn/s390_64/z13/sqr_basecase.c: New file.
+
 2023-07-20  Torbjörn Granlund  <tg@gmplib.org>
 
 	* config.guess: Generalise sparc patterns.
