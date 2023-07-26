@@ -1,6 +1,6 @@
-dnl  S/390-64 mpn_addmul_1
+dnl  S/390-64 mpn_addmul_1 and mpn_addmul_1c.
 
-dnl  Copyright 2021 Free Software Foundation, Inc.
+dnl  Copyright 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -106,11 +106,11 @@ L(top):	lgr	%r9, %r6
 	vlvgp	%v23, %r0, %r1		C W1 W0
 	vlvgp	%v21, %r7, %r9		C W1 W0
 	vacq	%v24, %v23, %v21, %v29	C
-	vacccq	%v29, %v23, %v21, %v29	C	carry critical path 3
+	vacccq	%v29, %v23, %v21, %v29	C	carry critical path 1
 	vl	%v16, 0(idx, rp)
 	vpdi	%v16, %v16, %v16, 4
 	vacq	%v20, %v24, %v16, %v30	C
-	vacccq	%v30, %v24, %v16, %v30	C	carry critical path 4
+	vacccq	%v30, %v24, %v16, %v30	C	carry critical path 2
 	vpdi	%v20, %v20, %v20, 4
 	vst	%v20, 0(idx, rp)
 	la	idx, 16(idx)
@@ -119,7 +119,6 @@ L(top):	lgr	%r9, %r6
 L(end):	vag	%v29, %v29, %v30
 	vlgvg	%r2, %v29, 1
 	algr	%r2, %r6
-
 	lmg	%r6, %r9, 48(%r15)
 	br	%r14
 L(1):	lgr	%r2, %r6

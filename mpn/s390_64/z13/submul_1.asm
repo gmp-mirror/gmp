@@ -1,4 +1,4 @@
-dnl  S/390-64 mpn_mul_2
+dnl  S/390-64 mpn_submul_1
 
 dnl  Copyright 2023 Free Software Foundation, Inc.
 
@@ -30,92 +30,79 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
+dnl TODO
+dnl * Schedule vlvgp away from mlgr; that saves 20% of the run time.
+dnl * Perhaps use vp[0]/vp[1] in innerloop instead preloading v0/v1.
+
 C            cycles/limb
 C z900		 -
 C z990		 -
 C z9		 -
-C z10		 ?
-C z196		 ?
+C z10		 -
+C z196		 -
 C z12		 ?
 C z13		 ?
 C z14		 ?
-C z15		 2.8
+C z15		 3.9
 
 
 define(`rp',	`%r2')
 define(`up',	`%r3')
 define(`un',	`%r4')
-define(`vp',	`%r5')
+define(`v0',	`%r5')
+define(`cy',	`%r6')
 
-define(`idx',	`%r12')
-define(`v0',	`%r11')
-define(`v1',	`%r5')
+define(`idx',	`%r8')
 
 ASM_START()
-PROLOGUE(mpn_mul_2)
-	stmg	%r6, %r12, 48(%r15)
 
-	vzero	%v27
-	vzero	%v28
-	vzero	%v29
-	vzero	%v30
-	lghi	%r10, 0
-	lg	v0, 0(vp)
-	lg	v1, 8(vp)
+PROLOGUE(mpn_submul_1)
+	stmg	%r6, %r9, 48(%r15)
 	tmll	un, 1
 	srlg	un, un, 1
 	je	L(evn)
 
 L(odd):	lg	%r7, 0(up)
-	mlgr	%r6, v0			C W2 W1
-	lg	%r1, 0(up)
-	stg	%r7, 0(rp)
+	mlgr	%r6, v0			C W1 W0
+	lghi	%r9, 0
+	lg	%r1, 0(rp)
+	slbgr	%r1, %r7
+	slbgr	%r7, %r7
+	slgr	%r6, %r7
+	stg	%r1, 0(rp)
+	clgije	un, 0, L(1)
 	lghi	idx, 8
-dnl	clgije	un, 0, L(end)
-	j	L(top)
-
+	j	L(lst)
 L(evn):	lghi	%r6, 0
 	lghi	idx, 0
-	lghi	%r1, 0
 
-L(top):	lg	%r9, 0(idx, up)
-	mlgr	%r0, v1			C W2 W1
-	mlgr	%r8, v1			C W3 W2
-	vlvgp	%v22, %r0, %r1		C W2 W1
-	vlvgp	%v23, %r9, %r6		C W2 W1
+L(lst):	vzero	%v29
+	vone	%v30
+L(top):	lgr	%r9, %r6
 	lg	%r1, 0(idx, up)
 	lg	%r7, 8(idx, up)
-	mlgr	%r0, v0			C W2 W1
-	mlgr	%r6, v0			C W3 W2
-	vlvgp	%v20, %r0, %r1		C W2 W1
-	vlvgp	%v21, %r7, %r10		C W2 W1
-	vacq	%v24, %v22, %v23, %v27	C
-	vacccq	%v27, %v22, %v23, %v27	C	carry critical path 1
-	vacq	%v23, %v24, %v20, %v28	C
-	vacccq	%v28, %v24, %v20, %v28	C	carry critical path 2
-	vacq	%v20, %v23, %v21, %v29	C
-	vacccq	%v29, %v23, %v21, %v29	C	carry critical path 3
+	mlgr	%r0, v0			C W1 W0
+	mlgr	%r6, v0			C W2 W1
+	vlvgp	%v23, %r0, %r1		C W1 W0
+	vlvgp	%v21, %r7, %r9		C W1 W0
+	vacq	%v24, %v23, %v21, %v29	C
+	vacccq	%v29, %v23, %v21, %v29	C	carry critical path 1
+	vl	%v16, 0(idx, rp)
+	vpdi	%v16, %v16, %v16, 4
+	vsbiq	%v20, %v16, %v24, %v30	C
+	vsbcbiq	%v30, %v16, %v24, %v30	C	carry critical path 2
 	vpdi	%v20, %v20, %v20, 4
-	lg	%r1, 8(idx, up)
 	vst	%v20, 0(idx, rp)
-	lgr	%r10, %r8
 	la	idx, 16(idx)
 	brctg	un, L(top)
 
-L(end):	mlgr	%r0, v1
-	algr	%r1, %r6
-	alcgr	%r0, un
-	algr	%r1, %r8
-	alcgr	%r0, un
-	vag	%v27, %v27, %v28
-	vag	%v29, %v29, %v30
-	vag	%v27, %v27, %v29
-	vlgvg	%r10, %v27, 1
-	algr	%r1, %r10
-	stg	%r1, 0(idx, rp)
-	alcgr	%r0, un
-	lgr	%r2, %r0
-
-	lmg	%r6, %r12, 48(%r15)
+L(end):	vsg	%v29, %v29, %v30
+	vlgvg	%r2, %v29, 1
+	algr	%r2, %r6
+	aghi	%r2, 1
+	lmg	%r6, %r9, 48(%r15)
+	br	%r14
+L(1):	lgr	%r2, %r6
+	lmg	%r6, %r9, 48(%r15)
 	br	%r14
 EPILOGUE()

@@ -1,6 +1,6 @@
-dnl  S/390-64 mpn_mul_1
+dnl  S/390-64 mpn_mul_1 and mpn_mul_1c.
 
-dnl  Copyright 2021 Free Software Foundation, Inc.
+dnl  Copyright 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -91,8 +91,8 @@ L(odd):	lg	%r7, 0(up)
 	j	L(lst)
 L(evn):	lghi	%r6, 0
 	lghi	idx, 0
-L(lst):	vzero	%v29
 
+L(lst):	vzero	%v29
 L(top):	lgr	%r9, %r6
 	lg	%r1, 0(idx, up)
 	lg	%r7, 8(idx, up)
@@ -101,7 +101,7 @@ L(top):	lgr	%r9, %r6
 	vlvgp	%v23, %r0, %r1		C W1 W0
 	vlvgp	%v21, %r7, %r9		C W1 W0
 	vacq	%v20, %v23, %v21, %v29	C
-	vacccq	%v29, %v23, %v21, %v29	C	carry critical path 3
+	vacccq	%v29, %v23, %v21, %v29	C	carry critical path
 	vpdi	%v20, %v20, %v20, 4
 	vst	%v20, 0(idx, rp)
 	la	idx, 16(idx)

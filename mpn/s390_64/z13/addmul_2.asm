@@ -1,6 +1,6 @@
 dnl  S/390-64 mpn_addmul_2
 
-dnl  Copyright 2021 Free Software Foundation, Inc.
+dnl  Copyright 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
