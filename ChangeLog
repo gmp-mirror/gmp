@@ -1,3 +1,16 @@
+2023-07-27  Niels Möller  <nisse@lysator.liu.se>
+
+	Update DIV_QR_1N_PI1_METHOD to use method 3 or 4.
+	* mpn/arm64/applem1/gmp-mparam.h: Update DIV_QR_1N_PI1_METHOD.
+	* mpn/arm64/cora57/gmp-mparam.h: Likewise.
+	* mpn/arm64/xgene1/gmp-mparam.h: Likewise.
+	* mpn/powerpc64/mode64/p7/gmp-mparam.h: Likewise.
+	* mpn/powerpc64/mode64/p8/gmp-mparam.h: Likewise.
+	* mpn/powerpc64/mode64/p9/gmp-mparam.h: Likewise.
+	* mpn/sparc64/ultrasparct45/gmp-mparam.h: Likewise.
+	* mpn/x86/coreihwl/gmp-mparam.h: Likewise.
+	* mpn/x86/k7/gmp-mparam.h: Likewise.
+
 2023-07-26  Niels Möller  <nisse@lysator.liu.se>
 
 	* tune/speed.h (mpn_hgcd_appr_lehmer): Fix declaration to use
