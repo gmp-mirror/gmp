@@ -1166,7 +1166,9 @@ s390*-*-*)
       2097 | 2098) zcpu="z10"  ;;
       2817 | 2818 | *) zcpu="z196" ;;
     esac
-    if grep "^features.* vxe2" /proc/cpuinfo >/dev/null; then
+    if grep "^features.* vxp2" /proc/cpuinfo >/dev/null; then
+      zcpu="z16"
+    elif grep "^features.* vxe2" /proc/cpuinfo >/dev/null; then
       zcpu="z15"
     elif grep "^features.* vxe" /proc/cpuinfo >/dev/null; then
       zcpu="z14"

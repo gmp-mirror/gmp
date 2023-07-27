@@ -1423,10 +1423,16 @@ case $host in
         ;;
       z15 | z15esa)
         cpu="z15"
-	gcc_cflags_arch="-march=$cpu -march=z14 -march=z13"
+	gcc_cflags_arch="-march=$cpu -march=arch13 -march=z14 -march=z13"
 	extra_functions=""
 	path_64="s390_64/z15 s390_64/z14 s390_64/z13 $path_64"
         ;;
+      z16 | z16esa)
+	cpu="z16"
+	gcc_cflags_arch="-march=$cpu -march=arch14 -march=z15 -march=arch13 -march=z14 -march=z13"
+	extra_functions=""
+	path_64="s390_64/z16 s390_64/z15 s390_64/z14 s390_64/z13 $path_64"
+	;;
       esac
 
     if test x"$cpu" != x ; then
