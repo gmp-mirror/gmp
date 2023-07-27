@@ -15,6 +15,11 @@ Changes between GMP version 6.2.* and *.*.*
   * New public function mpz_prevprime, companion of the existing
     mpz_nextprime.
 
+  * New documented pointer types mpz_ptr, mpz_srcptr, and similar for
+    other GMP types. Refer to the manual for full list and suggested
+    usage. These types have been present in gmp.h at least since
+    GMP-4.0, but previously not advertised to users.
+
   SPEEDUPS
   * New special code for base = 2 in mpz_powm reduces the average time
     for the functions that test primality.
