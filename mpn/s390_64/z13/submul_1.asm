@@ -87,12 +87,12 @@ L(top):	lgr	%r9, %r6
 	vlvgp	%v21, %r7, %r9		C W1 W0
 	vacq	%v24, %v23, %v21, %v29	C
 	vacccq	%v29, %v23, %v21, %v29	C	carry critical path 1
-	vl	%v16, 0(idx, rp)
+	vl	%v16, 0(idx, rp), 3
 	vpdi	%v16, %v16, %v16, 4
 	vsbiq	%v20, %v16, %v24, %v30	C
 	vsbcbiq	%v30, %v16, %v24, %v30	C	carry critical path 2
 	vpdi	%v20, %v20, %v20, 4
-	vst	%v20, 0(idx, rp)
+	vst	%v20, 0(idx, rp), 3
 	la	idx, 16(idx)
 	brctg	un, L(top)
 

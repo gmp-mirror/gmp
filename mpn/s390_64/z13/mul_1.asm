@@ -103,7 +103,7 @@ L(top):	lgr	%r9, %r6
 	vacq	%v20, %v23, %v21, %v29	C
 	vacccq	%v29, %v23, %v21, %v29	C	carry critical path
 	vpdi	%v20, %v20, %v20, 4
-	vst	%v20, 0(idx, rp)
+	vst	%v20, 0(idx, rp), 3
 	la	idx, 16(idx)
 	brctg	un, L(top)
 

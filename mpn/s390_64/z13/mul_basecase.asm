@@ -72,12 +72,13 @@ L(top):	lgr	%r9, %r6
 	vacq	%v20, %v23, %v21, %v29	C
 	vacccq	%v29, %v23, %v21, %v29	C	carry critical path 3
 	vpdi	%v20, %v20, %v20, 4
-	vst	%v20, 0(idx, rp)
+	vst	%v20, 0(idx, rp), 3
 	la	idx, 16(idx)
 	brctg	un, L(top)
 
 L(end):	vlgvg	%r7, %v29, 1
 	algr	%r6, %r7
+	stg	%r6, 0(idx, rp)
 popdef(`L')
 ')
 
@@ -126,7 +127,7 @@ L(top):	lg	%r9, 0(idx, up)
 	vacccq	%v29, %v23, %v21, %v29	C	carry critical path 3
 	vpdi	%v20, %v20, %v20, 4
 	lg	%r1, 8(idx, up)
-	vst	%v20, 0(idx, rp)
+	vst	%v20, 0(idx, rp), 3
 	lgr	%r10, %r8
 	la	idx, 16(idx)
 	brctg	un, L(top)
@@ -143,6 +144,7 @@ L(end):	mlgr	%r0, v1
 	algr	%r1, %r10
 	stg	%r1, 0(idx, rp)
 	alcgr	%r0, un
+	stg	%r0, 8(idx, rp)
 popdef(`L')
 ')
 
@@ -192,12 +194,12 @@ L(ent):	lg	%r9, 0(idx, up)
 	vacccq	%v28, %v24, %v20, %v28	C	carry critical path 2
 	vacq	%v24, %v23, %v21, %v29	C
 	vacccq	%v29, %v23, %v21, %v29	C	carry critical path 3
-	vl	%v16, 0(idx, rp)
+	vl	%v16, 0(idx, rp), 3
 	vpdi	%v16, %v16, %v16, 4
 	vacq	%v20, %v24, %v16, %v30	C
 	vacccq	%v30, %v24, %v16, %v30	C	carry critical path 4
 	vpdi	%v20, %v20, %v20, 4
-	vst	%v20, 0(idx, rp)
+	vst	%v20, 0(idx, rp), 3
 	lgr	%r10, %r8
 	la	idx, 16(idx)
 	brctg	un, L(top)
@@ -215,6 +217,7 @@ L(end):	lg	%r1, -8(idx, up)
 	algr	%r1, %r10
 	stg	%r1, 0(idx, rp)
 	alcgr	%r0, un
+	stg	%r0, 8(idx, rp)
 popdef(`L')
 ')
 
@@ -222,10 +225,7 @@ popdef(`L')
 ASM_START()
 
 PROLOGUE(mpn_mul_basecase)
-	stmg	%r6, %r15, 48(%r15)
-	lay     %r15, -240(%r15)
-	stg     un, 216(%r15)
-
+	stmg	%r4, %r14, 32(%r15)
 	lgr	vn, vn_arg
 
 	tmll	vn, 1
@@ -233,26 +233,23 @@ PROLOGUE(mpn_mul_basecase)
 L(vn_odd):
 	lg	v0, 0(vp)
 	MUL_1()
-	stg	%r6, 0(idx, rp)
 	lay	vp, -8(vp)
 	lay	rp, -8(rp)
 	j	L(join)
 L(vn_evn):
 	MUL_2()
-	stg	%r0, 8(idx, rp)
 	lay	vn, -2(vn)
 L(join):
 	srlg	vn, vn, 1
 	cgije	vn, 0, L(oend)
 L(otop):
-	lg	un, 216(%r15)
+	lg	un, 32(%r15)
 	la	rp, 16(rp)
 	la	vp, 16(vp)
 	ADDMUL_2()
-	stg	%r0, 8(idx, rp)
 	brctg	vn, L(otop)
 L(oend):
 
-	lmg	%r6, %r15, 288(%r15)
+	lmg	%r6, %r14, 48(%r15)
 	br	%r14
 EPILOGUE()
