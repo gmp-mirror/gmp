@@ -1,4 +1,5 @@
 dnl  S/390-64 mpn_mul_1 and mpn_mul_1c.
+dnl  Based on C code contributed by Marius Hillenbrand.
 
 dnl  Copyright 2023 Free Software Foundation, Inc.
 
@@ -43,75 +44,106 @@ C z196		 -
 C z12		 ?
 C z13		 ?
 C z14		 ?
-C z15		 3.3
+C z15		 2.25
 
 
 define(`rp',	`%r2')
-define(`up',	`%r3')
-define(`un',	`%r4')
-define(`v0',	`%r5')
+define(`ap',	`%r3')
+define(`an',	`%r4')
+define(`b0',	`%r5')
 define(`cy',	`%r6')
 
-define(`idx',	`%r8')
+define(`idx',	`%r4')
 
 ASM_START()
 
 PROLOGUE(mpn_mul_1c)
-	stmg	%r6, %r9, 48(%r15)
-	tmll	un, 1
-	srlg	un, un, 1
-	je	L(cev)
-
-L(cod):	lg	%r9, 0(up)
-	mlgr	%r8, v0			C W1 W0
-	lghi	%r7, 0
-	algr	%r6, %r9		C W0
-	alcgr	%r8, %r7		C W1
-	stg	%r6, 0(rp)
-	lgr	%r6, %r8
-	clgije	un, 0, L(1)
-	lghi	idx, 8
-	j	L(lst)
-L(cev):	lghi	idx, 0
-	j	L(lst)
+	stmg	%r6, %r13, 48(%r15)
+	j	L(ent)
 EPILOGUE()
 
 PROLOGUE(mpn_mul_1)
-	stmg	%r6, %r9, 48(%r15)
+	stmg	%r6, %r13, 48(%r15)
+	lghi	%r6, 0
+L(ent):	vzero	%v2
+	srlg	%r11, an, 2
 
-	lghi	%r9, 0
-	tmll	un, 1
-	srlg	un, un, 1
-	je	L(evn)
-L(odd):	lg	%r7, 0(up)
-	mlgr	%r6, v0			C W1 W0
-	stg	%r7, 0(rp)
-	lghi	idx, 8
-	clgije	un, 0, L(1)
-	j	L(lst)
-L(evn):	lghi	%r6, 0
-	lghi	idx, 0
+	tmll	an, 1
+	je	L(bx0)
+L(bx1):	tmll	an, 2
+	jne	L(b11)
 
-L(lst):	vzero	%v29
-L(top):	lgr	%r9, %r6
-	lg	%r1, 0(idx, up)
-	lg	%r7, 8(idx, up)
-	mlgr	%r0, v0			C W1 W0
-	mlgr	%r6, v0			C W2 W1
-	vlvgp	%v23, %r0, %r1		C W1 W0
-	vlvgp	%v21, %r7, %r9		C W1 W0
-	vacq	%v20, %v23, %v21, %v29	C
-	vacccq	%v29, %v23, %v21, %v29	C	carry critical path
-	vpdi	%v20, %v20, %v20, 4
-	vst	%v20, 0(idx, rp), 3
-	la	idx, 16(idx)
-	brctg	un, L(top)
+L(b01):	lghi	idx, -24
+	lg	%r13, 0(ap)
+	mlgr	%r12, b0
+	algr	%r13, %r6
+	lghi	%r6, 0
+	alcgr	%r12, %r6
+	stg	%r13, 0(rp)
+	cgije	%r11, 0, L(1)
+	j	L(cj0)
 
-L(end):	vlgvg	%r2, %v29, 1
-	algr	%r2, %r6
-	lmg	%r6, %r9, 48(%r15)
-	br	%r14
-L(1):	lgr	%r2, %r6
-	lmg	%r6, %r9, 48(%r15)
+L(b11):	lghi	idx, -8
+	lg	%r9, 0(ap)
+	mlgr	%r8, b0
+	algr	%r9, %r6
+	lghi	%r6, 0
+	alcgr	%r8, %r6
+	stg	%r9, 0(rp)
+	j	L(cj1)
+
+L(bx0):	tmll	an, 2
+	jne	L(b10)
+L(b00):	lghi	idx, -32
+	lgr	%r12, %r6
+L(cj0):	lg	%r1, 32(idx, ap)
+	lg	%r9, 40(idx, ap)
+	mlgr	%r0, b0
+	mlgr	%r8, b0
+	vlvgp	%v6, %r0, %r1
+	vlvgp	%v7, %r9, %r12
+	j	L(mid)
+
+L(b10):	lghi	idx, -16
+	lgr	%r8, %r6
+L(cj1):	lg	%r7, 16(idx, ap)
+	lg	%r13, 24(idx, ap)
+	mlgr	%r6, b0
+	mlgr	%r12, b0
+	vlvgp	%v6, %r6, %r7
+	vlvgp	%v7, %r13, %r8
+	cgije	%r11, 0, L(end)
+
+L(top):	lg	%r1, 32(idx, ap)
+	lg	%r9, 40(idx, ap)
+	mlgr	%r0, b0
+	mlgr	%r8, b0
+	vacq	%v3, %v6, %v7, %v2
+	vacccq	%v2, %v6, %v7, %v2
+	vpdi	%v3, %v3, %v3, 4
+	vst	%v3, 16(idx, rp), 3
+	vlvgp	%v6, %r0, %r1
+	vlvgp	%v7, %r9, %r12
+L(mid):	lg	%r7, 48(idx, ap)
+	lg	%r13, 56(idx, ap)
+	mlgr	%r6, b0
+	mlgr	%r12, b0
+	vacq	%v1, %v6, %v7, %v2
+	vacccq	%v2, %v6, %v7, %v2
+	vpdi	%v1, %v1, %v1, 4
+	vst	%v1, 32(idx, rp), 3
+	vlvgp	%v6, %r6, %r7
+	vlvgp	%v7, %r13, %r8
+	la	idx, 32(idx)
+	brctg	%r11, L(top)
+
+L(end):	vacq	%v3, %v6, %v7, %v2
+	vacccq	%v2, %v6, %v7, %v2
+	vpdi	%v3, %v3, %v3, 4
+	vst	%v3, 16(idx, rp), 3
+
+L(1):	vlgvg	%r2, %v2, 1
+	agr	%r2, %r12
+	lmg	%r6, %r13, 48(%r15)
 	br	%r14
 EPILOGUE()
