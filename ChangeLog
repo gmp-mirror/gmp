@@ -1,3 +1,13 @@
+2023-07-29  Torbjörn Granlund  <tg@gmplib.org>
+
+	* Version 6.3.0 released.
+
+	* mpn/s390_64/z13/mul_basecase.asm: Rewrite, using new addmul_1.asm.
+
+	* mpn/s390_64/z13/mul_1.asm: Rewrite.
+	* mpn/s390_64/z13/addmul_1.asm: Likewise.
+	* mpn/s390_64/z13/submul_1.asm: Likewise.
+
 2023-07-27  Niels Möller  <nisse@lysator.liu.se>
 
 	Update DIV_QR_1N_PI1_METHOD to use method 3 or 4.

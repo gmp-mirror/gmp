@@ -106,3 +106,5 @@ Ulrich Weigand		Changes to support powerpc64le:
 			mpn/powerpc64/vmx/popcount.asm.
 
 Seth Troisi		mpz/nextprime.c general speed-up and prevprime.
+
+Marius Hillenbrand	mpn/s390_64/z13/*.c (later used as basis for asm code)

@@ -91,6 +91,7 @@
 #        6.1.2   13:2:3    9:2:5     -
 #        6.2.0   14:0:4   10:0:6     -
 #        6.2.1   14:1:4   10:1:6     -
+#        6.3.0   15:0:5   11:0:7     -
 #
 # Starting at 3:0:0 is a slight abuse of the versioning system, but it
 # ensures we're past soname libgmp.so.2, which was used on Debian GNU/Linux
@@ -103,13 +104,13 @@
 # it's still good to get the shared library filename (like
 # libgmpxx.so.3.0.4) incrementing, to make it clear which GMP it's from.
 
-LIBGMP_LT_CURRENT    = 14
+LIBGMP_LT_CURRENT    = 15
 LIBGMP_LT_REVISION   = 0
-LIBGMP_LT_AGE        = 4
+LIBGMP_LT_AGE        = 5
 
-LIBGMPXX_LT_CURRENT  = 10
+LIBGMPXX_LT_CURRENT  = 11
 LIBGMPXX_LT_REVISION = 0
-LIBGMPXX_LT_AGE      = 6
+LIBGMPXX_LT_AGE      = 7
 
 
 SUBDIRS = tests mpn mpz mpq mpf printf scanf rand cxx demos tune doc

@@ -1,9 +1,9 @@
-Copyright 1996, 1999-2016, 2018-2020 Free Software Foundation, Inc.
+Copyright 1996, 1999-2016, 2018-2023 Free Software Foundation, Inc.
 
 Verbatim copying and distribution of this entire article is permitted in any
 medium, provided this notice is preserved.
 
-Changes between GMP version 6.2.* and *.*.*
+Changes between GMP version 6.2.* and 6.3.*.
 
   BUGS FIXED
   * A possible overflow of type int is avoided for mpz_cmp on huge operands.
@@ -20,6 +20,12 @@ Changes between GMP version 6.2.* and *.*.*
     usage. These types have been present in gmp.h at least since
     GMP-4.0, but previously not advertised to users.
 
+  * Support for 64-bit Arm under Macos.
+
+  * Support for the loongarch64 CPU family.
+
+  * Support for building with LTO, link-time optimisations.
+
   SPEEDUPS
   * New special code for base = 2 in mpz_powm reduces the average time
     for the functions that test primality.
@@ -28,6 +34,11 @@ Changes between GMP version 6.2.* and *.*.*
 
   * Speedup for multiplications (some sizes only) thanks to new
     internal functions to compute small negacyclic products.
+
+  * Special assembly code for IBM z13 and later "mainframe" CPUs, resulting in
+    a huge speedup.
+
+  * Improved assembly for several 64-bit x86 CPUs, Risc-V, 64-bit Arm.
 
 Changes between GMP version 6.1.* and 6.2.0
 
