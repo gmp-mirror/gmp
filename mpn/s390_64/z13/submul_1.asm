@@ -1,4 +1,5 @@
 dnl  S/390-64 mpn_submul_1
+dnl  Based on C code contributed by Marius Hillenbrand.
 
 dnl  Copyright 2023 Free Software Foundation, Inc.
 
@@ -43,7 +44,7 @@ C z196		 -
 C z12		 ?
 C z13		 ?
 C z14		 ?
-C z15		 3.9
+C z15		 2.55
 
 
 define(`rp',	`%r2')
@@ -93,7 +94,7 @@ L(b11):	lghi	idx, -8
 L(bx0):	tmll	an, 2
 	jne	L(b10)
 L(b00):	lghi	idx, -32
-	lgr	%r12, %r6
+	lghi	%r12, 0
 L(cj0):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
 	mlgr	%r0, b0
@@ -103,7 +104,7 @@ L(cj0):	lg	%r1, 32(idx, ap)
 	j	L(mid)
 
 L(b10):	lghi	idx, -16
-	lgr	%r8, %r6
+	lghi	%r8, 0
 L(cj1):	lg	%r7, 16(idx, ap)
 	lg	%r13, 24(idx, ap)
 	mlgr	%r6, b0
