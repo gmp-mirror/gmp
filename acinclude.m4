@@ -326,9 +326,9 @@ dnl  macros.
 ')]
 EOF
 dnl ' <- balance the quotes for emacs sh-mode
-  echo "trying m4" >&AC_FD_CC
-  gmp_tmp_val=`(m4 conftest.m4) 2>&AC_FD_CC`
-  echo "$gmp_tmp_val" >&AC_FD_CC
+  echo "trying m4" >&AS_MESSAGE_LOG_FD
+  gmp_tmp_val=`(m4 conftest.m4) 2>&AS_MESSAGE_LOG_FD`
+  echo "$gmp_tmp_val" >&AS_MESSAGE_LOG_FD
   if test "$gmp_tmp_val" = good; then
     gmp_cv_prog_m4="m4"
   else
@@ -339,9 +339,9 @@ dnl not every word.  This closes a longstanding sh security hole.
     ac_dummy="$PATH:/usr/5bin"
     for ac_dir in $ac_dummy; do
       test -z "$ac_dir" && ac_dir=.
-      echo "trying $ac_dir/m4" >&AC_FD_CC
-      gmp_tmp_val=`($ac_dir/m4 conftest.m4) 2>&AC_FD_CC`
-      echo "$gmp_tmp_val" >&AC_FD_CC
+      echo "trying $ac_dir/m4" >&AS_MESSAGE_LOG_FD
+      gmp_tmp_val=`($ac_dir/m4 conftest.m4) 2>&AS_MESSAGE_LOG_FD`
+      echo "$gmp_tmp_val" >&AS_MESSAGE_LOG_FD
       if test "$gmp_tmp_val" = good; then
         gmp_cv_prog_m4="$ac_dir/m4"
         break
@@ -384,10 +384,10 @@ tmp_d_n_l=d""nl
 cat >conftest.m4 <<EOF
 [changequote({,})define(x,)m4wrap({x})$tmp_d_n_l]
 EOF
-echo test input is >&AC_FD_CC
-cat conftest.m4 >&AC_FD_CC
+echo test input is >&AS_MESSAGE_LOG_FD
+cat conftest.m4 >&AS_MESSAGE_LOG_FD
 tmp_chars=`$M4 conftest.m4 | wc -c`
-echo produces $tmp_chars chars output >&AC_FD_CC
+echo produces $tmp_chars chars output >&AS_MESSAGE_LOG_FD
 rm -f conftest.m4
 if test $tmp_chars = 0; then
   gmp_cv_m4_m4wrap_spurious=no
@@ -825,8 +825,8 @@ AC_DEFUN([GMP_PROG_CC_WORKS_PART_TEST],
   cat >conftest.c <<EOF
 [$3]
 EOF
-  echo "Test compile: [$2]" >&AC_FD_CC
-  gmp_compile="$1 conftest.c >&AC_FD_CC"
+  echo "Test compile: [$2]" >&AS_MESSAGE_LOG_FD
+  gmp_compile="$1 conftest.c >&AS_MESSAGE_LOG_FD"
   if AC_TRY_EVAL(gmp_compile); then
     cc_works_part=yes
     if test "$cross_compiling" = no; then
@@ -839,8 +839,8 @@ EOF
     cc_works_part=no
   fi
   if test "$cc_works_part" != yes; then
-    echo "failed program was:" >&AC_FD_CC
-    cat conftest.c >&AC_FD_CC
+    echo "failed program was:" >&AS_MESSAGE_LOG_FD
+    cat conftest.c >&AS_MESSAGE_LOG_FD
   fi
   rm -f conftest* a.out b.out a.exe a_out.exe
   case $cc_works_part in
@@ -873,12 +873,12 @@ long long  bar () { return foo; }
 int main () { return 0; }
 EOF
 gmp_prog_cc_works=no
-gmp_compile="$1 -c conftest.c >&AC_FD_CC"
+gmp_compile="$1 -c conftest.c >&AS_MESSAGE_LOG_FD"
 if AC_TRY_EVAL(gmp_compile); then
   gmp_prog_cc_works=yes
 else
-  echo "failed program was:" >&AC_FD_CC
-  cat conftest.c >&AC_FD_CC
+  echo "failed program was:" >&AS_MESSAGE_LOG_FD
+  cat conftest.c >&AS_MESSAGE_LOG_FD
 fi
 rm -f conftest* a.out b.out a.exe a_out.exe
 AC_MSG_RESULT($gmp_prog_cc_works)
@@ -906,7 +906,7 @@ dnl  to "long" in the array dimension also follows autoconf, apparently it's
 dnl  a workaround for a HP compiler bug.
 
 AC_DEFUN([GMP_C_TEST_SIZEOF],
-[echo "configure: testlist $2" >&AC_FD_CC
+[echo "configure: testlist $2" >&AS_MESSAGE_LOG_FD
 [gmp_sizeof_type=`echo "$2" | sed 's/sizeof-\([a-z\*]*\).*/\1/'`]
 [gmp_sizeof_want=`echo "$2" | sed 's/sizeof-[a-z\*]*-\([0-9]*\).*/\1/'`]
 AC_MSG_CHECKING([compiler $1 has sizeof($gmp_sizeof_type)==$gmp_sizeof_want])
@@ -920,7 +920,7 @@ main ()
 }]
 EOF
 gmp_c_testlist_sizeof=no
-gmp_compile="$1 -c conftest.c >&AC_FD_CC"
+gmp_compile="$1 -c conftest.c >&AS_MESSAGE_LOG_FD"
 if AC_TRY_EVAL(gmp_compile); then
   gmp_c_testlist_sizeof=yes
 fi
@@ -948,7 +948,7 @@ AC_DEFUN([GMP_PROG_CC_IS_GNU],
   choke me
 #endif
 EOF
-gmp_compile="$1 -c conftest.c >&AC_FD_CC"
+gmp_compile="$1 -c conftest.c >&AS_MESSAGE_LOG_FD"
 if AC_TRY_EVAL(gmp_compile); then
   rm -f conftest*
   AC_MSG_CHECKING([whether $1 is gcc])
@@ -1010,20 +1010,20 @@ dnl  has established the pic options.  It's right for gcc, but perhaps not
 dnl  other compilers.
 
 AC_DEFUN([GMP_PROG_CC_X86_GOT_EAX_EMITTED],
-[echo "Testing gcc GOT with eax emitted" >&AC_FD_CC
+[echo "Testing gcc GOT with eax emitted" >&AS_MESSAGE_LOG_FD
 cat >conftest.c <<\EOF
 [int foo;
 int bar () { return foo; }
 ]EOF
 tmp_got_emitted=no
-gmp_compile="$1 -fPIC -S conftest.c >&AC_FD_CC 2>&1"
+gmp_compile="$1 -fPIC -S conftest.c >&AS_MESSAGE_LOG_FD 2>&1"
 if AC_TRY_EVAL(gmp_compile); then
   if grep "addl.*_GLOBAL_OFFSET_TABLE_.*eax" conftest.s >/dev/null; then
     tmp_got_emitted=yes
   fi
 fi
 rm -f conftest.*
-echo "Result: $tmp_got_emitted" >&AC_FD_CC
+echo "Result: $tmp_got_emitted" >&AS_MESSAGE_LOG_FD
 if test "$tmp_got_emitted" = yes; then
   ifelse([$2],,:,[$2])
 else
@@ -1048,12 +1048,12 @@ AC_DEFUN([GMP_HPC_HPPA_2_0],
 # Let A.10.32.30 or higher be ok.
 echo >conftest.c
 gmp_tmp_vs=`$1 $2 -V -c -o conftest.$OBJEXT conftest.c 2>&1 | grep "^ccom:"`
-echo "Version string: $gmp_tmp_vs" >&AC_FD_CC
+echo "Version string: $gmp_tmp_vs" >&AS_MESSAGE_LOG_FD
 rm conftest*
 gmp_tmp_v1=`echo $gmp_tmp_vs | sed 's/.* .\.\([[0-9]]*\).*/\1/'`
 gmp_tmp_v2=`echo $gmp_tmp_vs | sed 's/.* .\..*\.\(.*\)\..* HP C.*/\1/'`
 gmp_tmp_v3=`echo $gmp_tmp_vs | sed 's/.* .\..*\..*\.\(.*\) HP C.*/\1/'`
-echo "Version number: $gmp_tmp_v1.$gmp_tmp_v2.$gmp_tmp_v3" >&AC_FD_CC
+echo "Version number: $gmp_tmp_v1.$gmp_tmp_v2.$gmp_tmp_v3" >&AS_MESSAGE_LOG_FD
 if test -z "$gmp_tmp_v1"; then
   gmp_hpc_64bit=not-applicable
 else
@@ -1083,7 +1083,7 @@ dnl  tests/mpz/t-jac.c as a wrong result from mpz_kronecker_ui.
 AC_DEFUN([GMP_GCC_ARM_UMODSI],
 [AC_MSG_CHECKING([whether ARM gcc unsigned division works])
 tmp_version=`$1 --version`
-echo "$tmp_version" >&AC_FD_CC
+echo "$tmp_version" >&AS_MESSAGE_LOG_FD
 case $tmp_version in
   [2.95 | 2.95.[123]])
     ifelse([$3],,:,[$3])
@@ -1108,11 +1108,11 @@ dnl  "cc1: The -mabi=32 support does not work yet".
 AC_DEFUN([GMP_GCC_MIPS_O32],
 [AC_MSG_CHECKING([whether gcc supports o32])
 echo 'int x;' >conftest.c
-echo "$1 -mabi=32 -c conftest.c" >&AC_FD_CC
+echo "$1 -mabi=32 -c conftest.c" >&AS_MESSAGE_LOG_FD
 if $1 -mabi=32 -c conftest.c >conftest.out 2>&1; then
   result=yes
 else
-  cat conftest.out >&AC_FD_CC
+  cat conftest.out >&AS_MESSAGE_LOG_FD
   if grep "cc1: Invalid option \`abi=32'" conftest.out >/dev/null; then
     result=yes
   else
@@ -1154,7 +1154,7 @@ EOF
       result=yes
     fi
   fi
-  cat conftest.out >&AC_FD_CC
+  cat conftest.out >&AS_MESSAGE_LOG_FD
   rm -f conftest* a.out b.out a.exe a_out.exe
   AC_MSG_RESULT($result)
   if test "$result" = yes; then
@@ -1213,7 +1213,7 @@ if AC_TRY_EVAL(gmp_compile); then
     result=yes
   fi
 fi
-cat conftest.out >&AC_FD_CC
+cat conftest.out >&AS_MESSAGE_LOG_FD
 rm -f conftest*
 AC_MSG_RESULT($result)
 if test "$result" = yes; then
@@ -1257,12 +1257,12 @@ AC_DEFUN([GMP_GCC_WA_OLDAS],
 result=no
 cat >conftest.c <<EOF
 EOF
-echo "with empty conftest.c" >&AC_FD_CC
-gmp_compile="$1 -c conftest.c >&AC_FD_CC 2>&1"
+echo "with empty conftest.c" >&AS_MESSAGE_LOG_FD
+gmp_compile="$1 -c conftest.c >&AS_MESSAGE_LOG_FD 2>&1"
 if AC_TRY_EVAL(gmp_compile); then : ;
 else
   # empty fails
-  gmp_compile="$1 -Wa,-oldas -c conftest.c >&AC_FD_CC 2>&1"
+  gmp_compile="$1 -Wa,-oldas -c conftest.c >&AS_MESSAGE_LOG_FD 2>&1"
   if AC_TRY_EVAL(gmp_compile); then
     # but with -Wa,-oldas it works
     result=yes
@@ -1328,7 +1328,7 @@ _main:
 	xorl	%eax, %eax
 	ret
 EOF
-  gmp_compile="$1 conftest.s -o conftest >&AC_FD_CC"
+  gmp_compile="$1 conftest.s -o conftest >&AS_MESSAGE_LOG_FD"
   if AC_TRY_EVAL(gmp_compile); then
     if AC_TRY_COMMAND([./a.out || ./b.out || ./a.exe || ./a_out.exe || ./conftest]); then
       gmp_cv_os_x86_xmm=yes
@@ -1416,12 +1416,12 @@ result=no
 cat >conftest.s <<EOF
 	.level 2.0
 EOF
-gmp_compile="$1 -c conftest.s >&AC_FD_CC 2>&1"
+gmp_compile="$1 -c conftest.s >&AS_MESSAGE_LOG_FD 2>&1"
 if AC_TRY_EVAL(gmp_compile); then
   result=yes
 else
-  echo "failed program was" >&AC_FD_CC
-  cat conftest.s >&AC_FD_CC
+  echo "failed program was" >&AS_MESSAGE_LOG_FD
+  cat conftest.s >&AS_MESSAGE_LOG_FD
 fi
 rm -f conftest*
 AC_MSG_RESULT($result)
@@ -1494,8 +1494,8 @@ AC_DEFUN([GMP_PROG_CXX_WORKS_PART],
 [$3]
 int main (void) { return 0; }
 EOF
-  echo "Test compile: [$2]" >&AC_FD_CC
-  gmp_cxxcompile="$1 conftest.cc >&AC_FD_CC"
+  echo "Test compile: [$2]" >&AS_MESSAGE_LOG_FD
+  gmp_cxxcompile="$1 conftest.cc >&AS_MESSAGE_LOG_FD"
   if AC_TRY_EVAL(gmp_cxxcompile); then
     if test "$cross_compiling" = no; then
       if AC_TRY_COMMAND([./a.out || ./b.out || ./a.exe || ./a_out.exe || ./conftest]); then :;
@@ -1508,8 +1508,8 @@ EOF
   fi
   case $gmp_prog_cxx_works in
     no*)
-      echo "failed program was:" >&AC_FD_CC
-      cat conftest.cc >&AC_FD_CC
+      echo "failed program was:" >&AS_MESSAGE_LOG_FD
+      cat conftest.cc >&AS_MESSAGE_LOG_FD
       ;;
   esac
   rm -f conftest* a.out b.out a.exe a_out.exe
@@ -1651,12 +1651,12 @@ AC_DEFUN([GMP_TRY_ASSEMBLE],
 EOF
 gmp_assemble="$CCAS $CFLAGS $CPPFLAGS conftest.s >conftest.out 2>&1"
 if AC_TRY_EVAL(gmp_assemble); then
-  cat conftest.out >&AC_FD_CC
+  cat conftest.out >&AS_MESSAGE_LOG_FD
   ifelse([$2],,:,[$2])
 else
-  cat conftest.out >&AC_FD_CC
-  echo "configure: failed program was:" >&AC_FD_CC
-  cat conftest.s >&AC_FD_CC
+  cat conftest.out >&AS_MESSAGE_LOG_FD
+  echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+  cat conftest.s >&AS_MESSAGE_LOG_FD
   ifelse([$3],,:,[$3])
 fi
 rm -f conftest*
@@ -1709,14 +1709,14 @@ AC_CACHE_CHECK([for assembler label suffix],
                 gmp_cv_asm_label_suffix,
 [gmp_cv_asm_label_suffix=unknown
 for i in "" ":"; do
-  echo "trying $i" >&AC_FD_CC
+  echo "trying $i" >&AS_MESSAGE_LOG_FD
   GMP_TRY_ASSEMBLE(
 [	$gmp_cv_asm_text
 somelabel$i],
     [gmp_cv_asm_label_suffix=$i
      rm -f conftest*
      break],
-    [cat conftest.out >&AC_FD_CC])
+    [cat conftest.out >&AS_MESSAGE_LOG_FD])
 done
 if test "$gmp_cv_asm_label_suffix" = "unknown"; then
   AC_MSG_ERROR([Cannot determine label suffix])
@@ -1752,7 +1752,7 @@ AC_CACHE_CHECK([if globals are prefixed by underscore],
 cat >conftest.c <<EOF
 int gurkmacka;
 EOF
-gmp_compile="$CC $CFLAGS $CPPFLAGS -c conftest.c >&AC_FD_CC"
+gmp_compile="$CC $CFLAGS $CPPFLAGS -c conftest.c >&AS_MESSAGE_LOG_FD"
 if AC_TRY_EVAL(gmp_compile); then
   $NM conftest.$OBJEXT >conftest.out
   if grep "[[ 	]]_gurkmacka" conftest.out >/dev/null; then
@@ -1760,12 +1760,12 @@ if AC_TRY_EVAL(gmp_compile); then
   elif grep "[[ 	]]gurkmacka" conftest.out >/dev/null; then
     gmp_cv_asm_underscore=no
   else
-    echo "configure: $NM doesn't have gurkmacka:" >&AC_FD_CC
-    cat conftest.out >&AC_FD_CC
+    echo "configure: $NM doesn't have gurkmacka:" >&AS_MESSAGE_LOG_FD
+    cat conftest.out >&AS_MESSAGE_LOG_FD
   fi
 else
-  echo "configure: failed program was:" >&AC_FD_CC
-  cat conftest.c >&AC_FD_CC
+  echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+  cat conftest.c >&AS_MESSAGE_LOG_FD
 fi
 rm -f conftest*
 ])
@@ -1863,7 +1863,7 @@ AC_CACHE_CHECK([if the .align directive accepts an 0x90 fill in .text],
 	.byte   0
 	.align  4, 0x90],
 [if grep "Warning: Fill parameter ignored for executable section" conftest.out >/dev/null; then
-  echo "Suppressing this warning by omitting 0x90" 1>&AC_FD_CC
+  echo "Suppressing this warning by omitting 0x90" 1>&AS_MESSAGE_LOG_FD
   gmp_cv_asm_align_fill_0x90=no
 else
   gmp_cv_asm_align_fill_0x90=yes
@@ -1888,7 +1888,7 @@ AC_REQUIRE([GMP_ASM_LABEL_SUFFIX])
 AC_CACHE_CHECK([for assembler byte directive],
                 gmp_cv_asm_byte,
 [for i in .byte data1; do
-  echo "trying $i" >&AC_FD_CC
+  echo "trying $i" >&AS_MESSAGE_LOG_FD
   GMP_TRY_ASSEMBLE(
 [	$gmp_cv_asm_data
 	$i	0
@@ -1896,7 +1896,7 @@ AC_CACHE_CHECK([for assembler byte directive],
     [gmp_cv_asm_byte=$i
      rm -f conftest*
      break],
-    [cat conftest.out >&AC_FD_CC])
+    [cat conftest.out >&AS_MESSAGE_LOG_FD])
 done
 if test -z "$gmp_cv_asm_byte"; then
   AC_MSG_ERROR([Cannot determine how to emit a data byte])
@@ -1915,7 +1915,7 @@ AC_DEFUN([GMP_ASM_TEXT],
 [AC_CACHE_CHECK([how to switch to text section],
                 gmp_cv_asm_text,
 [for i in ".text" ".code" [".csect .text[PR]"]; do
-  echo "trying $i" >&AC_FD_CC
+  echo "trying $i" >&AS_MESSAGE_LOG_FD
   GMP_TRY_ASSEMBLE([	$i],
     [gmp_cv_asm_text=$i
      rm -f conftest*
@@ -1982,19 +1982,19 @@ cat >conftest.c <<EOF
 extern const int foo[[]];		/* Suppresses C++'s suppression of foo */
 const int foo[[]] = {1,2,3};
 EOF
-echo "Test program:" >&AC_FD_CC
-cat conftest.c >&AC_FD_CC
-gmp_compile="$CC $CFLAGS $CPPFLAGS -S conftest.c >&AC_FD_CC"
+echo "Test program:" >&AS_MESSAGE_LOG_FD
+cat conftest.c >&AS_MESSAGE_LOG_FD
+gmp_compile="$CC $CFLAGS $CPPFLAGS -S conftest.c >&AS_MESSAGE_LOG_FD"
 if AC_TRY_EVAL(gmp_compile); then
-  echo "Compiler output:" >&AC_FD_CC
-  cat conftest.s >&AC_FD_CC
+  echo "Compiler output:" >&AS_MESSAGE_LOG_FD
+  cat conftest.s >&AS_MESSAGE_LOG_FD
   if test $gmp_cv_asm_underscore = yes; then
     tmp_gsym_prefix=_
   else
     tmp_gsym_prefix=
   fi
   # must see our label
-  if grep "^${tmp_gsym_prefix}foo$gmp_cv_asm_label_suffix" conftest.s >/dev/null 2>&AC_FD_CC; then
+  if grep "^${tmp_gsym_prefix}foo$gmp_cv_asm_label_suffix" conftest.s >/dev/null 2>&AS_MESSAGE_LOG_FD; then
     # take the last directive before our label (hence skipping segments
     # getting debugging info etc)
     tmp_match=`sed -n ["/^${tmp_gsym_prefix}foo$gmp_cv_asm_label_suffix/q
@@ -2004,12 +2004,12 @@ if AC_TRY_EVAL(gmp_compile); then
                         /^[. 	]*section/p
                         /^[. 	]*csect/p
                         /^[. 	]*CSECT/p"] conftest.s | sed -n '$p'`
-    echo "Match: $tmp_match" >&AC_FD_CC
+    echo "Match: $tmp_match" >&AS_MESSAGE_LOG_FD
     if test -n "$tmp_match"; then
       gmp_cv_asm_rodata=$tmp_match
     fi
   else
-    echo "Couldn't find label: ^${tmp_gsym_prefix}foo$gmp_cv_asm_label_suffix" >&AC_FD_CC
+    echo "Couldn't find label: ^${tmp_gsym_prefix}foo$gmp_cv_asm_label_suffix" >&AS_MESSAGE_LOG_FD
   fi
 fi
 rm -f conftest*
@@ -2225,32 +2225,32 @@ AC_CACHE_CHECK([for assembler local label prefix],
                gmp_cv_asm_lsym_prefix,
 [gmp_tmp_pre_appears=yes
 for gmp_tmp_pre in L .L $L $ L$; do
-  echo "Trying $gmp_tmp_pre" >&AC_FD_CC
+  echo "Trying $gmp_tmp_pre" >&AS_MESSAGE_LOG_FD
   GMP_TRY_ASSEMBLE(
 [	$gmp_cv_asm_text
 dummy${gmp_cv_asm_label_suffix}
 ${gmp_tmp_pre}gurkmacka${gmp_cv_asm_label_suffix}],
-  [if $NM conftest.$OBJEXT >conftest.nm 2>&AC_FD_CC; then : ; else
-    cat conftest.nm >&AC_FD_CC
+  [if $NM conftest.$OBJEXT >conftest.nm 2>&AS_MESSAGE_LOG_FD; then : ; else
+    cat conftest.nm >&AS_MESSAGE_LOG_FD
     AC_MSG_WARN(["$NM" failure])
     break
   fi
-  cat conftest.nm >&AC_FD_CC
+  cat conftest.nm >&AS_MESSAGE_LOG_FD
   if grep gurkmacka conftest.nm >/dev/null; then : ; else
     # no mention of the symbol, this is good
-    echo "$gmp_tmp_pre label doesn't appear in object file at all (good)" >&AC_FD_CC
+    echo "$gmp_tmp_pre label doesn't appear in object file at all (good)" >&AS_MESSAGE_LOG_FD
     gmp_cv_asm_lsym_prefix="$gmp_tmp_pre"
     gmp_tmp_pre_appears=no
     break
   fi
   if grep [' [a-zN] .*gurkmacka'] conftest.nm >/dev/null; then
     # symbol mentioned as a local, use this if nothing better
-    echo "$gmp_tmp_pre label is local but still in object file" >&AC_FD_CC
+    echo "$gmp_tmp_pre label is local but still in object file" >&AS_MESSAGE_LOG_FD
     if test -z "$gmp_cv_asm_lsym_prefix"; then
       gmp_cv_asm_lsym_prefix="$gmp_tmp_pre"
     fi
   else
-    echo "$gmp_tmp_pre label is something unknown" >&AC_FD_CC
+    echo "$gmp_tmp_pre label is something unknown" >&AS_MESSAGE_LOG_FD
   fi
   ])
 done
@@ -2260,7 +2260,7 @@ if test -z "$gmp_cv_asm_lsym_prefix"; then
   AC_MSG_WARN([cannot determine local label, using default $gmp_cv_asm_lsym_prefix])
 fi
 # for development purposes, note whether we got a purely temporary local label
-echo "Local label appears in object files: $gmp_tmp_pre_appears" >&AC_FD_CC
+echo "Local label appears in object files: $gmp_tmp_pre_appears" >&AS_MESSAGE_LOG_FD
 ])
 echo ["define(<LSYM_PREFIX>, <${gmp_cv_asm_lsym_prefix}>)"] >> $gmp_tmpconfigm4
 AC_DEFINE_UNQUOTED(LSYM_PREFIX, "$gmp_cv_asm_lsym_prefix",
@@ -2382,7 +2382,7 @@ for tmp_underscore in "" "_"; do
 ${tmp_gsym_prefix}main$gmp_cv_asm_label_suffix
 	addl	$ ${tmp_underscore}_GLOBAL_OFFSET_TABLE_, %ebx
 EOF
-  gmp_compile="$CCAS $CFLAGS $CPPFLAGS $lt_prog_compiler_pic conftest.s >&AC_FD_CC && $CC $CFLAGS $CPPFLAGS $lt_prog_compiler_pic conftest.$OBJEXT >&AC_FD_CC"
+  gmp_compile="$CCAS $CFLAGS $CPPFLAGS $lt_prog_compiler_pic conftest.s >&AS_MESSAGE_LOG_FD && $CC $CFLAGS $CPPFLAGS $lt_prog_compiler_pic conftest.$OBJEXT >&AS_MESSAGE_LOG_FD"
   if AC_TRY_EVAL(gmp_compile); then
     if test "$tmp_underscore" = "_"; then
       gmp_cv_asm_x86_got_underscore=yes
@@ -2443,7 +2443,7 @@ dnl  has established the pic options.  It's right for gcc, but perhaps not
 dnl  other compilers.
 
 AC_DEFUN([GMP_ASM_X86_GOT_EAX_OK],
-[echo "Testing gas GOT with eax good" >&AC_FD_CC
+[echo "Testing gas GOT with eax good" >&AS_MESSAGE_LOG_FD
 cat >conftest.awk <<\EOF
 [BEGIN {
   want[0]  = "001"
@@ -2504,12 +2504,12 @@ cat >conftest.s <<\EOF
 	.byte	254, 220, 186, 152, 118, 84, 50, 16
 ]EOF
 tmp_got_good=yes
-gmp_compile="$1 -fPIC -o conftest.o -c conftest.s >&AC_FD_CC 2>&1"
+gmp_compile="$1 -fPIC -o conftest.o -c conftest.s >&AS_MESSAGE_LOG_FD 2>&1"
 if AC_TRY_EVAL(gmp_compile); then
   tmp_got_good=`od -b conftest.o | $AWK -f conftest.awk`
 fi
 rm -f conftest.*
-echo "Result: $tmp_got_good" >&AC_FD_CC
+echo "Result: $tmp_got_good" >&AS_MESSAGE_LOG_FD
 if test "$tmp_got_good" = no; then
   ifelse([$3],,:,[$3])
 else
@@ -2723,7 +2723,7 @@ foo(){bar();}
 EOF
 
 if test "$enable_static" = yes; then
-  gmp_asmout_compile="$CC $CFLAGS $CPPFLAGS -S conftest.c 1>&AC_FD_CC"
+  gmp_asmout_compile="$CC $CFLAGS $CPPFLAGS -S conftest.c 1>&AS_MESSAGE_LOG_FD"
   if AC_TRY_EVAL(gmp_asmout_compile); then
     if grep '\.data' conftest.s >/dev/null; then
       mcount_nonpic_reg=`sed -n ['/esp/!s/.*movl.*,\(%[a-z]*\).*$/\1/p'] conftest.s`
@@ -2740,7 +2740,7 @@ if test "$enable_static" = yes; then
 fi
 
 if test "$enable_shared" = yes; then
-  gmp_asmout_compile="$CC $CFLAGS $CPPFLAGS $lt_prog_compiler_pic -S conftest.c 1>&AC_FD_CC"
+  gmp_asmout_compile="$CC $CFLAGS $CPPFLAGS $lt_prog_compiler_pic -S conftest.c 1>&AS_MESSAGE_LOG_FD"
   if AC_TRY_EVAL(gmp_asmout_compile); then
     if grep '\.data' conftest.s >/dev/null; then
       case $lt_prog_compiler_pic in
@@ -3017,16 +3017,16 @@ cat >conftest.c <<EOF
 int foo;
 int *bar() { return &foo; }
 EOF
-echo "Test program:" >&AC_FD_CC
-cat conftest.c >&AC_FD_CC
-gmp_compile="$CC $CFLAGS $CPPFLAGS -S conftest.c >&AC_FD_CC"
+echo "Test program:" >&AS_MESSAGE_LOG_FD
+cat conftest.c >&AS_MESSAGE_LOG_FD
+gmp_compile="$CC $CFLAGS $CPPFLAGS -S conftest.c >&AS_MESSAGE_LOG_FD"
 if AC_TRY_EVAL(gmp_compile); then
-  echo "Compiler output:" >&AC_FD_CC
-  cat conftest.s >&AC_FD_CC
-  if grep 'foo@ha' conftest.s >/dev/null 2>&AC_FD_CC; then
+  echo "Compiler output:" >&AS_MESSAGE_LOG_FD
+  cat conftest.s >&AS_MESSAGE_LOG_FD
+  if grep 'foo@ha' conftest.s >/dev/null 2>&AS_MESSAGE_LOG_FD; then
     gmp_cv_asm_powerpc_pic=no
   fi
-  if grep 'ha16(_foo)' conftest.s >/dev/null 2>&AC_FD_CC; then
+  if grep 'ha16(_foo)' conftest.s >/dev/null 2>&AS_MESSAGE_LOG_FD; then
     gmp_cv_asm_powerpc_pic=no
   fi
 fi
@@ -3174,7 +3174,7 @@ if AC_TRY_EVAL(gmp_compile); then
 else
   gmp_cv_c_attribute_malloc=no
 fi
-cat conftest.out >&AC_FD_CC
+cat conftest.out >&AS_MESSAGE_LOG_FD
 rm -f conftest*
 ])
 if test $gmp_cv_c_attribute_malloc = yes; then
@@ -3279,7 +3279,7 @@ int main(){
   return 0;
 }]
 EOF
-gmp_compile="$CC $CFLAGS $CPPFLAGS conftest.c -o conftest$EXEEXT >&AC_FD_CC 2>&1"
+gmp_compile="$CC $CFLAGS $CPPFLAGS conftest.c -o conftest$EXEEXT >&AS_MESSAGE_LOG_FD 2>&1"
 if AC_TRY_EVAL(gmp_compile); then
 cat >conftest.awk <<\EOF
 [
@@ -3435,8 +3435,8 @@ EOF
   gmp_cv_c_double_format=`od -b conftest$EXEEXT | $AWK -f conftest.awk`
   case $gmp_cv_c_double_format in
   unknown*)
-    echo "cannot match anything, conftest$EXEEXT contains" >&AC_FD_CC
-    od -b conftest$EXEEXT >&AC_FD_CC
+    echo "cannot match anything, conftest$EXEEXT contains" >&AS_MESSAGE_LOG_FD
+    od -b conftest$EXEEXT >&AS_MESSAGE_LOG_FD
     ;;
   esac
 else
@@ -3830,7 +3830,7 @@ EOF
 gmp_compile="$1 conftest.c"
 cc_for_build_works=no
 if AC_TRY_EVAL(gmp_compile); then
-  if (./a.out || ./b.out || ./a.exe || ./a_out.exe || ./conftest) >&AC_FD_CC 2>&1; then
+  if (./a.out || ./b.out || ./a.exe || ./a_out.exe || ./conftest) >&AS_MESSAGE_LOG_FD 2>&1; then
     cc_for_build_works=yes
   fi
 fi
@@ -3860,7 +3860,7 @@ if test -z "$CPP_FOR_BUILD"; then
 EOF
   for i in "$CC_FOR_BUILD -E" "$CC_FOR_BUILD -E -traditional-cpp" "/lib/cpp"; do
     gmp_compile="$i conftest.c"
-    if AC_TRY_EVAL(gmp_compile) >&AC_FD_CC 2>&1; then
+    if AC_TRY_EVAL(gmp_compile) >&AS_MESSAGE_LOG_FD 2>&1; then
       gmp_cv_prog_cpp_for_build=$i
       break
     fi
@@ -3904,7 +3904,7 @@ EOF
 for i in .exe ,ff8 ""; do
   gmp_compile="$CC_FOR_BUILD conftest.c -o conftest$i"
   if AC_TRY_EVAL(gmp_compile); then
-    if (./conftest) 2>&AC_FD_CC; then
+    if (./conftest) 2>&AS_MESSAGE_LOG_FD; then
       gmp_cv_prog_exeext_for_build=$i
       break
     fi

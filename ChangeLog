@@ -1,3 +1,11 @@
+2023-07-30  Marc Glisse  <marc.glisse@inria.fr>
+
+	Thanks to FX Coudert.
+	* configure.ac: AC_FD_CC -> AS_MESSAGE_LOG_FD
+	AC_HELP_STRING -> AS_HELP_STRING
+	Update minimum autoconf version to 2.69.
+	* acinclude.m4: AC_FD_CC -> AS_MESSAGE_LOG_FD
+
 2023-07-29  Torbjörn Granlund  <tg@gmplib.org>
 
 	* Version 6.3.0 released.

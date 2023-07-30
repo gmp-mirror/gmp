@@ -36,7 +36,7 @@ AC_COPYRIGHT(GMP_COPYRIGHT)
 AH_TOP(/*GMP_COPYRIGHT*/)
 
 AC_REVISION($Revision$)
-AC_PREREQ(2.59)
+AC_PREREQ(2.69)
 AC_INIT(GNU MP, GMP_VERSION, [gmp-bugs@gmplib.org (see https://gmplib.org/manual/Reporting-Bugs.html)], gmp)
 AC_CONFIG_SRCDIR(gmp-impl.h)
 m4_pattern_forbid([^[ \t]*GMP_])
@@ -84,7 +84,7 @@ AM_MAINTAINER_MODE
 
 
 AC_ARG_ENABLE(assert,
-AC_HELP_STRING([--enable-assert],[enable ASSERT checking [default=no]]),
+AS_HELP_STRING([--enable-assert],[enable ASSERT checking [default=no]]),
 [case $enableval in
 yes|no) ;;
 *) AC_MSG_ERROR([bad value $enableval for --enable-assert, need yes or no]) ;;
@@ -102,7 +102,7 @@ GMP_DEFINE_RAW(["define(<WANT_ASSERT>,$want_assert_01)"])
 
 
 AC_ARG_ENABLE(alloca,
-AC_HELP_STRING([--enable-alloca],[how to get temp memory [default=reentrant]]),
+AS_HELP_STRING([--enable-alloca],[how to get temp memory [default=reentrant]]),
 [case $enableval in
 alloca|malloc-reentrant|malloc-notreentrant) ;;
 yes|no|reentrant|notreentrant) ;;
@@ -127,7 +127,7 @@ esac],
 # wanted.
 #
 AC_ARG_ENABLE(cxx,
-AC_HELP_STRING([--enable-cxx],[enable C++ support [default=no]]),
+AS_HELP_STRING([--enable-cxx],[enable C++ support [default=no]]),
 [case $enableval in
 yes|no|detect) ;;
 *) AC_MSG_ERROR([bad value $enableval for --enable-cxx, need yes/no/detect]) ;;
@@ -136,7 +136,7 @@ esac],
 
 
 AC_ARG_ENABLE(assembly,
-AC_HELP_STRING([--enable-assembly],[enable the use of assembly loops [default=yes]]),
+AS_HELP_STRING([--enable-assembly],[enable the use of assembly loops [default=yes]]),
 [case $enableval in
 yes|no) ;;
 *) AC_MSG_ERROR([bad value $enableval for --enable-assembly, need yes or no]) ;;
@@ -145,7 +145,7 @@ esac],
 
 
 AC_ARG_ENABLE(fft,
-AC_HELP_STRING([--enable-fft],[enable FFTs for multiplication [default=yes]]),
+AS_HELP_STRING([--enable-fft],[enable FFTs for multiplication [default=yes]]),
 [case $enableval in
 yes|no) ;;
 *) AC_MSG_ERROR([bad value $enableval for --enable-fft, need yes or no]) ;;
@@ -159,7 +159,7 @@ fi
 
 
 AC_ARG_ENABLE(old-fft-full,
-AC_HELP_STRING([--enable-old-fft-full],[enable old mpn_mul_fft_full for multiplication [default=no]]),
+AS_HELP_STRING([--enable-old-fft-full],[enable old mpn_mul_fft_full for multiplication [default=no]]),
 [case $enableval in
 yes|no) ;;
 *) AC_MSG_ERROR([bad value $enableval for --enable-old-fft-full, need yes or no]) ;;
@@ -173,7 +173,7 @@ fi
 
 
 AC_ARG_ENABLE(nails,
-AC_HELP_STRING([--enable-nails],[use nails on limbs [default=no]]),
+AS_HELP_STRING([--enable-nails],[use nails on limbs [default=no]]),
 [case $enableval in
 [yes|no|[02468]|[0-9][02468]]) ;;
 [*[13579]])
@@ -192,7 +192,7 @@ AC_SUBST(GMP_NAIL_BITS)
 
 
 AC_ARG_ENABLE(profiling,
-AC_HELP_STRING([--enable-profiling],
+AS_HELP_STRING([--enable-profiling],
                [build with profiler support [default=no]]),
 [case $enableval in
 no|prof|gprof|instrument) ;;
@@ -226,7 +226,7 @@ fi
 
 
 AC_ARG_WITH(readline,
-AC_HELP_STRING([--with-readline],
+AS_HELP_STRING([--with-readline],
                [readline support in demo programs [default=detect]]),
 [case $withval in
 yes|no|detect) ;;
@@ -236,7 +236,7 @@ esac],
 
 
 AC_ARG_ENABLE(fat,
-AC_HELP_STRING([--enable-fat],
+AS_HELP_STRING([--enable-fat],
                [build fat libraries on systems that support it [default=no]]),
 [case $enableval in
 yes|no) ;;
@@ -246,7 +246,7 @@ esac],
 
 
 AC_ARG_ENABLE(minithres,
-AC_HELP_STRING([--enable-minithres],
+AS_HELP_STRING([--enable-minithres],
                [choose minimal thresholds for testing [default=no]]),
 [case $enableval in
 yes|no) ;;
@@ -256,7 +256,7 @@ esac],
 
 
 AC_ARG_ENABLE(fake-cpuid,
-AC_HELP_STRING([--enable-fake-cpuid],[enable GMP_CPU_TYPE faking cpuid [default=no]]),
+AS_HELP_STRING([--enable-fake-cpuid],[enable GMP_CPU_TYPE faking cpuid [default=no]]),
 [case $enableval in
 yes|no) ;;
 *) AC_MSG_ERROR([bad value $enableval for --enable-fake-cpuid, need yes or no]) ;;
@@ -2109,7 +2109,7 @@ esac
 CFLAGS_or_unset=${CFLAGS-'(unset)'}
 CPPFLAGS_or_unset=${CPPFLAGS-'(unset)'}
 
-cat >&AC_FD_CC <<EOF
+cat >&AS_MESSAGE_LOG_FD <<EOF
 User:
 ABI=$ABI
 CC=$CC
@@ -2561,7 +2561,7 @@ if test $enable_cxx != no; then
   test_CXXFLAGS=${CXXFLAGS+set}
   AC_PROG_CXX
 
-  echo "CXXFLAGS chosen by autoconf: $CXXFLAGS" >&AC_FD_CC
+  echo "CXXFLAGS chosen by autoconf: $CXXFLAGS" >&AS_MESSAGE_LOG_FD
   cxxflags_ac_prog_cxx=$CXXFLAGS
   cxxflags_list=ac_prog_cxx
 
@@ -2677,7 +2677,7 @@ if test "$enable_assembly" = "no"; then
 fi
 
 
-cat >&AC_FD_CC <<EOF
+cat >&AS_MESSAGE_LOG_FD <<EOF
 Decided:
 ABI=$ABI
 CC=$CC
