@@ -55,6 +55,15 @@ define(`cy',	`%r6')
 
 define(`idx',	`%r4')
 
+ifdef(`HAVE_HOST_CPU_z15',`define(`HAVE_vler',1)')
+ifdef(`HAVE_HOST_CPU_z16',`define(`HAVE_vler',1)')
+ifdef(`HAVE_vler',`
+define(`vpdi', `dnl')
+',`
+define(`vler', `vl')
+define(`vster', `vst')
+')
+
 ASM_START()
 
 PROLOGUE(mpn_mul_1c)
@@ -121,17 +130,17 @@ L(top):	lg	%r1, 32(idx, ap)
 	vacq	%v3, %v6, %v7, %v2
 	vacccq	%v2, %v6, %v7, %v2
 	vpdi	%v3, %v3, %v3, 4
-	vst	%v3, 16(idx, rp), 3
+	vster	%v3, 16(idx, rp), 3
 	vlvgp	%v6, %r0, %r1
 	vlvgp	%v7, %r9, %r12
 L(mid):	lg	%r7, 48(idx, ap)
 	lg	%r13, 56(idx, ap)
 	mlgr	%r6, b0
 	mlgr	%r12, b0
-	vacq	%v1, %v6, %v7, %v2
+	vacq	%v3, %v6, %v7, %v2
 	vacccq	%v2, %v6, %v7, %v2
-	vpdi	%v1, %v1, %v1, 4
-	vst	%v1, 32(idx, rp), 3
+	vpdi	%v3, %v3, %v3, 4
+	vster	%v3, 32(idx, rp), 3
 	vlvgp	%v6, %r6, %r7
 	vlvgp	%v7, %r13, %r8
 	la	idx, 32(idx)
@@ -140,7 +149,7 @@ L(mid):	lg	%r7, 48(idx, ap)
 L(end):	vacq	%v3, %v6, %v7, %v2
 	vacccq	%v2, %v6, %v7, %v2
 	vpdi	%v3, %v3, %v3, 4
-	vst	%v3, 16(idx, rp), 3
+	vster	%v3, 16(idx, rp), 3
 
 L(1):	vlgvg	%r2, %v2, 1
 	agr	%r2, %r12

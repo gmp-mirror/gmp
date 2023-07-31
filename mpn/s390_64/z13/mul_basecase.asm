@@ -30,6 +30,10 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
+dnl TODO
+dnl  * Have mul_1 start without initial (un mod 4) separation, instead handle
+dnl    after loop.  Then fall into 4 separate addmul_1 loops.
+dnl  * Streamline handling of bn, an, %r11 to reduce the # if memops.
 
 C INPUT PARAMETERS
 define(`rp',	`%r2')
@@ -46,10 +50,14 @@ dnl r0  r1  r2  r3  r4  r5  r6  r7  r8  r9 r10 r11 r12 r13 r14
 dnl xx  xx  rp  ap  an  bp  xx  xx  xx  xx  b0  i   xx  xx idx
 dnl stack: bn
 
-dnl TODO
-dnl  * Have mul_1 start without initial (un mod 4) separation, instead handle
-dnl    after loop.  Then fall into 4 separate addmul_1 loops.
-dnl  * Streamline handling of bn, an, %r11 to reduce the # if memops.
+ifdef(`HAVE_HOST_CPU_z15',`define(`HAVE_vler',1)')
+ifdef(`HAVE_HOST_CPU_z16',`define(`HAVE_vler',1)')
+ifdef(`HAVE_vler',`
+define(`vpdi', `dnl')
+',`
+define(`vler', `vl')
+define(`vster', `vst')
+')
 
 define(`MUL_1',`
 pushdef(`L',
@@ -107,17 +115,17 @@ L(top):	lg	%r1, 32(idx, ap)
 	vacq	%v3, %v6, %v7, %v2
 	vacccq	%v2, %v6, %v7, %v2
 	vpdi	%v3, %v3, %v3, 4
-	vst	%v3, 16(idx, rp), 3
+	vster	%v3, 16(idx, rp), 3
 	vlvgp	%v6, %r0, %r1
 	vlvgp	%v7, %r9, %r12
 L(mid):	lg	%r7, 48(idx, ap)
 	lg	%r13, 56(idx, ap)
 	mlgr	%r6, b0
 	mlgr	%r12, b0
-	vacq	%v1, %v6, %v7, %v2
+	vacq	%v3, %v6, %v7, %v2
 	vacccq	%v2, %v6, %v7, %v2
-	vpdi	%v1, %v1, %v1, 4
-	vst	%v1, 32(idx, rp), 3
+	vpdi	%v3, %v3, %v3, 4
+	vster	%v3, 32(idx, rp), 3
 	vlvgp	%v6, %r6, %r7
 	vlvgp	%v7, %r13, %r8
 	la	idx, 32(idx)
@@ -126,7 +134,7 @@ L(mid):	lg	%r7, 48(idx, ap)
 L(end):	vacq	%v3, %v6, %v7, %v2
 	vacccq	%v2, %v6, %v7, %v2
 	vpdi	%v3, %v3, %v3, 4
-	vst	%v3, 16(idx, rp), 3
+	vster	%v3, 16(idx, rp), 3
 
 	vlgvg	%r0, %v2, 1
 	algr	%r0, %r12
@@ -176,6 +184,8 @@ L(cj0):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
 	mlgr	%r0, b0
 	mlgr	%r8, b0
+	vler	%v1, 32(idx, rp), 3
+	vpdi	%v1, %v1, %v1, 4
 	vlvgp	%v6, %r0, %r1
 	vlvgp	%v7, %r9, %r12
 	j	L(mid)
@@ -186,49 +196,50 @@ L(cj1):	lg	%r7, 16(idx, ap)
 	lg	%r13, 24(idx, ap)
 	mlgr	%r6, b0
 	mlgr	%r12, b0
+	vler	%v1, 16(idx, rp), 3
+	vpdi	%v1, %v1, %v1, 4
 	vlvgp	%v6, %r6, %r7
 	vlvgp	%v7, %r13, %r8
 	cgije	%r11, 0, L(end)
 
+	.align	16
 L(top):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
 	mlgr	%r0, b0
 	mlgr	%r8, b0
-	vl	%v1, 16(idx, rp), 3
-	vpdi	%v1, %v1, %v1, 4
 	vacq	%v5, %v6, %v1, %v0
 	vacccq	%v0, %v6, %v1, %v0
 	vacq	%v3, %v5, %v7, %v2
 	vacccq	%v2, %v5, %v7, %v2
 	vpdi	%v3, %v3, %v3, 4
-	vst	%v3, 16(idx, rp), 3
+	vler	%v1, 32(idx, rp), 3
+	vpdi	%v1, %v1, %v1, 4
+	vster	%v3, 16(idx, rp), 3
 	vlvgp	%v6, %r0, %r1
 	vlvgp	%v7, %r9, %r12
 L(mid):	lg	%r7, 48(idx, ap)
 	lg	%r13, 56(idx, ap)
 	mlgr	%r6, b0
 	mlgr	%r12, b0
-	vl	%v4, 32(idx, rp), 3
-	vpdi	%v4, %v4, %v4, 4
-	vacq	%v5, %v6, %v4, %v0
-	vacccq	%v0, %v6, %v4, %v0
-	vacq	%v1, %v5, %v7, %v2
-	vacccq	%v2, %v5, %v7, %v2
-	vpdi	%v1, %v1, %v1, 4
-	vst	%v1, 32(idx, rp), 3
-	vlvgp	%v6, %r6, %r7
-	vlvgp	%v7, %r13, %r8
-	la	idx, 32(idx)
-	brctg	%r11, L(top)
-
-L(end):	vl	%v1, 16(idx, rp), 3
-	vpdi	%v1, %v1, %v1, 4
 	vacq	%v5, %v6, %v1, %v0
 	vacccq	%v0, %v6, %v1, %v0
 	vacq	%v3, %v5, %v7, %v2
 	vacccq	%v2, %v5, %v7, %v2
 	vpdi	%v3, %v3, %v3, 4
-	vst	%v3, 16(idx, rp), 3
+	vler	%v1, 48(idx, rp), 3
+	vpdi	%v1, %v1, %v1, 4
+	vster	%v3, 32(idx, rp), 3
+	vlvgp	%v6, %r6, %r7
+	vlvgp	%v7, %r13, %r8
+	la	idx, 32(idx)
+	brctg	%r11, L(top)
+
+L(end):	vacq	%v5, %v6, %v1, %v0
+	vacccq	%v0, %v6, %v1, %v0
+	vacq	%v3, %v5, %v7, %v2
+	vacccq	%v2, %v5, %v7, %v2
+	vpdi	%v3, %v3, %v3, 4
+	vster	%v3, 16(idx, rp), 3
 
 	vag	%v2, %v0, %v2
 	vlgvg	%r0, %v2, 1
@@ -251,6 +262,7 @@ PROLOGUE(mpn_mul_basecase)
 
 	aghi	%r4, -1
 	je	L(end)
+
 L(top):	lg	%r0, 32(%r15)
 	la	bp, 8(bp)
 	la	rp, 8(rp)
