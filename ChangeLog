@@ -1,3 +1,9 @@
+2023-07-31  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/s390_64/z13: Further improve z13 asm code, adding	special code
+	for z15.
+	* mpn/s390_64/z13/gmp-mparam.h: Retune.
+
 2023-07-30  Marc Glisse  <marc.glisse@inria.fr>
 
 	Thanks to FX Coudert.
