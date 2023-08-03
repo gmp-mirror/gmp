@@ -55,7 +55,7 @@ PROLOGUE(mpn_hamdist)
 L(odd):	vllezg	%v16, 0(ap)
 	vllezg	%v17, 0(bp)
 	vx	%v16, %v16, %v17
-	vpopct	%v30, %v16, 3
+	vpopctg	%v30, %v16
 	la	ap, 8(ap)
 	la	bp, 8(bp)
 	clgije	n, 0, L(end)
@@ -63,7 +63,7 @@ L(odd):	vllezg	%v16, 0(ap)
 L(top):	vl	%v16, 0(ap), 3
 	vl	%v17, 0(bp), 3
 	vx	%v16, %v16, %v17
-	vpopct	%v20, %v16, 3
+	vpopctg	%v20, %v16
 	vag	%v30, %v30, %v20
 	la	ap, 16(ap)
 	la	bp, 16(bp)

@@ -52,12 +52,12 @@ PROLOGUE(mpn_popcount)
 	je	L(top)
 
 L(odd):	vllezg	%v16, 0(ap)
-	vpopct	%v30, %v16, 3
+	vpopctg	%v30, %v16
 	la	ap, 8(ap)
 	clgije	n, 0, L(end)
 
 L(top):	vl	%v16, 0(ap), 3
-	vpopct	%v20, %v16, 3
+	vpopctg	%v20, %v16
 	vag	%v30, %v30, %v20
 	la	ap, 16(ap)
 	brctg	n, L(top)
