@@ -1,6 +1,6 @@
-dnl  Power9 mpn_addmul_1.
+dnl  Power9/10 mpn_mul_1, mpn_addmul_1, mpn_mul_1c, mpn_addmul_1c.
 
-dnl  Copyright 2017, 2018 Free Software Foundation, Inc.
+dnl  Copyright 2017, 2018, 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -38,93 +38,100 @@ C POWER6		 -
 C POWER7		 -
 C POWER8		 -
 C POWER9		 2.5
+C POWER10		 1.5
 
 C TODO
-C  * Schedule for Power9 pipeline.
-C  * Unroll 4x if that proves beneficial.
-C  * This is marginally faster (but much smaller) than ../aorsmul_1.asm.
+C  * Consider using lq/plq/stq/pstq for POWER10
+C  * Combine with mul_1.asm.
 
-C INPUT PARAMETERS
 define(`rp', `r3')
 define(`up', `r4')
 define(`n',  `r5')
 define(`v0', `r6')
+define(`cy', `r7')
+
+undefine(`maddld')
+undefine(`maddhdu')
+
+PROLOGUE(mpn_addmul_1c)
+define(`G',defn(`L'))
+pushdef(`L',
+defn(`L')_1c)
+	mr	r0, cy
+	mr	r7, cy
+	b	G(ent)
+popdef(`L')
+EPILOGUE()
 
 ASM_START()
 PROLOGUE(mpn_addmul_1)
-	cmpdi	cr6, n, 2
-	addi	r0, n, -1	C FIXME: postpone
-	srdi	r0, r0, 1	C FIXME: postpone
-	mtctr	r0		C FIXME: postpone
-	rldicl.	r0, n, 0,63	C r0 = n & 3, set cr0
-	bne	cr0, L(b1)
+	li	r0, 0
+	li	r7, 0
+L(ent):	rldicl.	r9, n, 0, 63
+	addi	r10, n, 2
+	srdi	r10, r10, 2
+	mtctr	r10
+	rldicl	r8, n, 63, 63
+	cmpdi	cr6, r8, 0
+	cmpdi	cr7, n, 4
+	bne	cr0, L(bx1)
+	addic	r1, r1, 0	C clear CA
+L(bx0):	beq	cr6, L(top)
 
-L(b0):	ld	r10, 0(rp)
-	ld	r12, 0(up)
-	ld	r11, 8(rp)
-	ld	r0, 8(up)
-	maddld(	r9, r12, v0, r10)
-	maddhdu(r7, r12, v0, r10)
-	ble	cr6, L(2)
-	ld	r10, 16(rp)
-	ld	r12, 16(up)
-	maddld(	r8, r0, v0, r11)
-	maddhdu(r5, r0, v0, r11)
-	addic	up, up, 16
+L(b10):	addi	up, up, -16
+	addi	rp, rp, -16
+	b	L(mid)
+
+L(bx1):	beq	cr6, L(b01)
+L(b11):	ld	r9, 0(up)
+	ld	r11, 0(rp)
+	maddhdu	r7, r9, v0, r11
+	maddld	r9, r9, v0, r11
+	addc	r11, r9, r0
+	std	r11, 0(rp)
+	addi	up, up, -8
 	addi	rp, rp, -8
 	b	L(mid)
 
-L(b1):	ld	r11, 0(rp)
-	ld	r0, 0(up)
-	ble	cr6, L(1)
-	ld	r10, 8(rp)
-	ld	r12, 8(up)
-	maddld(	r8, r0, v0, r11)
-	maddhdu(r5, r0, v0, r11)
-	ld	r11, 16(rp)
-	ld	r0, 16(up)
-	maddld(	r9, r12, v0, r10)
-	maddhdu(r7, r12, v0, r10)
-	addic	up, up, 24
-	bdz	L(end)
+L(b01):	ld	r9, 0(up)
+	ld	r11, 0(rp)
+	maddhdu	r0, r9, v0, r11
+	maddld	r9, r9, v0, r11
+	addc	r11, r9, r7
+	std	r11, 0(rp)
+	blt	cr7, L(end)
+	addi	up, up, 8
+	addi	rp, rp, 8
 
 	ALIGN(16)
-L(top):	ld	r10, 24(rp)
-	ld	r12, 0(up)
-	std	r8, 0(rp)
-	adde	r9, r5, r9
-	maddld(	r8, r0, v0, r11)	C W:0,2,4
-	maddhdu(r5, r0, v0, r11)	C W:1,3,5
-L(mid):	ld	r11, 32(rp)
-	ld	r0, 8(up)
-	std	r9, 8(rp)
-	adde	r8, r7, r8
-	maddld(	r9, r12, v0, r10)	C W:1,3,5
-	maddhdu(r7, r12, v0, r10)	C W:2,4,6
-	addi	rp, rp, 16
-	addi	up, up, 16
+L(top):	ld	r8, 0(up)
+	ld	r9, 8(up)
+	ld	r10, 0(rp)
+	ld	r11, 8(rp)
+	maddhdu	r5, r8, v0, r10
+	maddld	r8, r8, v0, r10
+	maddhdu	r7, r9, v0, r11
+	maddld	r9, r9, v0, r11
+	adde	r10, r8, r0
+	adde	r11, r9, r5
+	std	r10, 0(rp)
+	std	r11, 8(rp)
+L(mid):	ld	r8, 16(up)
+	ld	r9, 24(up)
+	ld	r10, 16(rp)
+	ld	r11, 24(rp)
+	maddhdu	r5, r8, v0, r10
+	maddld	r8, r8, v0, r10
+	maddhdu	r0, r9, v0, r11
+	maddld	r9, r9, v0, r11
+	adde	r10, r8, r7
+	adde	r11, r9, r5
+	addi	up, up, 32
+	std	r10, 16(rp)
+	std	r11, 24(rp)
+	addi	rp, rp, 32
 	bdnz	L(top)
 
-L(end):	std	r8, 0(rp)
-	maddld(	r8, r0, v0, r11)
-	adde	r9, r5, r9
-	maddhdu(r5, r0, v0, r11)
-	std	r9, 8(rp)
-	adde	r8, r7, r8
-	std	r8, 16(rp)
-	addze	r3, r5
-	blr
-
-L(2):	maddld(	r8, r0, v0, r11)
-	maddhdu(r5, r0, v0, r11)
-	std	r9, 0(rp)
-	addc	r8, r7, r8
-	std	r8, 8(rp)
-	addze	r3, r5
-	blr
-
-L(1):	maddld(	r8,  r0, v0, r11)
-	std	r8, 0(rp)
-	maddhdu(r3, r0, v0, r11)
+L(end):	addze	r3, r0
 	blr
 EPILOGUE()
