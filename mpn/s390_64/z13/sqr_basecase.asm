@@ -1,4 +1,4 @@
-dnl  S/390-64 mpn_mul_basecase for z13 and later.
+dnl  S/390-64 mpn_sqr_basecase for z13 and later.
 
 dnl  Copyright 2023 Free Software Foundation, Inc.
 
@@ -31,18 +31,16 @@ dnl  see https://www.gnu.org/licenses/.
 include(`../config.m4')
 
 dnl TODO
-dnl  * Have mul_1 start without initial (un mod 4) separation, instead separate
-dnl    those cases after loop, and then fall into 4 separate ADDMUL_1 blocks
-dnl    (without the tmll nonsense).
+dnl  * The code at L(c2) could be greatly improved by accumulating using v
+dnl    registers, also avoiding using memory as rewritten scratch.
+dnl  * We could unroll the outer loop 4x, using 4 different, streamlined
+dnl    ADDMUL_1C blocks (without the tmll nonsense).
 
 define(`rp',	`%r2')
 define(`ap',	`%r3')
 define(`an',	`%r4')
-define(`bp',	`%r5')
-define(`bn_arg',`%r6')
 
-define(`bn',	`%r13')
-define(`idx',	`%r12')
+define(`idx',	`%r5')
 define(`b0',	`%r10')
 
 ifdef(`HAVE_HOST_CPU_z15',`define(`HAVE_vler',1)')
@@ -54,7 +52,7 @@ define(`vler', `vl')
 define(`vster', `vst')
 ')
 
-define(`MUL_1',`
+define(`MUL_1C',`
 pushdef(`L',
 defn(`L')$1`'_m1)
 	vzero	%v2
@@ -68,23 +66,26 @@ L(bx1):	tmll	an, 2
 L(b01):	lghi	idx, -24
 	lg	%r7, 0(ap)
 	mlgr	%r6, b0
+	algr	%r7, %r0
+	lghi	%r0, 0
+	alcgr	%r6, %r0
 	stg	%r7, 0(rp)
-	cgijne	%r11, 0, L(cj0)
-
-L(1):	stg	%r6, 8(rp)
-	lmg	%r6, %r13, 48(%r15)
-	br	%r14
+	j	L(cj0)
 
 L(b11):	lghi	idx, -8
 	lg	%r9, 0(ap)
 	mlgr	%r8, b0
+	algr	%r9, %r0
+	lghi	%r0, 0
+	alcgr	%r8, %r0
 	stg	%r9, 0(rp)
 	j	L(cj1)
 
 L(bx0):	tmll	an, 2
 	jne	L(b10)
+
 L(b00):	lghi	idx, -32
-	lghi	%r6, 0
+	lgr	%r6, %r0
 L(cj0):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
 	mlgr	%r0, b0
@@ -94,7 +95,7 @@ L(cj0):	lg	%r1, 32(idx, ap)
 	j	L(mid)
 
 L(b10):	lghi	idx, -16
-	lghi	%r8, 0
+	lgr	%r8, %r0
 L(cj1):	lg	%r1, 16(idx, ap)
 	lg	%r7, 24(idx, ap)
 	mlgr	%r0, b0
@@ -137,7 +138,7 @@ L(end):	vacq	%v3, %v6, %v7, %v2
 popdef(`L')
 ')
 
-define(`ADDMUL_1',`
+define(`ADDMUL_1C',`
 pushdef(`L',
 defn(`L')$1`'_am1)
 	vzero	%v0
@@ -146,14 +147,17 @@ defn(`L')$1`'_am1)
 
 	tmll	an, 1
 	je	L(bx0)
-L(bx1):	tmll	an, 2
+L(bx1):	vleg	%v2, 0(rp), 1
+	vzero	%v4
+	tmll	an, 2
 	jne	L(b11)
 
 L(b01):	lghi	idx, -24
-	vleg	%v2, 0(rp), 1
 	lg	%r7, 0(ap)
-	vzero	%v4
 	mlgr	%r6, b0
+	algr	%r7, %r0
+	lghi	%r0, 0
+	alcgr	%r6, %r0
 	vlvgg	%v4, %r7, 1
 	vaq	%v2, %v2, %v4
 	vsteg	%v2, 0(rp), 1
@@ -161,10 +165,11 @@ L(b01):	lghi	idx, -24
 	j	L(cj0)
 
 L(b11):	lghi	idx, -8
-	vleg	%v2, 0(rp), 1
 	lg	%r9, 0(ap)
-	vzero	%v4
 	mlgr	%r8, b0
+	algr	%r9, %r0
+	lghi	%r0, 0
+	alcgr	%r8, %r0
 	vlvgg	%v4, %r9, 1
 	vaq	%v2, %v2, %v4
 	vsteg	%v2, 0(rp), 1
@@ -173,8 +178,9 @@ L(b11):	lghi	idx, -8
 
 L(bx0):	tmll	an, 2
 	jne	L(b10)
+
 L(b00):	lghi	idx, -32
-	lghi	%r6, 0
+	lgr	%r6, %r0
 L(cj0):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
 	mlgr	%r0, b0
@@ -186,7 +192,7 @@ L(cj0):	lg	%r1, 32(idx, ap)
 	j	L(mid)
 
 L(b10):	lghi	idx, -16
-	lghi	%r8, 0
+	lgr	%r8, %r0
 L(cj1):	lg	%r1, 16(idx, ap)
 	lg	%r7, 24(idx, ap)
 	mlgr	%r0, b0
@@ -197,7 +203,6 @@ L(cj1):	lg	%r1, 16(idx, ap)
 	vlvgp	%v7, %r7, %r8
 	cgije	%r11, 0, L(end)
 
-	.align	16
 L(top):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
 	mlgr	%r0, b0
@@ -243,71 +248,122 @@ L(end):	vacq	%v5, %v6, %v1, %v0
 popdef(`L')
 ')
 
-
 ASM_START()
 
-PROLOGUE(mpn_mul_basecase)
+PROLOGUE(mpn_sqr_basecase)
 	clgijle	an, 2, L(sma)
 
-	stmg	%r6, %r13, 48(%r15)
-	lgr	bn, bn_arg
+	stmg	%r6,%r12,48(%r15)
 
-	lg	b0, 0(bp)
-	MUL_1()
-	aghi	bn, -1
-	je	L(end)
-
-L(top):	la	bp, 8(bp)
+	lg	%r1, 0(ap)
+	sllg	b0, %r1, 1
+	mlgr	%r0, %r1
+	stg	%r1, 0(rp)
 	la	rp, 8(rp)
-	lg	b0, 0(bp)
-	ADDMUL_1()
-	brctg	bn, L(top)
+	aghi	an, -1
+	lg	%r12, 0(ap)
+	la	ap, 8(ap)
+	MUL_1C()
+	j	L(ent)
 
-L(end):	lmg	%r6, %r13, 48(%r15)
+L(top):	la	ap, 8(ap)
+	ADDMUL_1C()
+L(ent):	lg	%r1, 0(ap)
+	srag	%r6, %r12, 63
+	srlg	b0, %r12, 63
+	lgr	%r12, %r1
+	rosbg	b0, %r1, 0, 62, 1
+	mlgr	%r0, %r1
+	ngr	%r6, %r12
+	alg	%r6, 8(rp)
+	lghi	%r9, 0
+	alcgr	%r0, %r9
+	algr	%r6, %r1
+	alcgr	%r0, %r9
+	stg	%r6, 8(rp)
+	la	rp, 16(rp)
+	aghi	an, -1
+	clgijh	an, 2, L(top)
+
+L(c2):	clgije	an, 1, L(c1)
+	la	ap, 8(ap)
+	lgr	%r8, %r0
+	lg	%r1, 0(ap)
+	lg	%r7, 8(ap)
+	mlgr	%r0, b0
+	mlgr	%r6, b0
+	vler	%v1, 0(rp), 3
+	vpdi	%v1, %v1, %v1, 4
+	vlvgp	%v6, %r0, %r1
+	vlvgp	%v7, %r7, %r8
+	vaq	%v5, %v6, %v1
+	vaccq	%v0, %v6, %v1
+	vaq	%v3, %v5, %v7
+	vaccq	%v2, %v5, %v7
+	vpdi	%v3, %v3, %v3, 4
+	vster	%v3, 0(rp), 3
+	vag	%v2, %v0, %v2
+	vlgvg	%r0, %v2, 1
+	algr	%r0, %r6
+	stg	%r0, 16(rp)
+	lg	%r1, 0(ap)
+	srag	%r6, %r12, 63
+	srlg	b0, %r12, 63
+	lgr	%r12, %r1
+	rosbg	b0, %r1, 0, 62, 1
+	mlgr	%r0, %r1
+	ngr	%r6, %r12
+	alg	%r6, 8(rp)
+	alcgr	%r0, %r9
+	algr	%r6, %r1
+	alcgr	%r0, %r9
+	stg	%r6, 8(rp)
+	la	rp, 16(rp)
+
+L(c1):	lg	%r5, 8(ap)
+	lgr	%r1, %r5
+	mlgr	%r4, b0
+	algr	%r5, %r0
+	alcgr	%r4, %r9
+	alg	%r5, 0(rp)
+	alcgr	%r4, %r9
+	stg	%r5, 0(rp)
+	srag	%r6, %r12, 63
+	ngr	%r6, %r1
+	mlgr	%r0, %r1
+	algr	%r6, %r4
+	alcgr	%r0, %r9
+	algr	%r6, %r1
+	alcgr	%r0, %r9
+	stg	%r6, 8(rp)
+	stg	%r0, 16(rp)
+	lmg	%r6,%r12,48(%r15)
 	br	%r14
 
-L(sma):	clgije	an, 1, L(11)
-L(2x):	clgije	bn_arg, 1, L(21)
-L(22):	stmg	%r6, %r9, 48(%r15)
-	lg	%r1, 0(bp)
-	lgr	%r7, %r1
-	mlg	%r0, 0(ap)
-	mlg	%r6, 8(ap)
-	algr	%r0, %r7
-	lghi	%r7, 0
-	alcgr	%r6, %r7
-	lg	%r5, 8(bp)
-	lgr	%r9, %r5
-	mlg	%r4, 0(ap)
-	mlg	%r8, 8(ap)
-	algr	%r0, %r5
-	alcgr	%r6, %r4
-	lghi	%r4, 0
-	alcgr	%r8, %r4
-	algr	%r6, %r9
-	alcgr	%r8, %r4
+L(sma):	clgijh	an, 1, L(2)
+L(1):	lg	%r1, 0(ap)
+	mlgr	%r0, %r1
 	stg	%r1, 0(rp)
 	stg	%r0, 8(rp)
-	stg	%r6, 16(rp)
-	stg	%r8, 24(rp)
-	lmg	%r6, %r9, 48(%r15)
 	br	%r14
 
-L(21):	lg	%r1, 0(bp)
-	lgr	%r5, %r1
-	mlg	%r0, 0(ap)
-	mlg	%r4, 8(ap)
-	algr	%r0, %r5
-	lghi	%r5, 0
-	alcgr	%r4, %r5
+L(2):	lg	%r1, 0(ap)
+	mlgr	%r0, %r1
 	stg	%r1, 0(rp)
-	stg	%r0, 8(rp)
+	lg	%r1, 0(ap)
+	lg	%r5, 8(ap)
+	mlgr	%r4, %r1
+	algr	%r5, %r5
+	alcgr	%r4, %r4
+	lg	%r1, 8(ap)
+	lghi	%r3, 0
+	alcgr	%r3, %r3
+	algr	%r5, %r0
+	stg	%r5, 8(rp)
+	mlgr	%r0, %r1
+	alcgr	%r4, %r1
 	stg	%r4, 16(rp)
-	br	%r14
-
-L(11):	lg	%r1, 0(ap)
-	mlg	%r0, 0(bp)
-	stg	%r1, 0(rp)
-	stg	%r0, 8(rp)
+	alcgr	%r0, %r3
+	stg	%r0, 24(rp)
 	br	%r14
 EPILOGUE()

@@ -67,15 +67,15 @@ define(`vster', `vst')
 ASM_START()
 
 PROLOGUE(mpn_mul_1c)
-	stmg	%r6, %r13, 48(%r15)
+	stmg	%r6, %r10, 48(%r15)
 	j	L(ent)
 EPILOGUE()
 
 PROLOGUE(mpn_mul_1)
-	stmg	%r6, %r13, 48(%r15)
+	stmg	%r6, %r10, 48(%r15)
 	lghi	%r6, 0
 L(ent):	vzero	%v2
-	srlg	%r11, an, 2
+	srlg	%r10, an, 2
 
 	tmll	an, 1
 	je	L(bx0)
@@ -83,13 +83,14 @@ L(bx1):	tmll	an, 2
 	jne	L(b11)
 
 L(b01):	lghi	idx, -24
-	lg	%r13, 0(ap)
-	mlgr	%r12, b0
-	algr	%r13, %r6
-	lghi	%r6, 0
-	alcgr	%r12, %r6
-	stg	%r13, 0(rp)
-	cgije	%r11, 0, L(1)
+	lgr	%r0, %r6
+	lg	%r7, 0(ap)
+	mlgr	%r6, b0
+	algr	%r7, %r0
+	lghi	%r0, 0
+	alcgr	%r6, %r0
+	stg	%r7, 0(rp)
+	cgije	%r10, 0, L(1)
 	j	L(cj0)
 
 L(b11):	lghi	idx, -8
@@ -103,25 +104,25 @@ L(b11):	lghi	idx, -8
 
 L(bx0):	tmll	an, 2
 	jne	L(b10)
+
 L(b00):	lghi	idx, -32
-	lgr	%r12, %r6
 L(cj0):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
 	mlgr	%r0, b0
 	mlgr	%r8, b0
 	vlvgp	%v6, %r0, %r1
-	vlvgp	%v7, %r9, %r12
+	vlvgp	%v7, %r9, %r6
 	j	L(mid)
 
 L(b10):	lghi	idx, -16
 	lgr	%r8, %r6
-L(cj1):	lg	%r7, 16(idx, ap)
-	lg	%r13, 24(idx, ap)
+L(cj1):	lg	%r1, 16(idx, ap)
+	lg	%r7, 24(idx, ap)
+	mlgr	%r0, b0
 	mlgr	%r6, b0
-	mlgr	%r12, b0
-	vlvgp	%v6, %r6, %r7
-	vlvgp	%v7, %r13, %r8
-	cgije	%r11, 0, L(end)
+	vlvgp	%v6, %r0, %r1
+	vlvgp	%v7, %r7, %r8
+	cgije	%r10, 0, L(end)
 
 L(top):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
@@ -132,19 +133,19 @@ L(top):	lg	%r1, 32(idx, ap)
 	vpdi	%v3, %v3, %v3, 4
 	vster	%v3, 16(idx, rp), 3
 	vlvgp	%v6, %r0, %r1
-	vlvgp	%v7, %r9, %r12
-L(mid):	lg	%r7, 48(idx, ap)
-	lg	%r13, 56(idx, ap)
+	vlvgp	%v7, %r9, %r6
+L(mid):	lg	%r1, 48(idx, ap)
+	lg	%r7, 56(idx, ap)
+	mlgr	%r0, b0
 	mlgr	%r6, b0
-	mlgr	%r12, b0
 	vacq	%v3, %v6, %v7, %v2
 	vacccq	%v2, %v6, %v7, %v2
 	vpdi	%v3, %v3, %v3, 4
 	vster	%v3, 32(idx, rp), 3
-	vlvgp	%v6, %r6, %r7
-	vlvgp	%v7, %r13, %r8
+	vlvgp	%v6, %r0, %r1
+	vlvgp	%v7, %r7, %r8
 	la	idx, 32(idx)
-	brctg	%r11, L(top)
+	brctg	%r10, L(top)
 
 L(end):	vacq	%v3, %v6, %v7, %v2
 	vacccq	%v2, %v6, %v7, %v2
@@ -152,7 +153,7 @@ L(end):	vacq	%v3, %v6, %v7, %v2
 	vster	%v3, 16(idx, rp), 3
 
 L(1):	vlgvg	%r2, %v2, 1
-	agr	%r2, %r12
-	lmg	%r6, %r13, 48(%r15)
+	algr	%r2, %r6
+	lmg	%r6, %r10, 48(%r15)
 	br	%r14
 EPILOGUE()

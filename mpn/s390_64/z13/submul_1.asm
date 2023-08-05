@@ -44,7 +44,7 @@ C z196		 -
 C z12		 ?
 C z13		 ?
 C z14		 ?
-C z15		 2.55
+C z15		 2.5
 
 
 define(`rp',	`%r2')
@@ -67,10 +67,10 @@ define(`vster', `vst')
 ASM_START()
 
 PROLOGUE(mpn_submul_1)
-	stmg	%r6, %r13, 48(%r15)
+	stmg	%r6, %r10, 48(%r15)
 	vzero	%v0
 	vone	%v2
-	srlg	%r11, an, 2
+	srlg	%r10, an, 2
 
 	tmll	an, 1
 	je	L(bx0)
@@ -80,13 +80,13 @@ L(bx1):	vleg	%v2, 0(rp), 1
 	jne	L(b11)
 
 L(b01):	lghi	idx, -24
-	lg	%r13, 0(ap)
-	mlgr	%r12, b0
-	vlvgg	%v4, %r13, 1
+	lg	%r7, 0(ap)
+	mlgr	%r6, b0
+	vlvgg	%v4, %r7, 1
 	vsq	%v2, %v2, %v4
 	vsteg	%v2, 0(rp), 1
 	vmrhg	%v2, %v2, %v2
-	cgije	%r11, 0, L(1)
+	cgije	%r10, 0, L(1)
 	j	L(cj0)
 
 L(b11):	lghi	idx, -8
@@ -102,7 +102,7 @@ L(bx0):	tmll	an, 2
 	jne	L(b10)
 
 L(b00):	lghi	idx, -32
-	lghi	%r12, 0
+	lghi	%r6, 0
 L(cj0):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
 	mlgr	%r0, b0
@@ -110,20 +110,20 @@ L(cj0):	lg	%r1, 32(idx, ap)
 	vler	%v1, 32(idx, rp), 3
 	vpdi	%v1, %v1, %v1, 4
 	vlvgp	%v6, %r0, %r1
-	vlvgp	%v7, %r9, %r12
+	vlvgp	%v7, %r9, %r6
 	j	L(mid)
 
 L(b10):	lghi	idx, -16
 	lghi	%r8, 0
-L(cj1):	lg	%r7, 16(idx, ap)
-	lg	%r13, 24(idx, ap)
+L(cj1):	lg	%r1, 16(idx, ap)
+	lg	%r7, 24(idx, ap)
+	mlgr	%r0, b0
 	mlgr	%r6, b0
-	mlgr	%r12, b0
 	vler	%v1, 16(idx, rp), 3
 	vpdi	%v1, %v1, %v1, 4
-	vlvgp	%v6, %r6, %r7
-	vlvgp	%v7, %r13, %r8
-	cgije	%r11, 0, L(end)
+	vlvgp	%v6, %r0, %r1
+	vlvgp	%v7, %r7, %r8
+	cgije	%r10, 0, L(end)
 
 L(top):	lg	%r1, 32(idx, ap)
 	lg	%r9, 40(idx, ap)
@@ -138,11 +138,11 @@ L(top):	lg	%r1, 32(idx, ap)
 	vpdi	%v1, %v1, %v1, 4
 	vster	%v3, 16(idx, rp), 3
 	vlvgp	%v6, %r0, %r1
-	vlvgp	%v7, %r9, %r12
-L(mid):	lg	%r7, 48(idx, ap)
-	lg	%r13, 56(idx, ap)
+	vlvgp	%v7, %r9, %r6
+L(mid):	lg	%r1, 48(idx, ap)
+	lg	%r7, 56(idx, ap)
+	mlgr	%r0, b0
 	mlgr	%r6, b0
-	mlgr	%r12, b0
 	vacq	%v5, %v6, %v7, %v0
 	vacccq	%v0, %v6, %v7, %v0
 	vsbiq	%v3, %v1, %v5, %v2
@@ -151,10 +151,10 @@ L(mid):	lg	%r7, 48(idx, ap)
 	vler	%v1, 48(idx, rp), 3
 	vpdi	%v1, %v1, %v1, 4
 	vster	%v3, 32(idx, rp), 3
-	vlvgp	%v6, %r6, %r7
-	vlvgp	%v7, %r13, %r8
+	vlvgp	%v6, %r0, %r1
+	vlvgp	%v7, %r7, %r8
 	la	idx, 32(idx)
-	brctg	%r11, L(top)
+	brctg	%r10, L(top)
 
 L(end):	vacq	%v5, %v6, %v7, %v0
 	vacccq	%v0, %v6, %v7, %v0
@@ -165,14 +165,14 @@ L(end):	vacq	%v5, %v6, %v7, %v0
 
 	vsg	%v2, %v0, %v2
 	vlgvg	%r2, %v2, 1
-	algr	%r2, %r12
+	algr	%r2, %r6
 	aghi	%r2, 1
-	lmg	%r6, %r13, 48(%r15)
+	lmg	%r6, %r10, 48(%r15)
 	br	%r14
 L(1):	vsg	%v2, %v0, %v2
 	vlgvg	%r2, %v2, 1
-	algr	%r2, %r12
+	algr	%r2, %r6
 	aghi	%r2, -1
-	lmg	%r6, %r13, 48(%r15)
+	lmg	%r6, %r10, 48(%r15)
 	br	%r14
 EPILOGUE()
