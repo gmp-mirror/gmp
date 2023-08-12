@@ -31,19 +31,15 @@ dnl  see https://www.gnu.org/licenses/.
 include(`../config.m4')
 
 C            cycles/limb
-C z900		 7
-C z990           3
-C z9		 ?
-C z10		 6
-C z196		 ?
-
-C NOTES
-C  * This uses discrete loads and stores in a software pipeline.  Using lmg and
-C    stmg is not faster.
-C  * One could assume more pipelining could approach 2.5 c/l, but we have not
-C    found any 8-way loop that runs better than the current 4-way loop.
-C  * Consider using the same feed-in code for 1 <= n <= 3 as for n mod 4,
-C    similarly to the x86_64 sqr_basecase feed-in.
+C z900		 -
+C z990           -
+C z9		 -
+C z10		 -
+C z196		 -
+C z12		 -
+C z13		 ?
+C z14		 ?
+C z15		 1.25
 
 define(`rp',	`%r2')
 define(`ap',	`%r3')

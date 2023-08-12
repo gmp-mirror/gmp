@@ -31,17 +31,13 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
-dnl TODO
-dnl * Schedule vlvgp away from mlgr; that saves 20% of the run time.
-dnl * Perhaps use vp[0]/vp[1] in innerloop instead preloading v0/v1.
-
 C            cycles/limb
 C z900		 -
 C z990		 -
 C z9		 -
 C z10		 -
 C z196		 -
-C z12		 ?
+C z12		 -
 C z13		 ?
 C z14		 ?
 C z15		 2.25
