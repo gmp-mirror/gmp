@@ -51,8 +51,8 @@ PROLOGUE(mpn_com)
 
 	tmll	n, 1
 	je	L(xx0)
-L(xx1):	lg	%r5, 0(ap)
-	nngrk	%r5, %r5, %r5
+L(xx1):	lghi	%r5, -1
+	xg	%r5, 0(ap)
 	stg	%r5, 0(rp)
 	la	ap, 8(ap)
 	la	rp, 8(rp)
