@@ -1,6 +1,6 @@
 dnl  S/390-64 logops.
 
-dnl  Copyright 2011 Free Software Foundation, Inc.
+dnl  Copyright 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -37,11 +37,12 @@ C z9		 -
 C z10		 -
 C z196		 -
 C z12		 -
-C z13		 ?
+C z13		 -
 C z14		 ?
 C z15		 ?
 
-C INPUT PARAMETERS
+C Most functions here run on z13, except the ones which use vnn, voc, and vnx.
+
 define(`rp',	`%r2')
 define(`ap',	`%r3')
 define(`bp',	`%r4')
