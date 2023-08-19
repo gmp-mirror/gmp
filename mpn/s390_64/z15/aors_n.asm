@@ -1,6 +1,6 @@
-dnl  S/390-64 logops.
+dnl  S/390-64 mpn_add_n and mpn_sub_n.
 
-dnl  Copyright 2011 Free Software Foundation, Inc.
+dnl  Copyright 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -30,7 +30,7 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
-C cycles/limb
+C            cycles/limb
 C z900		 -
 C z990		 -
 C z9		 -
@@ -41,7 +41,6 @@ C z13		 ?
 C z14		 ?
 C z15		 ?
 
-C INPUT PARAMETERS
 define(`rp',	`%r2')
 define(`ap',	`%r3')
 define(`bp',	`%r4')

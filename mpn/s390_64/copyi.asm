@@ -37,6 +37,10 @@ C z990           0.75
 C z9		 ?
 C z10		 1
 C z196		 ?
+C z12		 ?
+C z13		 ?
+C z14		 ?
+C z15		 0.55	(@4.2)
 
 C NOTE
 C  * This is based on GNU libc memcpy which was written by Martin Schwidefsky.

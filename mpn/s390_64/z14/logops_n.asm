@@ -30,7 +30,7 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
-C cycles/limb
+C            cycles/limb
 C z900		 -
 C z990		 -
 C z9		 -
