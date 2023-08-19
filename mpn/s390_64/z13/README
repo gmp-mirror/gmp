@@ -35,30 +35,3 @@ the legacy of S/390 instructions.  From GMP's perspective, the full set of
 very useful.  Unfortunately, the multiply support is unexpectedly limited,
 forcing GMP to use the the legacy mlg/mlgr instructions, juggling results
 between plain and vector registers.
-
-
-Torbjörn has faster mul_2 and addmul_2, running at close to 2 cycles/limb on
-z15.  That's not a whole lot faster than mul_1 and addmul_1, and as
-sqr_basecase and mul_basecase are based on the _1 variants, we have not
-committed the faster _2 code.
-
-Here is how a new mul_basecase should be organised:
-
-  1. If the rp pointer is 128-bit aligned, start with mul_2 to keep alignment.
-     Else start with mul_1.  Now rp will be 128-bit aligned.
-
-  2. Loop over addmul_2.  Probably don't expand it into 4 variants (addmul_2 is
-     4-way unrolled) as that practice pays off less with the fewer outer loop
-     iterations which are the result of using addmul_2.  Instead, do the n mod
-     4 handling before each run.
-
-  3. If there is now anything to do, finish off with an addmul_1.
-
-This means that we will sometimes both do a mul_1 first and an addmul_1 last,
-even if bn mod 2 == 0.  It is expected that that will be beneficial,
-considering the alignment penalty for the 128-operations and the fact that the
-_2 functions are not dramatically faster then the _1 functions.
-
-A new sqr_basecase should use addmul_2 too.  Here, we might get significant
-improvements as the branch predictor performs abysmally given the structure of
-sqr_basecase; an addmul_2 based variant cuts the number of branches in half.
