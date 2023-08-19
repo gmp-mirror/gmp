@@ -1,3 +1,7 @@
+2023-08-19  Marc Glisse  <marc.glisse@inria.fr>
+
+	* doc/gmp.texi: Rename IEEE P754.
+
 2023-07-31  Torbjörn Granlund  <tg@gmplib.org>
 
 	* mpn/s390_64/z13: Further improve z13 asm code, adding	special code
