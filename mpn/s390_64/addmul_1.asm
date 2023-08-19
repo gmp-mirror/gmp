@@ -1,6 +1,6 @@
 dnl  S/390-64 mpn_addmul_1
 
-dnl  Copyright 2011 Free Software Foundation, Inc.
+dnl  Copyright 2023 Free Software Foundation, Inc.
 
 dnl  This file is part of the GNU MP Library.
 dnl
@@ -30,43 +30,115 @@ dnl  see https://www.gnu.org/licenses/.
 
 include(`../config.m4')
 
-C            cycles/limb
-C z900		34
-C z990		23
-C z9		 ?
-C z10		28
-C z196		 ?
+C TODO
+C  * Delay saving of registers to handle n < 2 faster.
 
-C INPUT PARAMETERS
+C            cycles/limb
+C z900		 ?
+C z990		 ?
+C z9		 ?
+C z10		 ?
+C z196		 ?
+C z12		 ?
+C z13		 ?
+C z14		 ?
+C z15		 4.5
+
 define(`rp',	`%r2')
 define(`up',	`%r3')
 define(`n',	`%r4')
 define(`v0',	`%r5')
 
-define(`z',	`%r9')
+define(`idx',	`%r10')
+define(`cy',	`%r11')
 
 ASM_START()
+PROLOGUE(mpn_addmul_1c)
+	stmg	%r6, %r13, 48(%r15)
+	lgr	cy, %r6
+	j	L(ent)
+EPILOGUE()
 PROLOGUE(mpn_addmul_1)
-	stmg	%r9, %r12, 72(%r15)
-	lghi	%r12, 0			C zero index register
-	aghi	%r12, 0			C clear carry flag
-	lghi	%r11, 0			C clear carry limb
-	lghi	z, 0			C keep register zero
+	stmg	%r6, %r13, 48(%r15)
+	lghi	cy, 0
+L(ent):	tmll	n, 1
+	la	n, 3(n)
+	je	L(bx0)
+L(bx1):	tmll	n, 2
+	srlg	n, n, 2
+	je	L(b01)
+L(b11):	lg	%r7, 0(up)
+	mlgr	%r6, v0
+	lg	%r9, 8(up)
+	lg	%r13, 16(up)
+	mlgr	%r8, v0
+	mlgr	%r12, v0
+	algr	%r7, cy
+	alcgr	%r9, %r6
+	lghi	cy, 0
+	alcgr	%r8, %r13
+	alcgr	cy, %r12
+	alg	%r7, 0(rp)
+	stg	%r7, 0(rp)
+	lghi	idx, -8
+	j	L(m3)
 
-L(top):	lg	%r1, 0(%r12,up)
-	lg	%r10, 0(%r12,rp)
+L(b01):	lg	%r9, 0(up)
+	mlgr	%r8, v0
+	algr	%r9, cy
+	lghi	cy, 0
+	alcgr	cy, %r8
+	alg	%r9, 0(rp)
+	stg	%r9, 0(rp)
+	lghi	idx, 8
+	brctg	n, L(top)
+	j	L(end)
+
+L(bx0):	tmll	n, 2
+	lghi	idx, 0
+	srlg	n, n, 2
+	jne	L(b00)
+L(b10):	lg	%r9, 0(up)
+	lg	%r13, 8(up)
+	mlgr	%r8, v0
+	mlgr	%r12, v0
+	algr	%r9, cy
+	lghi	cy, 0
+	alcgr	%r8, %r13
+	alcgr	cy, %r12
+	alg	%r9, 0(rp)
+	lghi	idx, -16
+	j	L(m2)
+L(b00):	aghi	cy, 0			C clear CF
+
+L(top):	lg	%r1, 0(idx,up)
+	lg	%r7, 8(idx,up)
 	mlgr	%r0, v0
-	alcgr	%r1, %r10
-	alcgr	%r0, z
-	algr	%r1, %r11
-	lgr	%r11, %r0
-	stg	%r1, 0(%r12,rp)
-	la	%r12, 8(%r12)
+	mlgr	%r6, v0
+	lg	%r9, 16(idx,up)
+	lg	%r13, 24(idx,up)
+	mlgr	%r8, v0
+	mlgr	%r12, v0
+	alcgr	%r1, cy
+	alcgr	%r0, %r7
+	alcgr	%r9, %r6
+	lghi	cy, 0
+	alcgr	%r8, %r13
+	alcgr	cy, %r12
+	alg	%r1, 0(idx,rp)
+	alcg	%r0, 8(idx,rp)
+	stg	%r1, 0(idx,rp)
+	stg	%r0, 8(idx,rp)
+L(m3):	alcg	%r9, 16(idx,rp)
+L(m2):	alcg	%r8, 24(idx,rp)
+	stg	%r9, 16(idx,rp)
+	stg	%r8, 24(idx,rp)
+	la	idx, 32(idx)
 	brctg	n, L(top)
 
-	lghi	%r2, 0
-	alcgr	%r2, %r11
-
-	lmg	%r9, %r12, 72(%r15)
+L(end):	lghi	%r2, 0
+	alcgr	%r2, cy
+	lmg	%r6, %r13, 48(%r15)
 	br	%r14
 EPILOGUE()
+	.section .note.GNU-stack
