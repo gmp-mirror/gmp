@@ -86,9 +86,9 @@ L(bx0):	tmll	n, 2
 	srlg	n, n, 2
 	jne	L(b00)
 L(b10):	lghi	idx, -16
-C	aghi	%r8, 0			C clear CF
+C	clgr	%r0, %r0		C clear CF
 	j	L(mid)
-L(b00):	aghi	%r8, 0			C clear CF
+L(b00):	clgr	%r0, %r0		C clear CF
 	lghi	idx, 0
 
 L(top):	lg	%r1, 0(idx,up)

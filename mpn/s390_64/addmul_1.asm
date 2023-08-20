@@ -109,7 +109,7 @@ L(b10):	lg	%r9, 0(up)
 	alg	%r9, 0(rp)
 	lghi	idx, -16
 	j	L(m2)
-L(b00):	aghi	cy, 0			C clear CF
+L(b00):	clgr	%r0, %r0		C clear CF
 
 L(top):	lg	%r1, 0(idx,up)
 	lg	%r7, 8(idx,up)
