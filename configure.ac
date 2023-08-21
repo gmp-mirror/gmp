@@ -36,8 +36,8 @@ AC_COPYRIGHT(GMP_COPYRIGHT)
 AH_TOP(/*GMP_COPYRIGHT*/)
 
 AC_REVISION($Revision$)
-AC_PREREQ(2.69)
-AC_INIT(GNU MP, GMP_VERSION, [gmp-bugs@gmplib.org (see https://gmplib.org/manual/Reporting-Bugs.html)], gmp)
+AC_PREREQ([2.69])
+AC_INIT([GNU MP], [GMP_VERSION], [gmp-bugs@gmplib.org (see https://gmplib.org/manual/Reporting-Bugs.html)], [gmp])
 AC_CONFIG_SRCDIR(gmp-impl.h)
 m4_pattern_forbid([^[ \t]*GMP_])
 m4_pattern_allow(GMP_LDFLAGS)
@@ -2088,7 +2088,7 @@ case $host in
   # Special CPU "none" used to select generic C, now this is obsolete.
   none-*-*)
     enable_assembly=no
-    AC_MSG_WARN([the \"none\" host is obsolete, use --disable-assembly])
+    AC_MSG_WARN([the "none" host is obsolete, use --disable-assembly])
     ;;
 
 esac
@@ -4051,19 +4051,18 @@ AM_PROG_LEX
 GMP_FINISH
 
 # Create Makefiles
-# FIXME: Upcoming version of autoconf/automake may not like broken lines.
-#        Right now automake isn't accepting the new AC_CONFIG_FILES scheme.
 
-AC_OUTPUT(Makefile							\
-  mpf/Makefile mpn/Makefile mpq/Makefile				\
-  mpz/Makefile printf/Makefile scanf/Makefile rand/Makefile cxx/Makefile \
+AC_CONFIG_FILES([Makefile						\
+  mpf/Makefile mpn/Makefile mpq/Makefile mpz/Makefile			\
+  printf/Makefile scanf/Makefile rand/Makefile cxx/Makefile		\
   tests/Makefile tests/devel/Makefile					\
   tests/mpf/Makefile tests/mpn/Makefile tests/mpq/Makefile		\
   tests/mpz/Makefile tests/rand/Makefile tests/misc/Makefile		\
   tests/cxx/Makefile							\
   doc/Makefile tune/Makefile						\
   demos/Makefile demos/calc/Makefile demos/expr/Makefile		\
-  gmp.h:gmp-h.in gmp.pc:gmp.pc.in gmpxx.pc:gmpxx.pc.in)
+  gmp.h:gmp-h.in gmp.pc:gmp.pc.in gmpxx.pc:gmpxx.pc.in])
+AC_OUTPUT
 
 AC_MSG_NOTICE([summary of build options:
 

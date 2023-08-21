@@ -1,4 +1,5 @@
 2023-08-21  FX Coudert  <fxcoudert@gmail.com>
+	    Marc Glisse  <marc.glisse@inria.fr>
 
 	* configure.ac: Drop AC_HEADER_STDC and AC_HEADER_TIME.
 	* configure.ac, tests/misc.c, tune/freq.c, tune/speed.c, tune/time.c:
@@ -11,6 +12,8 @@
 	RETSIGTYPE -> void.
 
 	* configure.ac: Remove redundant LT_INIT.
+	Remove redundant backslash.
+	Use AC_CONFIG_FILES.
 
 2023-08-19  Marc Glisse  <marc.glisse@inria.fr>
 
