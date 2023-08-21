@@ -37,7 +37,7 @@ AH_TOP(/*GMP_COPYRIGHT*/)
 
 AC_REVISION($Revision$)
 AC_PREREQ([2.69])
-AC_INIT([GNU MP], [GMP_VERSION], [gmp-bugs@gmplib.org (see https://gmplib.org/manual/Reporting-Bugs.html)], [gmp])
+AC_INIT([GNU MP],[GMP_VERSION],[gmp-bugs@gmplib.org (see https://gmplib.org/manual/Reporting-Bugs.html)],[gmp])
 AC_CONFIG_SRCDIR(gmp-impl.h)
 m4_pattern_forbid([^[ \t]*GMP_])
 m4_pattern_allow(GMP_LDFLAGS)
@@ -368,7 +368,7 @@ AH_VERBATIM([HAVE_HOST_CPU_1],
 # After GMP specific searches and tests, the standard autoconf AC_PROG_CC is
 # called.  User selections of CC etc are respected.
 #
-# Care is taken not to use macros like AC_TRY_COMPILE during the GMP
+# Care is taken not to use macros like AC_COMPILE_IFELSE during the GMP
 # pre-testing, since they of course depend on AC_PROG_CC, and also some of
 # them cache their results, which is not wanted.
 #

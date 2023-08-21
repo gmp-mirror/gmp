@@ -1642,7 +1642,7 @@ dnl  conftest.o and conftest.out are available for inspection in
 dnl  "action-success".  If either action does a "break" out of a loop then
 dnl  an explicit "rm -f conftest*" will be necessary.
 dnl
-dnl  This is not unlike AC_TRY_COMPILE, but there's no default includes or
+dnl  This is not unlike AC_COMPILE_IFELSE, but there's no default includes or
 dnl  anything in "asm-code", everything wanted must be given explicitly.
 
 AC_DEFUN([GMP_TRY_ASSEMBLE],
@@ -3142,7 +3142,7 @@ dnl  ---------------------
 AC_DEFUN([GMP_C_ATTRIBUTE_CONST],
 [AC_CACHE_CHECK([whether gcc __attribute__ ((const)) works],
                 gmp_cv_c_attribute_const,
-[AC_TRY_COMPILE([int foo (int x) __attribute__ ((const));], ,
+[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[int foo (int x) __attribute__ ((const));]], [[]])],
   gmp_cv_c_attribute_const=yes, gmp_cv_c_attribute_const=no)
 ])
 if test $gmp_cv_c_attribute_const = yes; then
@@ -3191,7 +3191,7 @@ dnl  Introduced in gcc 2.2, but perhaps not in all Apple derived versions.
 AC_DEFUN([GMP_C_ATTRIBUTE_MODE],
 [AC_CACHE_CHECK([whether gcc __attribute__ ((mode (XX))) works],
                 gmp_cv_c_attribute_mode,
-[AC_TRY_COMPILE([typedef int SItype __attribute__ ((mode (SI)));], ,
+[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[typedef int SItype __attribute__ ((mode (SI)));]], [[]])],
   gmp_cv_c_attribute_mode=yes, gmp_cv_c_attribute_mode=no)
 ])
 if test $gmp_cv_c_attribute_mode = yes; then
@@ -3207,7 +3207,7 @@ dnl  ------------------------
 AC_DEFUN([GMP_C_ATTRIBUTE_NORETURN],
 [AC_CACHE_CHECK([whether gcc __attribute__ ((noreturn)) works],
                 gmp_cv_c_attribute_noreturn,
-[AC_TRY_COMPILE([void foo (int x) __attribute__ ((noreturn));], ,
+[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[void foo (int x) __attribute__ ((noreturn));]], [[]])],
   gmp_cv_c_attribute_noreturn=yes, gmp_cv_c_attribute_noreturn=no)
 ])
 if test $gmp_cv_c_attribute_noreturn = yes; then
@@ -3222,11 +3222,11 @@ dnl  ------------------------
 AC_DEFUN([GMP_C_HIDDEN_ALIAS],
 [AC_CACHE_CHECK([whether gcc hidden aliases work],
                 gmp_cv_c_hidden_alias,
-[AC_TRY_COMPILE(
-[void hid() __attribute__ ((visibility("hidden")));
+[AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+[[void hid() __attribute__ ((visibility("hidden")));
 void hid() {}
-void pub() __attribute__ ((alias("hid")));],
-, gmp_cv_c_hidden_alias=yes, gmp_cv_c_hidden_alias=no)
+void pub() __attribute__ ((alias("hid")));]], [[]])],
+  gmp_cv_c_hidden_alias=yes, gmp_cv_c_hidden_alias=no)
 ])
 if test $gmp_cv_c_hidden_alias = yes; then
   AC_DEFINE(HAVE_HIDDEN_ALIAS, 1,
@@ -3533,11 +3533,11 @@ AC_DEFUN([GMP_FUNC_ALLOCA],
 [AC_REQUIRE([GMP_HEADER_ALLOCA])
 AC_CACHE_CHECK([for alloca (via gmp-impl.h)],
                gmp_cv_func_alloca,
-[AC_TRY_LINK(
+[AC_LINK_IFELSE([AC_LANG_PROGRAM([
 GMP_INCLUDE_GMP_H
 [#include "$srcdir/gmp-impl.h"
-],
-  [char *p = (char *) alloca (1);],
+]],
+  [[char *p = (char *) alloca (1);]])],
   gmp_cv_func_alloca=yes,
   gmp_cv_func_alloca=no)])
 if test $gmp_cv_func_alloca = yes; then
@@ -3550,8 +3550,8 @@ AC_DEFUN([GMP_HEADER_ALLOCA],
 # for constant arguments.  Useless!
 AC_CACHE_CHECK([for working alloca.h],
                gmp_cv_header_alloca,
-[AC_TRY_LINK([#include <alloca.h>],
-  [char *p = (char *) alloca (2 * sizeof (int));],
+[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <alloca.h>]],
+  [[char *p = (char *) alloca (2 * sizeof (int));]])],
   gmp_cv_header_alloca=yes,
   gmp_cv_header_alloca=no)])
 if test $gmp_cv_header_alloca = yes; then
@@ -3683,7 +3683,7 @@ else
                  gmp_cv_func_vsnprintf,
   [gmp_cv_func_vsnprintf=yes
    for i in 'return check ("hello world");' 'int n; return check ("%nhello world", &n);'; do
-     AC_TRY_RUN([
+     AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <string.h>  /* for strcmp */
 #include <stdio.h>   /* for vsnprintf */
 
@@ -3715,7 +3715,7 @@ main ()
 {
 $i
 }
-],
+]])],
       [:],
       [gmp_cv_func_vsnprintf=no; break],
       [gmp_cv_func_vsnprintf=probably; break])
@@ -3742,13 +3742,13 @@ AC_DEFUN([GMP_H_EXTERN_INLINE],
 case $ac_cv_c_inline in
 no) ;;
 *)
-  AC_TRY_COMPILE(
-[#define __GMP_WITHIN_CONFIGURE_INLINE 1
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+[[#define __GMP_WITHIN_CONFIGURE_INLINE 1
 ]GMP_INCLUDE_GMP_H[
 #ifndef __GMP_EXTERN_INLINE
 die die die
 #endif
-],,,
+]],[[]])],,
   [case $ac_cv_c_inline in
   yes) tmp_inline=inline ;;
   *)   tmp_inline=$ac_cv_c_inline ;;
@@ -3765,13 +3765,13 @@ dnl  Check whether the #ifdef's in gmp.h recognise when stdio.h has been
 dnl  included to get FILE.
 
 AC_DEFUN([GMP_H_HAVE_FILE],
-[AC_TRY_COMPILE(
-[#include <stdio.h>]
+[AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+[[#include <stdio.h>]
 GMP_INCLUDE_GMP_H
 [#if ! _GMP_H_HAVE_FILE
 die die die
 #endif
-],,,
+]],[[]])],,
   [AC_MSG_WARN([gmp.h doesnt recognise <stdio.h>, FILE prototypes will be unavailable])])
 ])
 
