@@ -4047,8 +4047,6 @@ fi
 AC_PROG_YACC
 AM_PROG_LEX
 
-LT_INIT
-
 # Create config.m4.
 GMP_FINISH
 

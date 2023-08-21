@@ -10,6 +10,8 @@
 	* tests/misc.c, tests/spinner.c, tests/tests.h, tune/time.c:
 	RETSIGTYPE -> void.
 
+	* configure.ac: Remove redundant LT_INIT.
+
 2023-08-19  Marc Glisse  <marc.glisse@inria.fr>
 
 	* doc/gmp.texi: Rename IEEE P754. Remove @refill.
