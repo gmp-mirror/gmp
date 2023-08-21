@@ -51,7 +51,7 @@ int  spinner_tick = 1;     /* 1 ready to print, 0 not */
 
 
 /*ARGSUSED*/
-RETSIGTYPE
+void
 spinner_signal (int signum)
 {
   spinner_tick = 1;

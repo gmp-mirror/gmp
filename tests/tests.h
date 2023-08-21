@@ -73,7 +73,7 @@ unsigned short x86_fstcw (void);
   (signal (SIGFPE, tests_sigfpe_handler),       \
    setjmp (tests_sigfpe_target))
 
-RETSIGTYPE tests_sigfpe_handler (int);
+void tests_sigfpe_handler (int);
 void tests_sigfpe_done (void);
 extern jmp_buf  tests_sigfpe_target;
 

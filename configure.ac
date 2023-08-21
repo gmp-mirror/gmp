@@ -2601,7 +2601,7 @@ fi
 AM_CONDITIONAL(WANT_CXX, test $want_cxx = yes)
 
 # FIXME: We're not interested in CXXCPP for ourselves, but if we don't do it
-# here then AC_PROG_LIBTOOL will AC_REQUIRE it (via _LT_AC_TAGCONFIG) and
+# here then LT_INIT will AC_REQUIRE it (via _LT_AC_TAGCONFIG) and
 # hence execute it unconditionally, and that will fail if there's no C++
 # compiler (and no generic /lib/cpp).
 #
@@ -2803,7 +2803,7 @@ if test "${with_tags+set}" != set; then
   fi
 fi
 
-# The dead hand of AC_REQUIRE makes AC_PROG_LIBTOOL expand and execute
+# The dead hand of AC_REQUIRE makes LT_INIT expand and execute
 # AC_PROG_F77, even when F77 is not in the selected with_tags.  This is
 # probably harmless, but it's unsightly and bloats our configure, so pretend
 # AC_PROG_F77 has been expanded already.
@@ -2813,7 +2813,7 @@ fi
 #
 #AC_PROVIDE([AC_PROG_F77])
 
-AC_PROG_LIBTOOL
+LT_INIT
 
 # Generate an error here if attempting to build both shared and static when
 # $libname.a is in $library_names_spec (as mentioned above), rather than
@@ -2892,8 +2892,6 @@ AC_CHECK_DECLS([sys_errlist, sys_nerr], , ,
 [#include <stdio.h>
 #include <errno.h>])
 
-AC_TYPE_SIGNAL
-
 # Reasons for testing:
 #   intmax_t       - C99
 #   long double    - not in the HP bundled K&R cc
@@ -2924,7 +2922,7 @@ GMP_C_HIDDEN_ALIAS
 GMP_H_EXTERN_INLINE
 
 # from libtool
-AC_CHECK_LIBM
+LT_LIB_M
 AC_SUBST(LIBM)
 
 GMP_FUNC_ALLOCA

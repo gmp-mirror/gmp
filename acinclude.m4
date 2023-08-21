@@ -275,7 +275,7 @@ dnl  AR_FLAGS=cq.
 
 AC_DEFUN([GMP_PROG_AR],
 [dnl  Want to establish $AR before libtool initialization.
-AC_BEFORE([$0],[AC_PROG_LIBTOOL])
+AC_BEFORE([$0],[LT_INIT])
 gmp_user_AR=$AR
 AC_CHECK_TOOL(AR, ar, ar)
 if test -z "$gmp_user_AR"; then
@@ -401,12 +401,12 @@ GMP_DEFINE_RAW(["define(<M4WRAP_SPURIOUS>,<$gmp_cv_m4_m4wrap_spurious>)"])
 
 dnl  GMP_PROG_NM
 dnl  -----------
-dnl  GMP additions to libtool AC_PROG_NM.
+dnl  GMP additions to libtool LT_PATH_NM.
 dnl
-dnl  Note that if AC_PROG_NM can't find a working nm it still leaves
+dnl  Note that if LT_PATH_NM can't find a working nm it still leaves
 dnl  $NM set to "nm", so $NM can't be assumed to actually work.
 dnl
-dnl  A user-selected $NM is always left unchanged.  AC_PROG_NM is still run
+dnl  A user-selected $NM is always left unchanged.  LT_PATH_NM is still run
 dnl  to get the "checking" message printed though.
 dnl
 dnl  Perhaps it'd be worthwhile checking that nm works, by running it on an
@@ -420,11 +420,11 @@ dnl  do anything at all for say ranlib or strip.  So for now we're inclined
 dnl  to just demand that the user provides a coherent environment.
 
 AC_DEFUN([GMP_PROG_NM],
-[dnl  Make sure we're the first to call AC_PROG_NM, so our extra flags are
+[dnl  Make sure we're the first to call LT_PATH_NM, so our extra flags are
 dnl   used by everyone.
-AC_BEFORE([$0],[AC_PROG_NM])
+AC_BEFORE([$0],[LT_PATH_NM])
 gmp_user_NM=$NM
-AC_PROG_NM
+LT_PATH_NM
 
 # FIXME: When cross compiling (ie. $ac_tool_prefix not empty), libtool
 # defaults to plain "nm" if a "${ac_tool_prefix}nm" is not found.  In this
@@ -438,7 +438,7 @@ if test -z "$gmp_user_NM" && test -n "$ac_tool_prefix" && test "$NM" = nm; then
   gmp_save_ac_tool_prefix=$ac_tool_prefix
   ac_tool_prefix=
   NM=
-  AC_PROG_NM
+  LT_PATH_NM
   ac_tool_prefix=$gmp_save_ac_tool_prefix
 fi
 
@@ -2708,7 +2708,7 @@ dnl  the PLT.  If a pointer to a counter is required it's passed in %eax or
 dnl  %edx.
 dnl
 dnl  Flags to specify PIC are taken from $lt_prog_compiler_pic set by
-dnl  AC_PROG_LIBTOOL.
+dnl  LT_INIT.
 dnl
 dnl  Enhancement: Cache the values determined here. But what's the right way
 dnl  to get two variables (mcount_nonpic_reg and mcount_nonpic_call say) set
@@ -2716,7 +2716,7 @@ dnl  from one block of commands?
 
 AC_DEFUN([GMP_ASM_X86_MCOUNT],
 [AC_REQUIRE([AC_ENABLE_SHARED])
-AC_REQUIRE([AC_PROG_LIBTOOL])
+AC_REQUIRE([LT_INIT])
 AC_MSG_CHECKING([how to call x86 mcount])
 cat >conftest.c <<EOF
 foo(){bar();}
@@ -3957,7 +3957,7 @@ dnl  GMP_CHECK_LIBM_FOR_BUILD
 dnl  ------------------------
 dnl  Establish LIBM_FOR_BUILD as -lm, if that seems to work.
 dnl
-dnl  Libtool AC_CHECK_LIBM also uses -lmw on *-ncr-sysv4.3*, if it works.
+dnl  Libtool LT_LIB_M also uses -lmw on *-ncr-sysv4.3*, if it works.
 dnl  Don't know what that does, lets assume it's not needed just for log().
 
 AC_DEFUN([GMP_CHECK_LIBM_FOR_BUILD],

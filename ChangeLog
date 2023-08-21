@@ -4,6 +4,12 @@
 	* configure.ac, tests/misc.c, tune/freq.c, tune/speed.c, tune/time.c:
 	Unconditionally include time.h.
 
+	* acinclude.m4: AC_PROG_LIBTOOL -> LT_INIT, AC_PROG_NM -> LT_PATH_NM
+	* configure.ac: AC_PROG_LIBTOOL -> LT_INIT, AC_CHECK_LIBM -> LT_LIB_M,
+	remove AC_TYPE_SIGNAL.
+	* tests/misc.c, tests/spinner.c, tests/tests.h, tune/time.c:
+	RETSIGTYPE -> void.
+
 2023-08-19  Marc Glisse  <marc.glisse@inria.fr>
 
 	* doc/gmp.texi: Rename IEEE P754. Remove @refill.

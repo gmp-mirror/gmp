@@ -446,7 +446,7 @@ unittime_string (double t)
 
 static jmp_buf  cycles_works_buf;
 
-static RETSIGTYPE
+static void
 cycles_works_handler (int sig)
 {
   longjmp (cycles_works_buf, 1);
@@ -475,7 +475,7 @@ cycles_works_p (void)
    * all linux systems. */
 #ifdef SIGILL
   {
-    RETSIGTYPE (*old_handler) (int);
+    void (*old_handler) (int);
     unsigned  cycles[2];
 
     old_handler = signal (SIGILL, cycles_works_handler);
@@ -826,7 +826,7 @@ freq_measure_mftb_one (void)
 
 static jmp_buf  mftb_works_buf;
 
-static RETSIGTYPE
+static void
 mftb_works_handler (int sig)
 {
   longjmp (mftb_works_buf, 1);
@@ -835,9 +835,9 @@ mftb_works_handler (int sig)
 int
 mftb_works_p (void)
 {
-  unsigned   a[2];
-  RETSIGTYPE (*old_handler) (int);
-  double     cycletime;
+  unsigned a[2];
+  void     (*old_handler) (int);
+  double   cycletime;
 
   /* suppress a warning about a[] unused */
   a[0] = 0;
