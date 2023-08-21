@@ -2830,12 +2830,6 @@ fi
 AM_CONDITIONAL(ENABLE_STATIC, test "$enable_static" = yes)
 
 
-# Many of these library and header checks are for the benefit of
-# supplementary programs.  libgmp doesn't use anything too weird.
-
-AC_HEADER_STDC
-AC_HEADER_TIME
-
 # Reasons for testing:
 #   float.h - not in SunOS bundled cc
 #   invent.h - IRIX specific
@@ -2865,15 +2859,9 @@ AC_CHECK_HEADERS(fcntl.h float.h invent.h langinfo.h locale.h nl_types.h sys/att
 
 # On SunOS, sys/resource.h needs sys/time.h (for struct timeval)
 AC_CHECK_HEADERS(sys/resource.h,,,
-[#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
+[#include <time.h>
+#if HAVE_SYS_TIME_H
+# include <sys/time.h>  /* for struct timeval */
 #endif])
 
 # On NetBSD and OpenBSD, sys/sysctl.h needs sys/param.h for various constants
