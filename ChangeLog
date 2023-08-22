@@ -17,6 +17,8 @@
 
 	* acinclude.m4, configure.ac: AC_TRY_* -> AC_*_IFELSE.
 
+	* configure.ac: Add AC_PROG_SED before testing NM.
+
 2023-08-19  Marc Glisse  <marc.glisse@inria.fr>
 
 	* doc/gmp.texi: Rename IEEE P754. Remove @refill.

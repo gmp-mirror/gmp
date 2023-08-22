@@ -2701,6 +2701,10 @@ echo "      MPN_PATH=\"$path\""
 
 CL_AS_NOEXECSTACK
 
+AC_PROG_SED
+# FIXME: AC_PROG_SED above is a hack (LT_PATH_NM uses $SED), it normally
+# happens as part of LT_INIT, and we are not supposed to call LT_PATH_NM before
+# LT_INIT, but the comments in acinclude.m4 say we want it before LT_INIT...
 GMP_PROG_AR
 GMP_PROG_NM
 
