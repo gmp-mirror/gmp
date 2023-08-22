@@ -802,7 +802,7 @@ dnl
 AC_DEFUN([GMP_PROG_CC_WORKS_PART],
 [GMP_PROG_CC_WORKS_PART_MAIN([$1],[$2],
 [$3]
-[int main () { return 0; }])
+[int main (void) { return 0; }])
 ])
 
 dnl  Called: GMP_PROG_CC_WORKS_PART_MAIN(CC+CFLAGS,FAIL-MESSAGE,CODE)
@@ -870,7 +870,7 @@ AC_DEFUN([GMP_PROG_CC_WORKS_LONGLONG],
 cat >conftest.c <<EOF
 long long  foo;
 long long  bar () { return foo; }
-int main () { return 0; }
+int main (void) { return 0; }
 EOF
 gmp_prog_cc_works=no
 gmp_compile="$1 -c conftest.c >&AS_MESSAGE_LOG_FD"
@@ -912,7 +912,7 @@ AC_DEFUN([GMP_C_TEST_SIZEOF],
 AC_MSG_CHECKING([compiler $1 has sizeof($gmp_sizeof_type)==$gmp_sizeof_want])
 cat >conftest.c <<EOF
 [int
-main ()
+main (void)
 {
   static int test_array [1 - 2 * (long) (sizeof ($gmp_sizeof_type) != $gmp_sizeof_want)];
   test_array[0] = 0;
@@ -1145,7 +1145,7 @@ AC_DEFUN([GMP_GCC_NO_CPP_PRECOMP],
   AC_MSG_CHECKING([compiler $2 $3 -no-cpp-precomp])
   result=no
   cat >conftest.c <<EOF
-int main () { return 0; }
+int main (void) { return 0; }
 EOF
   gmp_compile="$2 $3 -no-cpp-precomp conftest.c >conftest.out 2>&1"
   if AC_TRY_EVAL(gmp_compile); then
@@ -1204,7 +1204,7 @@ AC_DEFUN([GMP_GCC_WA_MCPU],
 [AC_MSG_CHECKING([assembler $1 $2])
 result=no
 cat >conftest.c <<EOF
-int main () {}
+int main (void) {}
 EOF
 gmp_compile="$1 $2 -c conftest.c >conftest.out 2>&1"
 if AC_TRY_EVAL(gmp_compile); then
@@ -3271,7 +3271,7 @@ struct foo foo = {
   -123456789.0,
   { '\376', '\334', '\272', '\230', '\166', '\124', '\062', '\020' },
 };
-int main(){
+int main(void){
   int i;
   for (i = 0; i < 8; i++) {
     printf ("%d %f\n", foo.before[i] + foo.after[i], foo.x);
@@ -3711,7 +3711,7 @@ check (const char *fmt, ...)
 }
 
 int
-main ()
+main (void)
 {
 $i
 }
@@ -3822,7 +3822,7 @@ AC_DEFUN([GMP_PROG_CC_FOR_BUILD_WORKS],
 rm -f conftest* a.out b.out a.exe a_out.exe
 cat >conftest.c <<EOF
 int
-main ()
+main (void)
 {
   return 0;
 }
@@ -3896,7 +3896,7 @@ AC_CACHE_CHECK([for build system executable suffix],
                gmp_cv_prog_exeext_for_build,
 [cat >conftest.c <<EOF
 int
-main ()
+main (void)
 {
   return 0;
 }
@@ -3967,7 +3967,7 @@ AC_CACHE_CHECK([for build system compiler math library],
 [cat >conftest.c <<EOF
 #include <math.h>
 int
-main ()
+main (void)
 {
   return 0;
 }
