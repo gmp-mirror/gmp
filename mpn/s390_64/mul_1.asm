@@ -95,17 +95,17 @@ L(top):	lg	%r1, 0(idx,up)
 	lg	%r7, 8(idx,up)
 	mlgr	%r0, v0
 	mlgr	%r6, v0
-	alcgr	%r1, %r8
+	alcgr	%r8, %r1
 	alcgr	%r0, %r7
-	stg	%r1, 0(idx,rp)
+	stg	%r8, 0(idx,rp)
 	stg	%r0, 8(idx,rp)
 L(mid):	lg	%r1, 16(idx,up)
 	lg	%r9, 24(idx,up)
 	mlgr	%r0, v0
 	mlgr	%r8, v0
-	alcgr	%r1, %r6
+	alcgr	%r6, %r1
 	alcgr	%r0, %r9
-	stg	%r1, 16(idx,rp)
+	stg	%r6, 16(idx,rp)
 	stg	%r0, 24(idx,rp)
 	la	idx, 32(idx)
 	brctg	n, L(top)

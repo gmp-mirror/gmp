@@ -121,7 +121,7 @@ L(top):	lg	%r1, 0(idx,up)
 	mlgr	%r12, v0
 	alcgr	%r1, cy
 	alcgr	%r0, %r7
-	alcgr	%r9, %r6
+	alcgr	%r6, %r9
 	lghi	cy, 0
 	alcgr	%r8, %r13
 	alcgr	cy, %r12
@@ -129,9 +129,9 @@ L(top):	lg	%r1, 0(idx,up)
 	alcg	%r0, 8(idx,rp)
 	stg	%r1, 0(idx,rp)
 	stg	%r0, 8(idx,rp)
-L(m3):	alcg	%r9, 16(idx,rp)
+L(m3):	alcg	%r6, 16(idx,rp)
 L(m2):	alcg	%r8, 24(idx,rp)
-	stg	%r9, 16(idx,rp)
+	stg	%r6, 16(idx,rp)
 	stg	%r8, 24(idx,rp)
 	la	idx, 32(idx)
 	brctg	n, L(top)
