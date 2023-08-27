@@ -56,6 +56,7 @@ define(`cy',	`%r11')
 ASM_START()
 PROLOGUE(mpn_submul_1)
 	stmg	%r6, %r14, 48(%r15)
+	lghi	%r14, 0
 	lghi	cy, 0
 	tmll	n, 1
 	la	n, 3(n)
