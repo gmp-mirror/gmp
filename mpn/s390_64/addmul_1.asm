@@ -74,7 +74,7 @@ L(b11):	lg	%r7, 0(up)
 	mlgr	%r8, v0
 	mlgr	%r12, v0
 	algr	%r7, cy
-	alcgr	%r9, %r6
+	alcgr	%r6, %r9
 	lghi	cy, 0
 	alcgr	%r8, %r13
 	alcgr	cy, %r12
@@ -107,6 +107,7 @@ L(b10):	lg	%r9, 0(up)
 	alcgr	%r8, %r13
 	alcgr	cy, %r12
 	alg	%r9, 0(rp)
+	lgr	%r6, %r9
 	lghi	idx, -16
 	j	L(m2)
 L(b00):	clgr	%r0, %r0		C clear CF
