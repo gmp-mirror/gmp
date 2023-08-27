@@ -39,7 +39,7 @@ C z196		 -
 C z12		 ?
 C z13		 ?
 C z14		 ?
-C z15		 ?
+C z15		 1.0
 
 define(`ap',	`%r2')
 define(`bp',	`%r3')
@@ -47,30 +47,67 @@ define(`n',	`%r4')
 
 ASM_START()
 PROLOGUE(mpn_hamdist)
-	vzero	%v30
-	tmll	n, 1
-	srlg	n, n, 1
-	je	L(top)
+	clgije	n, 1, L(1)
+	vzero	%v31
+	lay	%r0, -2(n)
+	srlg	%r0, %r0, 2
 
-L(odd):	vllezg	%v16, 0(ap)
-	vllezg	%v17, 0(bp)
-	vx	%v16, %v16, %v17
-	vpopctg	%v30, %v16
-	la	ap, 8(ap)
-	la	bp, 8(bp)
-	clgije	n, 0, L(end)
+	vl	%v16, 0(ap), 3
+	vl	%v17, 0(bp), 3
+	vx	%v18, %v16, %v17
+	vpopctg	%v30, %v18
+	tmll	n, 2
+	je	L(b0x)
+
+L(b1x):	la	ap, 16(ap)
+	la	bp, 16(bp)
+	clgijle	n, 3, L(end)
+	vl	%v16, 0(ap), 3
+	vl	%v17, 0(bp), 3
+	vx	%v18, %v16, %v17
+	vpopctg	%v31, %v18
+	j	L(mid)
+
+L(b0x):	vl	%v16, 16(ap), 3
+	vl	%v17, 16(bp), 3
+	vx	%v18, %v16, %v17
+	la	ap, 32(ap)
+	la	bp, 32(bp)
+	vpopctg	%v31, %v18
+	clgijle	n, 5, L(end)
 
 L(top):	vl	%v16, 0(ap), 3
 	vl	%v17, 0(bp), 3
-	vx	%v16, %v16, %v17
-	vpopctg	%v20, %v16
+	vx	%v18, %v16, %v17
+	vpopctg	%v20, %v18
 	vag	%v30, %v30, %v20
-	la	ap, 16(ap)
-	la	bp, 16(bp)
-	brctg	n, L(top)
+L(mid):	vl	%v16, 16(ap), 3
+	vl	%v17, 16(bp), 3
+	vx	%v18, %v16, %v17
+	vpopctg	%v20, %v18
+	vag	%v31, %v31, %v20
+	la	ap, 32(ap)
+	la	bp, 32(bp)
+	brctg	%r0, L(top)
 
-L(end):	vzero	%v29
+L(end):	tmll	n, 1
+	je	L(evn)
+	vllezg	%v16, 0(ap)
+	vllezg	%v17, 0(bp)
+	vx	%v18, %v16, %v17
+	vpopctg	%v20, %v18
+	vag	%v30, %v30, %v20
+
+L(evn):	vag	%v30, %v30, %v31
+	vzero	%v29
 	vsumqg	%v30, %v30, %v29
 	vlgvg	%r2, %v30, 1(%r0)
+	br	%r14
+
+L(1):	vllezg	%v16, 0(ap)
+	vllezg	%v17, 0(bp)
+	vx	%v18, %v16, %v17
+	vpopctg	%v30, %v18
+	vlgvg	%r2, %v30, 0
 	br	%r14
 EPILOGUE()
