@@ -1,3 +1,10 @@
+2023-09-05 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpn/generic/toom{54,63,6h,8h}_mul.c, mpn/generic/toom_couple_handling.c,
+	mpn/generic/toom_eval_{dgr3_pm1,dgr3_pm2,pm1,pm2,pm2exp,pm2rexp}.c:
+	Use unsigned to handle sign for evaluated couples of value in Toom code.
+	* gmp-impl.h: Update prototypes accordingly.
+
 2023-08-21  FX Coudert  <fxcoudert@gmail.com>
 	    Marc Glisse  <marc.glisse@inria.fr>
 
