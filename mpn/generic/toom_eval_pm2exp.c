@@ -38,13 +38,14 @@ see https://www.gnu.org/licenses/.  */
 #include "gmp-impl.h"
 
 /* Evaluates a polynomial of degree k > 2, in the points +2^shift and -2^shift. */
-int
+/* It returns 0 or ~0, depending on the sign of the result xm2. */
+unsigned
 mpn_toom_eval_pm2exp (mp_ptr xp2, mp_ptr xm2, unsigned k,
 		      mp_srcptr xp, mp_size_t n, mp_size_t hn, unsigned shift,
 		      mp_ptr tp)
 {
   unsigned i;
-  int neg;
+  unsigned neg;
 #if HAVE_NATIVE_mpn_addlsh_n
   mp_limb_t cy;
 #endif
@@ -101,7 +102,7 @@ mpn_toom_eval_pm2exp (mp_ptr xp2, mp_ptr xm2, unsigned k,
     mpn_add (xp2, xp2, n+1, xm2, hn+1);
 #endif /* !HAVE_NATIVE_mpn_addlsh_n */
 
-  neg = (mpn_cmp (xp2, tp, n + 1) < 0) ? ~0 : 0;
+  neg = - (unsigned) (mpn_cmp (xp2, tp, n + 1) < 0);
 
 #if HAVE_NATIVE_mpn_add_n_sub_n
   if (neg)

@@ -54,13 +54,14 @@ DO_mpn_addlsh_n(mp_ptr dst, mp_srcptr src, mp_size_t n, unsigned int s, mp_ptr w
 #endif
 
 /* Evaluates a polynomial of degree k >= 3. */
-int
+/* It returns 0 or ~0, depending on the sign of the result rm. */
+unsigned
 mpn_toom_eval_pm2rexp (mp_ptr rp, mp_ptr rm,
 		      unsigned int q, mp_srcptr ap, mp_size_t n, mp_size_t t,
 		      unsigned int s, mp_ptr ws)
 {
   unsigned int i;
-  int neg;
+  unsigned neg;
   /* {ap,q*n+t} -> {rp,n+1} {rm,n+1} , with {ws, n+1}*/
   ASSERT (n >= t);
   ASSERT (s != 0); /* or _eval_pm1 should be used */
@@ -81,7 +82,7 @@ mpn_toom_eval_pm2rexp (mp_ptr rp, mp_ptr rm,
     ws[n] += DO_mpn_addlsh_n(ws, ap+n*i, n, s*(q-i), rm);
   };
 
-  neg = (mpn_cmp (rp, ws, n + 1) < 0) ? ~0 : 0;
+  neg = - (unsigned) (mpn_cmp (rp, ws, n + 1) < 0);
 
 #if HAVE_NATIVE_mpn_add_n_sub_n
   if (neg)

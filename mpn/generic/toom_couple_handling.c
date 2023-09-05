@@ -45,7 +45,7 @@ see https://www.gnu.org/licenses/.  */
 */
 void
 mpn_toom_couple_handling (mp_ptr pp, mp_size_t n, mp_ptr np,
-			  int nsign, mp_size_t off, int ps, int ns)
+			  unsigned nsign, mp_size_t off, int ps, int ns)
 {
   if (nsign) {
 #ifdef HAVE_NATIVE_mpn_rsh1sub_n

@@ -37,8 +37,9 @@ see https://www.gnu.org/licenses/.  */
 
 #include "gmp-impl.h"
 
-/* Stores |{ap,n}-{bp,n}| in {rp,n}, returns the sign. */
-static int
+/* Stores |{ap,n}-{bp,n}| in {rp,n}. */
+/* It returns 0 or ~0, depending on the sign of the result. */
+static unsigned
 abs_sub_n (mp_ptr rp, mp_srcptr ap, mp_srcptr bp, mp_size_t n)
 {
   mp_limb_t  x, y;
@@ -57,7 +58,7 @@ abs_sub_n (mp_ptr rp, mp_srcptr ap, mp_srcptr bp, mp_size_t n)
 	  else
 	    {
 	      mpn_sub_n (rp, bp, ap, n);
-	      return ~0;
+	      return ~ (unsigned) 0;
 	    }
 	}
       rp[n] = 0;
@@ -65,9 +66,10 @@ abs_sub_n (mp_ptr rp, mp_srcptr ap, mp_srcptr bp, mp_size_t n)
   return 0;
 }
 
-static int
+/* It returns 0 or ~0, depending on the sign of the result rm. */
+static unsigned
 abs_sub_add_n (mp_ptr rm, mp_ptr rp, mp_srcptr rs, mp_size_t n) {
-  int result;
+  unsigned result;
   result = abs_sub_n (rm, rp, rs, n);
   ASSERT_NOCARRY(mpn_add_n (rp, rp, rs, n));
   return result;
@@ -99,7 +101,7 @@ mpn_toom63_mul (mp_ptr pp,
 {
   mp_size_t n, s, t;
   mp_limb_t cy;
-  int sign;
+  unsigned sign;
 
   /***************************** decomposition *******************************/
 #define a5  (ap + 5 * n)

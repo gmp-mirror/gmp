@@ -37,13 +37,15 @@ see https://www.gnu.org/licenses/.  */
 
 #include "gmp-impl.h"
 
+/* Evaluates a polynomial of degree 3, in the points +2 and -2. */
 /* Needs n+1 limbs of temporary storage. */
-int
+/* It returns 0 or ~0, depending on the sign of the result xm2. */
+unsigned
 mpn_toom_eval_dgr3_pm2 (mp_ptr xp2, mp_ptr xm2,
 			mp_srcptr xp, mp_size_t n, mp_size_t x3n, mp_ptr tp)
 {
   mp_limb_t cy;
-  int neg;
+  unsigned neg;
 
   ASSERT (x3n > 0);
   ASSERT (x3n <= n);
@@ -74,7 +76,7 @@ mpn_toom_eval_dgr3_pm2 (mp_ptr xp2, mp_ptr xm2,
 #endif
   mpn_lshift (tp, tp, n+1, 1);
 
-  neg = (mpn_cmp (xp2, tp, n + 1) < 0) ? ~0 : 0;
+  neg = - (unsigned) (mpn_cmp (xp2, tp, n + 1) < 0);
 
 #if HAVE_NATIVE_mpn_add_n_sub_n
   if (neg)

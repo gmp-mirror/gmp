@@ -65,12 +65,13 @@ do {					\
 
 /* Evaluates a polynomial of degree 2 < k < GMP_NUMB_BITS, in the
    points +2 and -2. */
-int
+/* It returns 0 or ~0, depending on the sign of the result xm2. */
+unsigned
 mpn_toom_eval_pm2 (mp_ptr xp2, mp_ptr xm2, unsigned k,
 		   mp_srcptr xp, mp_size_t n, mp_size_t hn, mp_ptr tp)
 {
   int i;
-  int neg;
+  unsigned neg;
   mp_limb_t cy;
 
   ASSERT (k >= 3);
@@ -103,7 +104,7 @@ mpn_toom_eval_pm2 (mp_ptr xp2, mp_ptr xm2, unsigned k,
   else
     ASSERT_NOCARRY(mpn_lshift (xp2, xp2, n + 1, 1));
 
-  neg = (mpn_cmp (xp2, tp, n + 1) < 0) ? ~0 : 0;
+  neg = (mpn_cmp (xp2, tp, n + 1) < 0);
 
 #if HAVE_NATIVE_mpn_add_n_sub_n
   if (neg)
@@ -122,9 +123,9 @@ mpn_toom_eval_pm2 (mp_ptr xp2, mp_ptr xm2, unsigned k,
   ASSERT (xp2[n] < (1<<(k+2))-1);
   ASSERT (xm2[n] < ((1<<(k+3))-1 - (1^k&1))/3);
 
-  neg ^= ((k & 1) - 1);
+  neg ^= 1 ^ k & 1;
 
-  return neg;
+  return - neg;
 }
 
 #undef DO_addlsh2

@@ -119,7 +119,7 @@ mpn_toom8h_mul   (mp_ptr pp,
 {
   mp_size_t n, s, t;
   int p, q, half;
-  int sign;
+  unsigned sign;
 
   /***************************** decomposition *******************************/
 

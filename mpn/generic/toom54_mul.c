@@ -61,7 +61,7 @@ mpn_toom54_mul (mp_ptr pp,
 		mp_srcptr bp, mp_size_t bn, mp_ptr scratch)
 {
   mp_size_t n, s, t;
-  int sign;
+  unsigned sign;
 
   /***************************** decomposition *******************************/
 #define a4  (ap + 4 * n)
