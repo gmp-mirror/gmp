@@ -1,3 +1,17 @@
+2023-09-24  Niels Möller  <nisse@lysator.liu.se>
+
+	* tune/speed.h (struct speed_params): Add size_ratio field.
+	(SPEED_ROUTINE_MPN_MUL): If size_ratio > 0.0, use it to set size1.
+
+	* tune/speed.c (FLAG_SR_OPTIONAL): New flag.
+	(FLAG_RSIZE): Deleted unused flag.
+	(routine): Add FLAG_SR_OPTIONAL to all unbalanced multiplication
+	functions.
+	(slash_r_string): New function, parse float ratio.
+	(run_one): Copy size_ratio field.
+	(routine_find): Handle optional /r.
+	(usage): Deisplay help on /r option.
+
 2023-09-05 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpn/generic/toom{54,63,6h,8h}_mul.c, mpn/generic/toom_couple_handling.c,
