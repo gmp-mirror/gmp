@@ -1123,9 +1123,8 @@ int speed_routine_count_zeros_setup (struct speed_params *, mp_ptr, int, int);
     double    t;							\
     TMP_DECL;								\
 									\
-    if (s->size_ratio > 0.0)						\
-      size1 = s->size_ratio * s->size;					\
-    else								\
+    size1 = s->size_ratio * s->size;					\
+    if (size1 == 0)							\
       {									\
 	size1 = (s->r == 0 ? s->size : s->r);				\
 	if (size1 < 0) size1 = -size1 - s->size;			\

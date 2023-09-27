@@ -1055,7 +1055,7 @@ routine_find (struct choice_t *c, const char *s_orig)
         {
           /* match, with a .r parameter */
 
-          if (! (routine[i].flag & (FLAG_R|FLAG_R_OPTIONAL)))
+          if (! (routine[i].flag & (FLAG_R|FLAG_R_OPTIONAL|FLAG_SR_OPTIONAL)))
             {
               fprintf (stderr,
                        "Choice %s bad: doesn't take a \".<r>\" parameter\n",
