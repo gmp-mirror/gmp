@@ -1474,6 +1474,47 @@ int speed_routine_count_zeros_setup (struct speed_params *, mp_ptr, int, int);
     return t;								\
   }
 
+#define SPEED_ROUTINE_MPN_MUL_TSPACE(function, itch, default_bn, valid)	\
+  {									\
+    mp_ptr    wp, tspace;						\
+    mp_size_t an, bn, tn;						\
+    unsigned  i;							\
+    double    t;							\
+    TMP_DECL;								\
+									\
+    an = s->size;							\
+    bn = s->size_ratio * s->size;					\
+    if (bn == 0)							\
+      {									\
+	bn = (s->r == 0 ? default_bn : s->r);				\
+	if (bn < 0) bn = -bn - an;					\
+      }									\
+    SPEED_RESTRICT_COND (bn >= 1);					\
+    SPEED_RESTRICT_COND (an >= bn);					\
+    SPEED_RESTRICT_COND (valid);					\
+    tn = itch(an, bn);							\
+									\
+    TMP_MARK;								\
+    SPEED_TMP_ALLOC_LIMBS (wp, an + bn, s->align_wp);			\
+    SPEED_TMP_ALLOC_LIMBS (tspace, tn, s->align_wp2);			\
+									\
+    speed_operand_src (s, s->xp, an);					\
+    speed_operand_src (s, s->yp, bn);					\
+    speed_operand_dst (s, wp, an + bn);					\
+    speed_operand_dst (s, tspace, tn);					\
+    speed_cache_fill (s);						\
+									\
+    speed_starttime ();							\
+    i = s->reps;							\
+    do									\
+      function(wp, s->xp, an, s->yp, bn, tspace);			\
+    while (--i != 0);							\
+    t = speed_endtime ();						\
+									\
+    TMP_FREE;								\
+    return t;								\
+  }
+
 #define SPEED_ROUTINE_MPN_MUL_N_TSPACE(call, tsize, minsize)		\
   {									\
     mp_ptr    wp, tspace;						\
@@ -1504,59 +1545,50 @@ int speed_routine_count_zeros_setup (struct speed_params *, mp_ptr, int, int);
     return t;								\
   }
 
-#define SPEED_ROUTINE_MPN_TOOM22_MUL_N(function)			\
-  SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
-    (function (wp, s->xp, s->size, s->yp, s->size, tspace),		\
-     mpn_toom22_mul_itch (s->size, s->size),				\
-     MPN_TOOM22_MUL_MINSIZE)
+#define SPEED_ROUTINE_MPN_TOOM22_MUL(function)				\
+  SPEED_ROUTINE_MPN_MUL_TSPACE						\
+    (function, mpn_toom22_mul_itch,					\
+     an, 5*bn > 4*an)
 
-#define SPEED_ROUTINE_MPN_TOOM33_MUL_N(function)			\
-  SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
-    (function (wp, s->xp, s->size, s->yp, s->size, tspace),		\
-     mpn_toom33_mul_itch (s->size, s->size),				\
-     MPN_TOOM33_MUL_MINSIZE)
+#define SPEED_ROUTINE_MPN_TOOM33_MUL(function)				\
+  SPEED_ROUTINE_MPN_MUL_TSPACE						\
+    (function, mpn_toom33_mul_itch,					\
+     an, bn > 2 * ((an+2) / 3))
 
-#define SPEED_ROUTINE_MPN_TOOM44_MUL_N(function)			\
-  SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
-    (function (wp, s->xp, s->size, s->yp, s->size, tspace),		\
-     mpn_toom44_mul_itch (s->size, s->size),				\
-     MPN_TOOM44_MUL_MINSIZE)
+#define SPEED_ROUTINE_MPN_TOOM44_MUL(function)				\
+  SPEED_ROUTINE_MPN_MUL_TSPACE						\
+    (function, mpn_toom44_mul_itch,					\
+     an, bn > 3*((an + 3) >> 2))
 
-#define SPEED_ROUTINE_MPN_TOOM6H_MUL_N(function)			\
-  SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
-    (function (wp, s->xp, s->size, s->yp, s->size, tspace),		\
-     mpn_toom6h_mul_itch (s->size, s->size),				\
-     MPN_TOOM6H_MUL_MINSIZE)
+#define SPEED_ROUTINE_MPN_TOOM6H_MUL(function)				\
+  SPEED_ROUTINE_MPN_MUL_TSPACE						\
+  (function, mpn_toom6h_mul_itch,					\
+   an, bn >= 42 && ((an*3 <  bn * 8) || (bn >= 46 && an * 6 <  bn * 17)))
 
-#define SPEED_ROUTINE_MPN_TOOM8H_MUL_N(function)			\
-  SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
-    (function (wp, s->xp, s->size, s->yp, s->size, tspace),		\
-     mpn_toom8h_mul_itch (s->size, s->size),				\
-     MPN_TOOM8H_MUL_MINSIZE)
+#define SPEED_ROUTINE_MPN_TOOM8H_MUL(function)				\
+  SPEED_ROUTINE_MPN_MUL_TSPACE						\
+    (function, mpn_toom8h_mul_itch,					\
+     an, (bn >= 86) && an*4 <= bn*11)
 
 #define SPEED_ROUTINE_MPN_TOOM32_MUL(function)				\
-  SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
-    (function (wp, s->xp, s->size, s->yp, 2*s->size/3, tspace),		\
-     mpn_toom32_mul_itch (s->size, 2*s->size/3),			\
-     MPN_TOOM32_MUL_MINSIZE)
+  SPEED_ROUTINE_MPN_MUL_TSPACE						\
+    (function, mpn_toom32_mul_itch,					\
+     2*an / 3, bn + 2 <= an && an + 6 <= 3*bn)
 
 #define SPEED_ROUTINE_MPN_TOOM42_MUL(function)				\
-  SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
-    (function (wp, s->xp, s->size, s->yp, s->size/2, tspace),		\
-     mpn_toom42_mul_itch (s->size, s->size/2),				\
-     MPN_TOOM42_MUL_MINSIZE)
+  SPEED_ROUTINE_MPN_MUL_TSPACE						\
+  (function, mpn_toom42_mul_itch,					\
+   an / 2, an >= 7 && bn >= 2 && an > 3*((bn+1)/2) && bn > ((an+3)/4))
 
 #define SPEED_ROUTINE_MPN_TOOM43_MUL(function)				\
-  SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
-    (function (wp, s->xp, s->size, s->yp, s->size*3/4, tspace),		\
-     mpn_toom43_mul_itch (s->size, s->size*3/4),			\
-     MPN_TOOM43_MUL_MINSIZE)
+  SPEED_ROUTINE_MPN_MUL_TSPACE						\
+    (function, mpn_toom43_mul_itch,					\
+     an*3/4, an >= 7 && bn >= 5 && an > 3 * ((bn+2)/3) && bn > 2 * ((an+3)/4))
 
 #define SPEED_ROUTINE_MPN_TOOM63_MUL(function)				\
-  SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
-    (function (wp, s->xp, s->size, s->yp, s->size/2, tspace),		\
-     mpn_toom63_mul_itch (s->size, s->size/2),				\
-     MPN_TOOM63_MUL_MINSIZE)
+  SPEED_ROUTINE_MPN_MUL_TSPACE						\
+    (function, mpn_toom63_mul_itch,					\
+     an/2, an >= 26 && bn >= 5 && an > 5*((bn+2)/3) && bn > 2*((an+5)/6))
 
 #define SPEED_ROUTINE_MPN_TOOM32_FOR_TOOM43_MUL(function)		\
   SPEED_ROUTINE_MPN_MUL_N_TSPACE					\
