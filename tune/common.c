@@ -1347,27 +1347,27 @@ speed_mpn_toom8_sqr (struct speed_params *s)
 double
 speed_mpn_toom22_mul (struct speed_params *s)
 {
-  SPEED_ROUTINE_MPN_TOOM22_MUL (mpn_toom22_mul);
+  SPEED_ROUTINE_MPN_TOOM22_MUL_N (mpn_toom22_mul);
 }
 double
 speed_mpn_toom33_mul (struct speed_params *s)
 {
-  SPEED_ROUTINE_MPN_TOOM33_MUL (mpn_toom33_mul);
+  SPEED_ROUTINE_MPN_TOOM33_MUL_N (mpn_toom33_mul);
 }
 double
 speed_mpn_toom44_mul (struct speed_params *s)
 {
-  SPEED_ROUTINE_MPN_TOOM44_MUL (mpn_toom44_mul);
+  SPEED_ROUTINE_MPN_TOOM44_MUL_N (mpn_toom44_mul);
 }
 double
 speed_mpn_toom6h_mul (struct speed_params *s)
 {
-  SPEED_ROUTINE_MPN_TOOM6H_MUL (mpn_toom6h_mul);
+  SPEED_ROUTINE_MPN_TOOM6H_MUL_N (mpn_toom6h_mul);
 }
 double
 speed_mpn_toom8h_mul (struct speed_params *s)
 {
-  SPEED_ROUTINE_MPN_TOOM8H_MUL (mpn_toom8h_mul);
+  SPEED_ROUTINE_MPN_TOOM8H_MUL_N (mpn_toom8h_mul);
 }
 
 double

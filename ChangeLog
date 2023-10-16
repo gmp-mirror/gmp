@@ -1,35 +1,3 @@
-2023-09-27  Niels Möller  <nisse@lysator.liu.se>
-
-	* tune/speed.h (SPEED_ROUTINE_MPN_MUL_TSPACE): New macro,
-	supporting .r and /r for benchmarking unbalanced operation.
-	(SPEED_ROUTINE_MPN_TOOM22_MUL): Use SPEED_ROUTINE_MPN_MUL_TSPACE,
-	and renamed from...
-	(SPEED_ROUTINE_MPN_TOOM22_MUL_N): ... old name.
-	(SPEED_ROUTINE_MPN_TOOM33_MUL, SPEED_ROUTINE_MPN_TOOM44_MUL)
-	(SPEED_ROUTINE_MPN_TOOM6H_MUL, SPEED_ROUTINE_MPN_TOOM8H_MUL):
-	Analogous change and rename.
-	(SPEED_ROUTINE_MPN_TOOM32_MUL, SPEED_ROUTINE_MPN_TOOM42_MUL)
-	(SPEED_ROUTINE_MPN_TOOM43_MUL)
-	(SPEED_ROUTINE_MPN_TOOM63_MUL): Use SPEED_ROUTINE_MPN_MUL_TSPACE.
-
-	* tune/common.c (speed_mpn_toom22_mul, speed_mpn_toom33_mul)
-	(speed_mpn_toom44_mul, speed_mpn_toom6h_mul)
-	(speed_mpn_toom8h_mul): Updated for rename of corresponding macros.
-
-2023-09-24  Niels Möller  <nisse@lysator.liu.se>
-
-	* tune/speed.h (struct speed_params): Add size_ratio field.
-	(SPEED_ROUTINE_MPN_MUL): If size_ratio > 0.0, use it to set size1.
-
-	* tune/speed.c (FLAG_SR_OPTIONAL): New flag.
-	(FLAG_RSIZE): Deleted unused flag.
-	(routine): Add FLAG_SR_OPTIONAL to all unbalanced multiplication
-	functions.
-	(slash_r_string): New function, parse float ratio.
-	(run_one): Copy size_ratio field.
-	(routine_find): Handle optional /r.
-	(usage): Deisplay help on /r option.
-
 2023-09-05 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpn/generic/toom{54,63,6h,8h}_mul.c, mpn/generic/toom_couple_handling.c,
