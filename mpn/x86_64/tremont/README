@@ -1,0 +1,12 @@
+We should get some "grabber" files in place here:
+
+gcd_11	       -> core2
+aorrlsh1_n     -> atom
+addmul_1       -> coreisbr
+submul_1       -> coreisbr
+mul_2	       -> coreisbr
+addmul_2       -> coreisbr
+mul_basecase   -> coreisbr
+sqr_basecase   -> coreisbr
+mullo_basecase -> coreisbr
+redc_1	       -> coreisbr
