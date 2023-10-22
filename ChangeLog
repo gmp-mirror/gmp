@@ -5,6 +5,16 @@
 	Use unsigned to handle sign for evaluated couples of value in Toom code.
 	* gmp-impl.h: Update prototypes accordingly.
 
+2023-08-27  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/s390_64/z15/mul_2.asm: New file.
+	* mpn/s390_64/z15/addmul_2.asm: New file.
+	* mpn/s390_64/z13/bdiv_dbm1c.asm: New file.
+
+	* mpn/s390_64/submul_1.asm: Properly initiate register used for carry.
+
+	* mpn/s390_64/z14/hamdist.asm: Unroll.
+
 2023-08-21  FX Coudert  <fxcoudert@gmail.com>
 	    Marc Glisse  <marc.glisse@inria.fr>
 
@@ -27,9 +37,34 @@
 	* configure.ac: Add AC_PROG_SED before testing NM.
 	* acinclude.m4: Some main() -> main(void).
 
+2023-08-20  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/s390_64/z14/popcount.asm: Unroll.
+
 2023-08-19  Marc Glisse  <marc.glisse@inria.fr>
 
 	* doc/gmp.texi: Rename IEEE P754. Remove @refill.
+
+2023-08-19  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/s390_64/z15/copyd.asm: New file.
+
+	* mpn/s390_64/mul_1.asm: Unroll.
+	* mpn/s390_64/addmul_1.asm: Likewise.
+	* mpn/s390_64/submul_1.asm: Likewise.
+
+2023-08-13  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/s390_64/z13/aormul_2.c: Remove C low-level s390 file.
+	* mpn/s390_64/z13/mul_basecase.c: Likewise.
+	* mpn/s390_64/z13/addmul_1.c: Likewise.
+	* mpn/s390_64/z13/mul_1.c: Likewise.
+	* mpn/s390_64/z13/common-vec.h: Likewise.
+
+2023-08-05  Torbjörn Granlund  <tg@gmplib.org>
+
+	* mpn/powerpc64/mode64/p9/addmul_1.asm: Rewrite for pwr10 speed.
+	* mpn/powerpc64/mode64/p9/mul_1.asm: Likewise.
 
 2023-07-31  Torbjörn Granlund  <tg@gmplib.org>
 
@@ -76,8 +111,8 @@
 2023-07-26  Torbjörn Granlund  <tg@gmplib.org>
 
 	* mpn/s390_64/z13/submul_1.asm: New file.
-	* mpn/s390_64/z13/popcount.asm: New file.
-	* mpn/s390_64/z13/hamdist.asm: New file.
+	* mpn/s390_64/z14/popcount.asm: New file.
+	* mpn/s390_64/z14/hamdist.asm: New file.
 
 2023-07-25  Torbjörn Granlund  <tg@gmplib.org>
 
