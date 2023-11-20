@@ -2948,6 +2948,7 @@ all (void)
 #endif
   }
   printf ("\n");
+  s.size_ratio = 0.0;
 
   tune_divrem_1 ();
   tune_mod_1 ();

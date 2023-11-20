@@ -113,6 +113,7 @@ struct speed_params {
   mp_ptr     yp;	/* second argument */
   mp_size_t  size;	/* size of both arguments */
   mp_limb_t  r;		/* user supplied parameter */
+  double     size_ratio; /* ratio for smaller to larger size, e.g., for mpn_mul */
   mp_size_t  align_xp;	/* alignment of xp */
   mp_size_t  align_yp;	/* alignment of yp */
   mp_size_t  align_wp;	/* intended alignment of wp */
@@ -1122,9 +1123,12 @@ int speed_routine_count_zeros_setup (struct speed_params *, mp_ptr, int, int);
     double    t;							\
     TMP_DECL;								\
 									\
-    size1 = (s->r == 0 ? s->size : s->r);				\
-    if (size1 < 0) size1 = -size1 - s->size;				\
-									\
+    size1 = s->size_ratio * s->size;					\
+    if (size1 == 0)							\
+      {									\
+	size1 = (s->r == 0 ? s->size : s->r);				\
+	if (size1 < 0) size1 = -size1 - s->size;			\
+      }									\
     SPEED_RESTRICT_COND (size1 >= 1);					\
     SPEED_RESTRICT_COND (s->size >= size1);				\
 									\
