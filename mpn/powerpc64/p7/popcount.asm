@@ -36,6 +36,9 @@ C POWER4/PPC970          -
 C POWER5                 -
 C POWER6                 -
 C POWER7                 2
+C POWER8                 2.63
+C POWER9                 1.62
+C POWER10                0.88
 
 define(`up', r3)
 define(`n',  r4)
