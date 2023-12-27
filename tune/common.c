@@ -1386,49 +1386,19 @@ speed_mpn_toom43_mul (struct speed_params *s)
   SPEED_ROUTINE_MPN_TOOM43_MUL (mpn_toom43_mul);
 }
 double
+speed_mpn_toom53_mul (struct speed_params *s)
+{
+  SPEED_ROUTINE_MPN_TOOM53_MUL (mpn_toom53_mul);
+}
+double
+speed_mpn_toom54_mul (struct speed_params *s)
+{
+  SPEED_ROUTINE_MPN_TOOM54_MUL (mpn_toom54_mul);
+}
+double
 speed_mpn_toom63_mul (struct speed_params *s)
 {
   SPEED_ROUTINE_MPN_TOOM63_MUL (mpn_toom63_mul);
-}
-double
-speed_mpn_toom32_for_toom43_mul (struct speed_params *s)
-{
-  SPEED_ROUTINE_MPN_TOOM32_FOR_TOOM43_MUL (mpn_toom32_mul);
-}
-double
-speed_mpn_toom43_for_toom32_mul (struct speed_params *s)
-{
-  SPEED_ROUTINE_MPN_TOOM43_FOR_TOOM32_MUL (mpn_toom43_mul);
-}
-double
-speed_mpn_toom32_for_toom53_mul (struct speed_params *s)
-{
-  SPEED_ROUTINE_MPN_TOOM32_FOR_TOOM53_MUL (mpn_toom32_mul);
-}
-double
-speed_mpn_toom53_for_toom32_mul (struct speed_params *s)
-{
-  SPEED_ROUTINE_MPN_TOOM53_FOR_TOOM32_MUL (mpn_toom53_mul);
-}
-double
-speed_mpn_toom42_for_toom53_mul (struct speed_params *s)
-{
-  SPEED_ROUTINE_MPN_TOOM42_FOR_TOOM53_MUL (mpn_toom42_mul);
-}
-double
-speed_mpn_toom53_for_toom42_mul (struct speed_params *s)
-{
-  SPEED_ROUTINE_MPN_TOOM53_FOR_TOOM42_MUL (mpn_toom53_mul);
-}
-double
-speed_mpn_toom43_for_toom54_mul (struct speed_params *s)
-{
-  SPEED_ROUTINE_MPN_TOOM43_FOR_TOOM54_MUL (mpn_toom43_mul);
-}
-double
-speed_mpn_toom54_for_toom43_mul (struct speed_params *s)
-{
-  SPEED_ROUTINE_MPN_TOOM54_FOR_TOOM43_MUL (mpn_toom54_mul);
 }
 
 double

@@ -1,3 +1,33 @@
+2023-12-27  Niels Möller  <nisse@lysator.liu.se>
+
+	* tune/tuneup.c (tune_mul): Updated to measure all
+	MUL_TOOM*_TO_TOOM*_THRESHOLD using size_ratio.
+
+	* tune/speed.h: Update declarations.
+	(SPEED_ROUTINE_MPN_MUL_TSPACE): Add support for size_ratio. New
+	arguments default_bn and valid.
+	(SPEED_ROUTINE_MPN_TOOM22_MUL, SPEED_ROUTINE_MPN_TOOM33_MUL)
+	(SPEED_ROUTINE_MPN_TOOM44_MUL, SPEED_ROUTINE_MPN_TOOM6H_MUL)
+	(SPEED_ROUTINE_MPN_TOOM8H_MUL, SPEED_ROUTINE_MPN_TOOM32_MUL)
+	(SPEED_ROUTINE_MPN_TOOM42_MUL, SPEED_ROUTINE_MPN_TOOM43_MUL)
+	(SPEED_ROUTINE_MPN_TOOM63_MUL): Updated for
+	SPEED_ROUTINE_MPN_MUL_TSPACE changes.
+	(SPEED_ROUTINE_MPN_TOOM53_MUL, SPEED_ROUTINE_MPN_TOOM54_MUL): New.
+	(SPEED_ROUTINE_MPN_TOOM*_FOR_TOOM*_MUL): All deleted.
+
+	* tune/speed.c (routine): Add FLAG_SR_OPTIONAL to mpn_toom*_mul
+	functions. Add mpn_toom53_mul and mpn_toom54_mul,
+
+	* tune/common.c (speed_mpn_toom53_mul, speed_mpn_toom54_mul): New functions.
+	(speed_mpn_toom32_for_toom43_mul)
+	(speed_mpn_toom43_for_toom32_mul)
+	(speed_mpn_toom32_for_toom53_mul)
+	(speed_mpn_toom53_for_toom32_mul)
+	(speed_mpn_toom42_for_toom53_mul)
+	(speed_mpn_toom53_for_toom42_mul)
+	(speed_mpn_toom43_for_toom54_mul)
+	(speed_mpn_toom54_for_toom43_mul): Deleted functions.
+
 2023-11-22  Niels Möller  <nisse@lysator.liu.se>
 
 	* tune/speed.h (SPEED_ROUTINE_MPN_MUL_TSPACE): Rename macro, was

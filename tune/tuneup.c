@@ -1417,30 +1417,36 @@ tune_mul (void)
 
   param.noprint = 1;
 
-  param.function = speed_mpn_toom32_for_toom43_mul;
-  param.function2 = speed_mpn_toom43_for_toom32_mul;
+  s.r = 0;		/* clear, use size_ratio for these tests. */
+
+  s.size_ratio = 17.0 / 24;
+  param.function = speed_mpn_toom32_mul;
+  param.function2 = speed_mpn_toom43_mul;
   param.name = "MUL_TOOM32_TO_TOOM43_THRESHOLD";
   param.min_size = MPN_TOOM43_MUL_MINSIZE * 24 / 17;
   one (&thres, &param);
   mul_toom32_to_toom43_threshold = thres * 17 / 24;
   print_define ("MUL_TOOM32_TO_TOOM43_THRESHOLD", mul_toom32_to_toom43_threshold);
 
-  param.function = speed_mpn_toom32_for_toom53_mul;
-  param.function2 = speed_mpn_toom53_for_toom32_mul;
+  s.size_ratio = 19.0 / 30;
+  param.function = speed_mpn_toom32_mul;
+  param.function2 = speed_mpn_toom53_mul;
   param.name = "MUL_TOOM32_TO_TOOM53_THRESHOLD";
   param.min_size = MPN_TOOM53_MUL_MINSIZE * 30 / 19;
   one (&thres, &param);
   mul_toom32_to_toom53_threshold = thres * 19 / 30;
   print_define ("MUL_TOOM32_TO_TOOM53_THRESHOLD", mul_toom32_to_toom53_threshold);
 
-  param.function = speed_mpn_toom42_for_toom53_mul;
-  param.function2 = speed_mpn_toom53_for_toom42_mul;
+  s.size_ratio = 11.0 / 20;
+  param.function = speed_mpn_toom42_mul;
+  param.function2 = speed_mpn_toom53_mul;
   param.name = "MUL_TOOM42_TO_TOOM53_THRESHOLD";
   param.min_size = MPN_TOOM53_MUL_MINSIZE * 20 / 11;
   one (&thres, &param);
   mul_toom42_to_toom53_threshold = thres * 11 / 20;
   print_define ("MUL_TOOM42_TO_TOOM53_THRESHOLD", mul_toom42_to_toom53_threshold);
 
+  s.size_ratio = 0.5;
   param.function = speed_mpn_toom42_mul;
   param.function2 = speed_mpn_toom63_mul;
   param.name = "MUL_TOOM42_TO_TOOM63_THRESHOLD";
@@ -1450,13 +1456,17 @@ tune_mul (void)
   print_define ("MUL_TOOM42_TO_TOOM63_THRESHOLD", mul_toom42_to_toom63_threshold);
 
   /* Use ratio 5/6 when measuring, the middle of the range 2/3 to 1. */
-  param.function = speed_mpn_toom43_for_toom54_mul;
-  param.function2 = speed_mpn_toom54_for_toom43_mul;
+  s.size_ratio = 5.0 / 6;
+  param.function = speed_mpn_toom43_mul;
+  param.function2 = speed_mpn_toom54_mul;
   param.name = "MUL_TOOM43_TO_TOOM54_THRESHOLD";
   param.min_size = MPN_TOOM54_MUL_MINSIZE * 6 / 5;
   one (&thres, &param);
   mul_toom43_to_toom54_threshold = thres * 5 / 6;
   print_define ("MUL_TOOM43_TO_TOOM54_THRESHOLD", mul_toom43_to_toom54_threshold);
+
+  /* Reset for other tests. */
+  s.size_ratio = 0.0;
 }
 
 
