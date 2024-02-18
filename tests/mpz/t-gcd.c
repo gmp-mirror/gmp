@@ -432,6 +432,10 @@ gcdext_valid_p (const mpz_t a, const mpz_t b, const mpz_t g, const mpz_t s)
   if (mpz_sgn (g) <= 0)
     return 0;
 
+  /* Require that s==0 iff g==abs(b) */
+  if (!mpz_sgn (s) != !mpz_cmpabs (g, b))
+    return 0;
+
   mpz_tdiv_qr (temp1, temp3, a, g);
   if (mpz_sgn (temp3) != 0)
     return 0;
@@ -440,8 +444,8 @@ gcdext_valid_p (const mpz_t a, const mpz_t b, const mpz_t g, const mpz_t s)
   if (mpz_sgn (temp3) != 0)
     return 0;
 
-  /* Require that 2 |s| < |b/g|, or |s| == 1. */
-  if (mpz_cmpabs_ui (s, 1) > 0)
+  /* Require that 2 |s| < |b/g|, or s == sgn(a) */
+  if (mpz_cmp_si (s, mpz_sgn (a)) != 0)
     {
       mpz_mul_2exp (temp3, s, 1);
       if (mpz_cmpabs (temp3, temp2) >= 0)
@@ -456,8 +460,8 @@ gcdext_valid_p (const mpz_t a, const mpz_t b, const mpz_t g, const mpz_t s)
   if (mpz_sgn (temp3) != 0)
     return 0;
 
-  /* Require that 2 |t| < |a/g| or |t| == 1*/
-  if (mpz_cmpabs_ui (temp2, 1) > 0)
+  /* Require that 2 |t| < |a/g| or t == sgn(b) */
+  if (mpz_cmp_si (temp2, mpz_sgn (b)) != 0)
     {
       mpz_mul_2exp (temp2, temp2, 1);
       if (mpz_cmpabs (temp2, temp1) >= 0)

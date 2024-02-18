@@ -55,6 +55,10 @@ gcdext_valid_p (const mpz_t a, const mpz_t b,
   if (mpz_sgn (g) <= 0)
     return 0;
 
+  /* Require that s==0 iff g==abs(b) */
+  if (!mpz_sgn (s) != !mpz_cmpabs (g, b))
+    goto fail;
+
   mpz_init (ta);
   mpz_init (tb);
   mpz_init (r);
@@ -79,20 +83,20 @@ gcdext_valid_p (const mpz_t a, const mpz_t b,
   if (mpz_sgn (r) != 0)
     goto fail;
 
-  /* Require that 2 |s| < |b/g|, or |s| == 1. */
-  if (mpz_cmpabs_ui (s, 1) > 0)
+  /* Require that 2 |s| < |b/g|, or s == sgn(a) */
+  if (mpz_cmp_si (s, mpz_sgn (a)) != 0)
     {
       mpz_mul_2exp (r, s, 1);
-      if (mpz_cmpabs (r, tb) > 0)
+      if (mpz_cmpabs (r, tb) >= 0)
 	goto fail;
     }
 
-  /* Require that 2 |t| < |a/g| or |t| == 1*/
-  if (mpz_cmpabs_ui (t, 1) > 0)
+  /* Require that 2 |t| < |a/g| or t == sgn(b) */
+  if (mpz_cmp_si (t, mpz_sgn (b)) != 0)
     {
       mpz_mul_2exp (r, t, 1);
-      if (mpz_cmpabs (r, ta) > 0)
-	return 0;
+      if (mpz_cmpabs (r, ta) >= 0)
+	goto fail;
     }
 
   mpz_clear (ta);
@@ -102,17 +106,53 @@ gcdext_valid_p (const mpz_t a, const mpz_t b,
   return 1;
 }
 
+static void test_one(const mpz_t a, const mpz_t b)
+{
+  mpz_t g, s, t;
+
+  mpz_init (g);
+  mpz_init (s);
+  mpz_init (t);
+
+  mpz_gcdext (g, s, t, a, b);
+  if (!gcdext_valid_p (a, b, g, s, t))
+    {
+      fprintf (stderr, "mpz_gcdext failed:\n");
+      dump ("a", a);
+      dump ("b", b);
+      dump ("g", g);
+      dump ("s", s);
+      dump ("t", t);
+      abort ();
+    }
+
+  mpz_gcd (s, a, b);
+  if (mpz_cmp (g, s))
+    {
+      fprintf (stderr, "mpz_gcd failed:\n");
+      dump ("a", a);
+      dump ("b", b);
+      dump ("r", g);
+      dump ("ref", s);
+      abort ();
+    }
+
+  mpz_clear (g);
+  mpz_clear (s);
+  mpz_clear (t);
+}
+
 void
 testmain (int argc, char **argv)
 {
   unsigned i;
-  mpz_t a, b, g, s, t;
+  mpz_t a, b, g, s;
+  int ai, bi;
 
   mpz_init (a);
   mpz_init (b);
   mpz_init (g);
   mpz_init (s);
-  mpz_init (t);
 
   for (i = 0; i < COUNT; i++)
     {
@@ -128,6 +168,15 @@ testmain (int argc, char **argv)
 	  abort ();
 	}
     }
+
+  /* Exhaustive test of small inputs */
+  for (ai = -30; ai <= 30; ai++)
+    for (bi = -30; bi <= 30; bi++)
+      {
+	mpz_set_si (a, ai);
+	mpz_set_si (b, bi);
+	test_one (a, b);
+      }
 
   for (i = 0; i < COUNT; i++)
     {
@@ -147,32 +196,11 @@ testmain (int argc, char **argv)
       if (flags & 2)
 	mpz_neg (b, b);
 
-      mpz_gcdext (g, s, t, a, b);
-      if (!gcdext_valid_p (a, b, g, s, t))
-	{
-	  fprintf (stderr, "mpz_gcdext failed:\n");
-	  dump ("a", a);
-	  dump ("b", b);
-	  dump ("g", g);
-	  dump ("s", s);
-	  dump ("t", t);
-	  abort ();
-	}
-
-      mpz_gcd (s, a, b);
-      if (mpz_cmp (g, s))
-	{
-	  fprintf (stderr, "mpz_gcd failed:\n");
-	  dump ("a", a);
-	  dump ("b", b);
-	  dump ("r", g);
-	  dump ("ref", s);
-	  abort ();
-	}
+      test_one (a, b);
     }
+
   mpz_clear (a);
   mpz_clear (b);
   mpz_clear (g);
   mpz_clear (s);
-  mpz_clear (t);
 }

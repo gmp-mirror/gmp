@@ -1,3 +1,13 @@
+2024-02-18  Niels Möller  <nisse@lysator.liu.se>
+
+	* mini-gmp.c (mpz_gcdext): Fix logic to canonicalize cofactors.
+	But reported by Guido Vranken.
+
+	* tests/t-gcd.c (gcdext_valid_p): Stricter check that cofactors
+	match the documented behavior.
+	(test_one): New function, extracted from testmain.
+	(testmain): Add exhaustive tests for all inputs |a|, |b| <= 30.
+
 2023-07-20  Niels Möller  <nisse@lysator.liu.se>
 
 	* mini-gmp.c (gmp_umullo_limb): New macro, to avoid unintended

@@ -1,3 +1,9 @@
+2024-02-18  Niels Möller  <nisse@lysator.liu.se>
+
+	* tests/mpz/t-gcd.c (gcdext_valid_p): Stricter check that cofactors
+	match the documented behavior. Adapted from the corresponding
+	mini-gmp test.
+
 2023-12-27  Niels Möller  <nisse@lysator.liu.se>
 
 	* tune/tuneup.c (tune_mul): Updated to measure all
