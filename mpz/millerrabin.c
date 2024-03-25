@@ -8,7 +8,7 @@
    With the current implementation, the first 24 MR-tests are substituted by a
    Baillie-PSW probable prime test.
 
-   This implementation of the Baillie-PSW test was checked up to 2463*10^12,
+   This implementation of the Baillie-PSW test was checked up to 2640*10^12,
    for smaller values no MR-test is performed, regardless of reps, and
    2 ("surely prime") is returned if the number was not proved composite.
 
@@ -19,7 +19,7 @@
    CERTAIN TO BE SUBJECT TO INCOMPATIBLE CHANGES OR DISAPPEAR COMPLETELY IN
    FUTURE GNU MP RELEASES.
 
-Copyright 1991, 1993, 1994, 1996-2002, 2005, 2014, 2018-2022 Free
+Copyright 1991, 1993, 1994, 1996-2002, 2005, 2014, 2018-2022, 2024 Free
 Software Foundation, Inc.
 
 Contributed by John Amanatides.
@@ -101,12 +101,12 @@ mpz_millerrabin (mpz_srcptr n, int reps)
 	  || SIZ (n) - 64 / GMP_NUMB_BITS == (PTR (n) [64 / GMP_NUMB_BITS] < CNST_LIMB(1) << 64 % GMP_NUMB_BITS)
 #endif
 #else
-	  /* Consider numbers up to 35*2^46 that pass the BPSW test as primes.
-	     This implementation was tested up to 2463*10^12 > 2^51+2^47+2^46 */
-	  /* 2^5 < 35 = 0b100011 < 2^6 */
-#define GMP_BPSW_LIMB_CONST CNST_LIMB(35)
-#define GMP_BPSW_BITS_CONST (LOG2C(35) - 1)
-#define GMP_BPSW_BITS_LIMIT (46 + GMP_BPSW_BITS_CONST)
+	  /* Consider numbers up to 75*2^45 that pass the BPSW test as primes.
+	     This implementation was tested up to 264*10^13 > 2^51+2^48+2^46+2^45 */
+	  /* 2^6 < 75 = 0b1001011 < 2^7 */
+#define GMP_BPSW_LIMB_CONST CNST_LIMB(75)
+#define GMP_BPSW_BITS_CONST (LOG2C(75) - 1)
+#define GMP_BPSW_BITS_LIMIT (45 + GMP_BPSW_BITS_CONST)
 
 #define GMP_BPSW_LIMBS_LIMIT (GMP_BPSW_BITS_LIMIT / GMP_NUMB_BITS)
 #define GMP_BPSW_BITS_MOD (GMP_BPSW_BITS_LIMIT % GMP_NUMB_BITS)
