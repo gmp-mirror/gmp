@@ -1,3 +1,14 @@
+2024-03-25 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* mpz/millerrabin.c: Swap function order to avoid a (wrong) prototype,
+	typo spoted by Case Van Horsen. Update also tested values.
+	* mpn/generic/sec_div.c: Declare qh only when needed.
+
+	* printf/doprntf.c: Trust return value of sprintf, and use it.
+	* printf/repl-vsnprintf.c: Likewise, with vsprintf.
+	* printf/sprintffuns.c: Likewise. Bugs spotted by Vincent Lefevre.
+	* tests/misc/t-printf.c: Test those changes.
+
 2024-02-18  Niels Möller  <nisse@lysator.liu.se>
 
 	* tests/mpz/t-gcd.c (gcdext_valid_p): Stricter check that cofactors

@@ -1,7 +1,11 @@
+2024-03-25 Marco Bodrato <bodrato@mail.dm.unipi.it>
+
+	* tests/t-import.c: Do not print unused value.
+
 2024-02-18  Niels Möller  <nisse@lysator.liu.se>
 
 	* mini-gmp.c (mpz_gcdext): Fix logic to canonicalize cofactors.
-	But reported by Guido Vranken.
+	Bug reported by Guido Vranken.
 
 	* tests/t-gcd.c (gcdext_valid_p): Stricter check that cofactors
 	match the documented behavior.
