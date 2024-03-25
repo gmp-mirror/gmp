@@ -364,16 +364,14 @@ __gmp_replacement_vsnprintf (char *buf, size_t buf_size,
 
   if (total_width <= buf_size)
     {
-      vsprintf (buf, orig_fmt, orig_ap);
-      len = strlen (buf);
+      len = vsprintf (buf, orig_fmt, orig_ap);
     }
   else
     {
       char  *s;
 
       s = __GMP_ALLOCATE_FUNC_TYPE (total_width, char);
-      vsprintf (s, orig_fmt, orig_ap);
-      len = strlen (s);
+      len = vsprintf (s, orig_fmt, orig_ap);
       if (buf_size != 0)
 	{
 	  size_t  copylen = MIN (len, buf_size-1);

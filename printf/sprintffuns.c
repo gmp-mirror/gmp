@@ -53,9 +53,9 @@ gmp_sprintf_format (char **bufp, const char *fmt, va_list ap)
 {
   char  *buf = *bufp;
   int   ret;
-  vsprintf (buf, fmt, ap);
-  ret = strlen (buf);
-  *bufp = buf + ret;
+  ret = vsprintf (buf, fmt, ap);
+  if (ret > 0)
+    *bufp = buf + ret;
   return ret;
 }
 
