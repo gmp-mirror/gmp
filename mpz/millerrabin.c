@@ -57,9 +57,54 @@ see https://www.gnu.org/licenses/.  */
 #define GMP_BPSW_NOFALSEPOSITIVES_UPTO_64BITS 0
 #endif
 
-static int millerrabin (mpz_srcptr,
-			mpz_ptr, mpz_ptr,
-			mpz_srcptr, unsigned long int);
+static int
+mod_eq_m1 (mpz_srcptr x, mpz_srcptr m)
+{
+  mp_size_t ms;
+  mp_srcptr mp, xp;
+
+  ms = SIZ (m);
+  if (SIZ (x) != ms)
+    return 0;
+  ASSERT (ms > 0);
+
+  mp = PTR (m);
+  xp = PTR (x);
+  ASSERT ((mp[0] - 1) == (mp[0] ^ 1)); /* n is odd */
+
+  if ((*xp ^ CNST_LIMB(1) ^ *mp) != CNST_LIMB(0)) /* xp[0] != mp[0] - 1 */
+    return 0;
+  else
+    {
+      int cmp;
+
+      --ms;
+      ++xp;
+      ++mp;
+
+      MPN_CMP (cmp, xp, mp, ms);
+
+      return cmp == 0;
+    }
+}
+
+static int
+millerrabin (mpz_srcptr n, mpz_ptr x, mpz_ptr y,
+	     mpz_srcptr q, mp_bitcnt_t k)
+{
+  mpz_powm (y, x, q, n);
+
+  if (mpz_cmp_ui (y, 1L) == 0 || mod_eq_m1 (y, n))
+    return 1;
+
+  for (mp_bitcnt_t i = 1; i < k; ++i)
+    {
+      mpz_powm_ui (y, y, 2L, n);
+      if (mod_eq_m1 (y, n))
+	return 1;
+    }
+  return 0;
+}
 
 int
 mpz_millerrabin (mpz_srcptr n, int reps)
@@ -164,53 +209,4 @@ mpz_millerrabin (mpz_srcptr n, int reps)
     }
   TMP_FREE;
   return is_prime;
-}
-
-static int
-mod_eq_m1 (mpz_srcptr x, mpz_srcptr m)
-{
-  mp_size_t ms;
-  mp_srcptr mp, xp;
-
-  ms = SIZ (m);
-  if (SIZ (x) != ms)
-    return 0;
-  ASSERT (ms > 0);
-
-  mp = PTR (m);
-  xp = PTR (x);
-  ASSERT ((mp[0] - 1) == (mp[0] ^ 1)); /* n is odd */
-
-  if ((*xp ^ CNST_LIMB(1) ^ *mp) != CNST_LIMB(0)) /* xp[0] != mp[0] - 1 */
-    return 0;
-  else
-    {
-      int cmp;
-
-      --ms;
-      ++xp;
-      ++mp;
-
-      MPN_CMP (cmp, xp, mp, ms);
-
-      return cmp == 0;
-    }
-}
-
-static int
-millerrabin (mpz_srcptr n, mpz_ptr x, mpz_ptr y,
-	     mpz_srcptr q, mp_bitcnt_t k)
-{
-  mpz_powm (y, x, q, n);
-
-  if (mpz_cmp_ui (y, 1L) == 0 || mod_eq_m1 (y, n))
-    return 1;
-
-  for (mp_bitcnt_t i = 1; i < k; ++i)
-    {
-      mpz_powm_ui (y, y, 2L, n);
-      if (mod_eq_m1 (y, n))
-	return 1;
-    }
-  return 0;
 }
