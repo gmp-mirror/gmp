@@ -65,8 +65,8 @@ testmain (int argc, char **argv)
 	    if (mpz_cmp (a, res))
 	      {
 		fprintf (stderr, "mpz_import failed:\n"
-			 "in_count %lu, out_count %lu, endian = %d, order = %d\n",
-			 (unsigned long) in_count, (unsigned long) out_count, endian, order);
+			 "in_count %lu, endian = %d, order = %d\n",
+			 (unsigned long) in_count, endian, order);
 		dump ("a", a);
 		dump ("res", res);
 		abort ();
