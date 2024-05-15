@@ -1,3 +1,7 @@
+2024-05-15 Sven Anderson <sven@anderson.de>
+
+	* mpn/x86_64/fat/fat.c: Fix bug in BMI2 detection.
+
 2024-03-25 Marco Bodrato <bodrato@mail.dm.unipi.it>
 
 	* mpz/millerrabin.c: Swap function order to avoid a (wrong) prototype,
