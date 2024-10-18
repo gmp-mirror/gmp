@@ -106,7 +106,8 @@ gcdext_valid_p (const mpz_t a, const mpz_t b,
   return 1;
 }
 
-static void test_one(const mpz_t a, const mpz_t b)
+static void
+test_one (const mpz_t a, const mpz_t b)
 {
   mpz_t g, s, t;
 
@@ -135,6 +136,42 @@ static void test_one(const mpz_t a, const mpz_t b)
       dump ("r", g);
       dump ("ref", s);
       abort ();
+    }
+
+  /* Test mpn_gcd, if inputs are valid. */
+  if (mpz_sgn (a) && mpz_sgn (b) && (mpz_odd_p (a) || mpz_odd_p (b)))
+    {
+      mp_size_t an, bn, gn;
+      mp_ptr ap, bp, tp;
+      mpz_t t;
+
+      an = mpz_size (a); ap = a->_mp_d;
+      bn = mpz_size (b); bp = b->_mp_d;
+
+      if (an < bn)
+	{
+	  mp_ptr sp = ap;
+	  mp_size_t sn = an;
+	  ap = bp; an = bn;
+	  bp = sp; bn = sn;
+	}
+
+      tp = malloc ((an + bn) * sizeof (mp_limb_t));
+      if (!tp)
+	abort ();
+
+      mpn_copyi (tp, ap, an);
+      mpn_copyi (tp + an, bp, bn);
+      gn = mpn_gcd (tp, tp, an, tp + an, bn);
+      if (mpz_cmp (s, mpz_roinit_n (t, tp, gn)))
+	{
+	  fprintf (stderr, "mpn_gcd failed:\n");
+	  dump ("a", a);
+	  dump ("b", b);
+	  dump ("r", t);
+	  dump ("ref", s);
+	  abort ();
+	}
     }
 
   mpz_clear (g);
