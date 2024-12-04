@@ -179,6 +179,10 @@ arm*-*-* | aarch64-*-*)
 	    exact_cpu="applem1";;
 	  *Apple\ M2)
 	    exact_cpu="applem2";;
+	  *Apple\ M3)
+	    exact_cpu="applem3";;
+	  *Apple\ M4)
+	    exact_cpu="applem4";;
       esac
   fi
 
@@ -700,7 +704,7 @@ sparc-*-* | sparc64-*-*)
   for prtconfopt in "" "-vp"; do
     if test -z "$exact_cpu"; then
       if $SHELL -c "/usr/sbin/prtconf $prtconfopt" 2>/dev/null >$dummy; then
-	if egrep '(SUNW|ORCL),(Ultra)?SPARC-T5' $dummy >/dev/null; then
+	if egrep '(SUNW|ORCL),(Ultra)?SPARC-T[5-9]' $dummy >/dev/null; then
 	  exact_cpu=ultrasparct5
 	elif egrep '(SUNW|ORCL),(Ultra)?SPARC-T4' $dummy >/dev/null; then
 	  exact_cpu=ultrasparct4
@@ -1035,6 +1039,11 @@ main ()
 	      modelstr = "zen4";
 	      break;
 	    }
+	  break;
+	case 26:                /* Zen 5 */
+	  cpu_64bit = 1, cpu_avx = 1;
+	  modelstr = "zen5";
+	  break;
 	}
     }
   else if (strcmp (vendor_string, "HygonGenuine") == 0)
