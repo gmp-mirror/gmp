@@ -1,3 +1,8 @@
+2025-01-29  Rudi Heitbaum <rudi@heitbaum.com>
+	    Marc Glisse <marc.glisse@inria.fr>
+
+	* acinclude.m4: Complete function prototype.
+
 2024-05-15 Sven Anderson <sven@anderson.de>
 
 	* mpn/x86_64/fat/fat.c: Fix bug in BMI2 detection.
