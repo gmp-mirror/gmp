@@ -1,3 +1,8 @@
+2025-01-29  Albin Ahlbäck <albin.ahlback@gmail.com>
+	    Marc Glisse <marc.glisse@inria.fr>
+
+	* config.guess: Accept pro/max variants of Apple chips.
+
 2025-01-29  Rudi Heitbaum <rudi@heitbaum.com>
 	    Marc Glisse <marc.glisse@inria.fr>
 

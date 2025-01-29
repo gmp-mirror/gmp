@@ -175,13 +175,13 @@ EOF
 arm*-*-* | aarch64-*-*)
   if [ $( (uname -s) 2>/dev/null) = Darwin ]; then
       case $(system_profiler SPHardwareDataType | grep Chip) in
-	  *Apple\ M1)
+	  *Apple\ M1 | *Apple\ M1\ *)
 	    exact_cpu="applem1";;
-	  *Apple\ M2)
+	  *Apple\ M2 | *Apple\ M2\ *)
 	    exact_cpu="applem2";;
-	  *Apple\ M3)
+	  *Apple\ M3 | *Apple\ M3\ *)
 	    exact_cpu="applem3";;
-	  *Apple\ M4)
+	  *Apple\ M4 | *Apple\ M4\ *)
 	    exact_cpu="applem4";;
       esac
   fi
