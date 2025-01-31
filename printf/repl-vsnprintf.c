@@ -264,6 +264,30 @@ __gmp_replacement_vsnprintf (char *buf, size_t buf_size,
 	      }
 	    goto next;
 
+	  case 'A':
+	  case 'a':
+	    /* 6 for the 2 signs, 0x, point and p.
+	     * The exponent is decimal, the rest hexa, pretend everything is
+	     * the exponent. The right factor is more like 2.4.
+	     * + 2 extra margin for error.
+	     * prec + width are added later. */
+	    total_width += 6 + floating_sizeof * 3 + 2;
+	    if (type == 'L')
+	      {
+#if HAVE_LONG_DOUBLE
+		(void) va_arg (ap, long double);
+		total_width += long_double_digits;
+#else
+		ASSERT_FAIL (long double not available);
+#endif
+	      }
+	    else
+	      {
+		(void) va_arg (ap, double);
+		total_width += double_digits;
+	      }
+	    goto next;
+
 	  case 'h':  /* short or char */
 	  case 'j':  /* intmax_t */
 	  case 'L':  /* long long or long double */
