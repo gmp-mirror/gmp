@@ -1,3 +1,7 @@
+2025-01-31  Marc Glisse <marc.glisse@inria.fr>
+
+	* demos/calc/calc.y (yylex, yyerror): Declare.
+
 2025-01-29  Albin Ahlbäck <albin.ahlback@gmail.com>
 	    Marc Glisse <marc.glisse@inria.fr>
 

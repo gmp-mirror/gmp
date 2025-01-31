@@ -50,6 +50,8 @@ this program.  If not, see https://www.gnu.org/licenses/.  */
 #define NO_CALC_H /* because it conflicts with normal calc.c stuff */
 #include "calc-common.h"
 
+int yylex(void);
+void yyerror (char *s);
 
 #define numberof(x)  (sizeof (x) / sizeof ((x)[0]))
 
@@ -263,6 +265,7 @@ lcmlist:
 
 %%
 
+void
 yyerror (char *s)
 {
   fprintf (stderr, "%s\n", s);
