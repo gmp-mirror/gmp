@@ -276,7 +276,6 @@ __gmp_replacement_vsnprintf (char *buf, size_t buf_size,
 	      {
 #if HAVE_LONG_DOUBLE
 		(void) va_arg (ap, long double);
-		total_width += long_double_digits;
 #else
 		ASSERT_FAIL (long double not available);
 #endif
@@ -284,7 +283,6 @@ __gmp_replacement_vsnprintf (char *buf, size_t buf_size,
 	    else
 	      {
 		(void) va_arg (ap, double);
-		total_width += double_digits;
 	      }
 	    goto next;
 
