@@ -4261,7 +4261,8 @@ only.
 Return a pointer to the limb array, intended for write access. The array is
 reallocated as needed, to make room for @var{n} limbs. Requires @math{@var{n}
 > 0}. The @code{mpz_limbs_modify} function returns an array that holds the old
-absolute value of @var{x}, while @code{mpz_limbs_write} may destroy the old
+absolute value of @var{x} (in the first @code{mpz_size}(@var{x}) limbs, the
+other ones are undefined), while @code{mpz_limbs_write} may destroy the old
 value and return an array with unspecified contents.
 @end deftypefun
 
